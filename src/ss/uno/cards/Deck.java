@@ -9,14 +9,14 @@ public class Deck {
     ArrayList<AbstractCard> deckCards;
 
     /**
-     * Creates a deck withh all the cards
+     * Creates a deck with all the cards
      */
     public Deck(){
 
     }
 
     /**
-     * Creates a deck without the cards that are in any of the player's hands or that have been played last
+     * Creates a deck without the cards that are in any of the player's hands and that have been played last
      * @param cards the cards in the player's hands and the last played card
      */
     public Deck(ArrayList<AbstractCard> cards){
@@ -38,9 +38,4 @@ public class Deck {
     public void removeCard(Card card){
 
     }
-
-    public static void main(String[] args) {
-
-    }
-
 }

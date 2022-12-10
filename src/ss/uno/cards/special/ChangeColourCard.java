@@ -4,7 +4,7 @@ import ss.uno.cards.AbstractCard;
 
 public class ChangeColourCard extends AbstractCard implements AbstractCard.Ability {
     /**
-     * Gives the card the ability to change the current colour
+     * Gives the card the ability to change the current colour of the last placed card
      */
     @Override
     public void abilityFunction() {

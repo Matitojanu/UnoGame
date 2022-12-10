@@ -5,7 +5,8 @@ import ss.uno.cards.Card;
 public class AI extends AbstractPlayer {
 
     /**
-     * The move that the AI will do
+     * Returns the move that the AI will do
+     * @return the card the AI will play
      */
     @Override
     public Card determineMove() {
