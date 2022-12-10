@@ -6,7 +6,7 @@ import ss.uno.cards.Card;
 import java.util.ArrayList;
 
 public class Deck {
-    ArrayList<AbstractCard> deckCards;
+    private ArrayList<AbstractCard> deckCards;
 
     /**
      * Creates a deck with all the cards
