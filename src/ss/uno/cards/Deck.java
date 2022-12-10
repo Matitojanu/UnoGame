@@ -1,4 +1,7 @@
-package ss.uno;
+package ss.uno.cards;
+
+import ss.uno.cards.AbstractCard;
+import ss.uno.cards.Card;
 
 import java.util.ArrayList;
 

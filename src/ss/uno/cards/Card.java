@@ -1,4 +1,6 @@
-package ss.uno;
+package ss.uno.cards;
+
+import ss.uno.cards.AbstractCard;
 
 public class Card extends AbstractCard {
     private int number;

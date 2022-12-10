@@ -1,4 +1,6 @@
-package ss.uno;
+package ss.uno.player;
+
+import ss.uno.cards.Card;
 
 public class AI extends AbstractPlayer {
 
@@ -6,7 +8,8 @@ public class AI extends AbstractPlayer {
      * The move that the AI will do
      */
     @Override
-    public void determineMove() {
+    public Card determineMove() {
 
+        return null;
     }
 }

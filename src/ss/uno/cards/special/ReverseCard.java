@@ -1,4 +1,4 @@
-package ss.uno;
+package ss.uno.cards.special;
 
 public class ReverseCard {
 }

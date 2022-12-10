@@ -1,4 +1,4 @@
-package ss.uno;
+package ss.uno.cards;
 
 public abstract class AbstractCard {
     /**
@@ -42,10 +42,11 @@ public abstract class AbstractCard {
         return colour;
     }
 
-    /**
-     *
-     */
+
     public interface Ability{
+        /**
+         * Holds the ability of respective special card
+         */
         public void abilityFunction();
     }
 }
