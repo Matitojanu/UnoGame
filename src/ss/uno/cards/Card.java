@@ -1,5 +1,6 @@
 package ss.uno.cards;
 
+import ss.uno.UnoGame;
 import ss.uno.cards.AbstractCard;
 
 public class Card extends AbstractCard {

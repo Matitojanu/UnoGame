@@ -9,7 +9,7 @@ public abstract class AbstractCard {
         PLUSFOUR,
         CHANGECOLOR,
         SKIPTURN,
-        REVERSE,
+        REVERSE
     }
 
     /**

@@ -32,17 +32,17 @@ public class Deck {
             deckCards.add(count+2, new ReverseCard(AbstractCard.Colour.RED));
             deckCards.add(count+3, new SkipTurnCard(AbstractCard.Colour.RED));
 
-            deckCards.add(count+4, new PlusTwoCard(AbstractCard.Colour.YELLOW));
-            deckCards.add(count+5, new ReverseCard(AbstractCard.Colour.YELLOW));
-            deckCards.add(count+6, new SkipTurnCard(AbstractCard.Colour.YELLOW));
+            deckCards.add(count+1, new Card(AbstractCard.Colour.YELLOW, AbstractCard.Symbol.PLUSTWO));
+            deckCards.add(count+2, new Card(AbstractCard.Colour.YELLOW, AbstractCard.Symbol.REVERSE));
+            deckCards.add(count+3, new Card(AbstractCard.Colour.YELLOW, AbstractCard.Symbol.SKIPTURN));
 
-            deckCards.add(count+7, new PlusTwoCard(AbstractCard.Colour.GREEN));
-            deckCards.add(count+8, new ReverseCard(AbstractCard.Colour.GREEN));
-            deckCards.add(count+9, new SkipTurnCard(AbstractCard.Colour.GREEN));
+            deckCards.add(count+1, new Card(AbstractCard.Colour.GREEN, AbstractCard.Symbol.PLUSTWO));
+            deckCards.add(count+2, new Card(AbstractCard.Colour.GREEN, AbstractCard.Symbol.REVERSE));
+            deckCards.add(count+3, new Card(AbstractCard.Colour.GREEN, AbstractCard.Symbol.SKIPTURN));
 
-            deckCards.add(count+10, new PlusTwoCard(AbstractCard.Colour.BLUE));
-            deckCards.add(count+11, new ReverseCard(AbstractCard.Colour.BLUE));
-            deckCards.add(count+12, new SkipTurnCard(AbstractCard.Colour.BLUE));
+            deckCards.add(count+1, new Card(AbstractCard.Colour.BLUE, AbstractCard.Symbol.PLUSTWO));
+            deckCards.add(count+2, new Card(AbstractCard.Colour.BLUE, AbstractCard.Symbol.REVERSE));
+            deckCards.add(count+3, new Card(AbstractCard.Colour.BLUE, AbstractCard.Symbol.SKIPTURN));
             count+=12;
         }
 
@@ -56,8 +56,6 @@ public class Deck {
             deckCards.add(count+7, new Card(AbstractCard.Colour.GREEN, i));
             deckCards.add(count+8, new Card(AbstractCard.Colour.GREEN, i));
             count+=8;
-
-
         }
     }
 
