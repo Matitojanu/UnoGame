@@ -1,7 +1,10 @@
 package ss.uno;
 
+import ss.uno.cards.AbstractCard;
 import ss.uno.cards.Card;
 import ss.uno.cards.Deck;
+
+import java.util.Scanner;
 
 public class Board {
     private Deck deckCards;
@@ -29,5 +32,19 @@ public class Board {
      */
     public boolean deckFinished(){
         return deckCards.isEmpty();
+    }
+
+    public Deck getDeckCards() {
+        return deckCards;
+    }
+
+    public void setDeckCards(Deck deckCards) {
+        this.deckCards = deckCards;
+    }
+
+    public AbstractCard.Colour pickColor(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please pick a color out of RED, YELLOW, GREEN, BLUE: ");
+        return AbstractCard.Colour.valueOf(scanner.nextLine());
     }
 }

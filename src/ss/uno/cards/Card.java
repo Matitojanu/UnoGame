@@ -3,8 +3,9 @@ package ss.uno.cards;
 import ss.uno.UnoGame;
 import ss.uno.cards.AbstractCard;
 
-public class Card extends AbstractCard {
+public class Card extends AbstractCard{
     private int number;
+    private Symbol symbol;
 
     /**
      * Creates the card with the respective color and number given as parameters
@@ -17,10 +18,32 @@ public class Card extends AbstractCard {
     }
 
     /**
+     * Creates a special card with the color black, and it's respective symbol
+     * @param colour
+     * @param symbol
+     */
+    public Card(Colour colour, Symbol symbol){
+        super(colour);
+        this.symbol = symbol;
+    }
+
+    /**
      * Returns the number of the card
      * @return number
      */
     public int getNumber(){
         return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public Symbol getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(Symbol symbol) {
+        this.symbol = symbol;
     }
 }

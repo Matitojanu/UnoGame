@@ -4,7 +4,7 @@ public abstract class AbstractCard {
     /**
      * All the possibilities of symbols a special card has
      */
-    public enum symbol{
+    public enum Symbol{
         PLUSTWO,
         PLUSFOUR,
         CHANGECOLOR,
