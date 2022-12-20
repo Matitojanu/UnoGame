@@ -16,7 +16,7 @@ public abstract class AbstractPlayer implements Player {
         return hand;
     }
 
-    public void setHand(Deck hand) {
+    public void setHand(ArrayList<AbstractCard> hand) {
         this.hand = hand;
     }
 }

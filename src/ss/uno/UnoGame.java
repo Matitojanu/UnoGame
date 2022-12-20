@@ -53,7 +53,13 @@ public class UnoGame {
      * @param card that will be played
      */
     public void playCard(Card card){
-
+        if(playersTurn == player1){
+            board.setLastCard(card);
+            player1.getHand().remove(card);
+        }else{
+            board.setLastCard(card);
+            player2.getHand().remove(card);
+        }
     }
 
     /**
@@ -61,6 +67,10 @@ public class UnoGame {
      * @param card that will be drawn from the deck
      */
     public void drawCard(Card card){
-
+        if( playersTurn == player1 ){
+            player1.getHand().add(card);
+        }else {
+            player2.getHand().add(card);
+        }
     }
 }
