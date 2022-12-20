@@ -2,9 +2,9 @@ package ss.uno.cards;
 
 import ss.uno.cards.AbstractCard;
 import ss.uno.cards.Card;
-import ss.uno.cards.special.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Deck {
     private ArrayList<AbstractCard> deckCards =  new ArrayList<>();
@@ -22,15 +22,15 @@ public class Deck {
 
         int count = 3;
         for(int i = 0; i <4;i++){
-            deckCards.add(count+1, new ChangeColourCard(AbstractCard.Colour.BLACK));
-            deckCards.add(count+1, new PlusFourCard(AbstractCard.Colour.BLACK));
+            deckCards.add(count+1, new Card(AbstractCard.Colour.BLACK, AbstractCard.Symbol.CHANGECOLOR));
+            deckCards.add(count+1, new Card(AbstractCard.Colour.BLACK, AbstractCard.Symbol.PLUSFOUR));
             count+=2;
         }
 
         for(int i=0; i<2; i++){
-            deckCards.add(count+1, new PlusTwoCard(AbstractCard.Colour.RED));
-            deckCards.add(count+2, new ReverseCard(AbstractCard.Colour.RED));
-            deckCards.add(count+3, new SkipTurnCard(AbstractCard.Colour.RED));
+            deckCards.add(count+1, new Card(AbstractCard.Colour.RED, AbstractCard.Symbol.PLUSTWO));
+            deckCards.add(count+2, new Card(AbstractCard.Colour.RED, AbstractCard.Symbol.REVERSE));
+            deckCards.add(count+3, new Card(AbstractCard.Colour.RED, AbstractCard.Symbol.SKIPTURN));
 
             deckCards.add(count+1, new Card(AbstractCard.Colour.YELLOW, AbstractCard.Symbol.PLUSTWO));
             deckCards.add(count+2, new Card(AbstractCard.Colour.YELLOW, AbstractCard.Symbol.REVERSE));
@@ -57,6 +57,7 @@ public class Deck {
             deckCards.add(count+8, new Card(AbstractCard.Colour.GREEN, i));
             count+=8;
         }
+        Collections.shuffle(deckCards);
     }
 
     /**
@@ -65,6 +66,7 @@ public class Deck {
      */
     public Deck(ArrayList<AbstractCard> cards){
 
+        Collections.shuffle(deckCards);
     }
 
     /**
@@ -73,6 +75,15 @@ public class Deck {
      */
     public ArrayList<AbstractCard> getDeckCards() {
         return deckCards;
+    }
+
+    public AbstractCard getCard(Card card){
+        for (int i = 0; i < deckCards.size(); i++) {
+            if ( deckCards.get(i) == card ){
+                return deckCards.get(i);
+            }
+        }
+        return null;
     }
 
     /**
