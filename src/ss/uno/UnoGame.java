@@ -9,13 +9,13 @@ public class UnoGame {
     private Board board;
     private AbstractPlayer player1;
     private AbstractPlayer player2;
-    private Player playersTurn = player1;
+    private AbstractPlayer playersTurn = player1;
 
     /**
      * Returns the player that has to do a move
      * @return the player who's turn is it
      */
-    public Player getTurn(){
+    public AbstractPlayer getTurn(){
         if (playersTurn == player1){
             playersTurn = player2;
         } else {
@@ -67,7 +67,7 @@ public class UnoGame {
      * @param card that will be drawn from the deck
      */
     public void drawCard(Card card){
-        if( playersTurn == player1 ){
+        if( getTurn() == player1 ){
             player1.getHand().add(card);
         }else {
             player2.getHand().add(card);
