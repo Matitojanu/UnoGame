@@ -1,13 +1,12 @@
 package ss.uno;
 
+import java.util.Scanner;
+
 public class UnoTUI {
     private static UnoGame game;
     /**
      * The function will run the entire game
      */
-    public void run(){
-
-    }
 
     public static void main(String[] args) {
         
