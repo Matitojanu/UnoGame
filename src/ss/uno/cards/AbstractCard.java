@@ -29,7 +29,6 @@ public abstract class AbstractCard {
     /**
      * Creates the Card with the colour given as parameter
      * @param colour the color that the card has
-     * @param ability the ability the card has. It can be null
      */
     public AbstractCard(Colour colour){
         this.colour =  colour;
