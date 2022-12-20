@@ -88,5 +88,4 @@ public class Deck {
     public boolean isEmpty(){
         return deckCards.size()==0;
     }
-
 }
