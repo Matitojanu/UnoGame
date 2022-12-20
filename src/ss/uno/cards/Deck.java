@@ -82,7 +82,7 @@ public class Deck {
      * @param card the card that should be removed
      */
     public void removeCard(Card card){
-
+        deckCards.remove(card);
     }
 
     public boolean isEmpty(){
