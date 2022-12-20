@@ -28,6 +28,6 @@ public class Board {
      * @return true if the deck is finished, and false otherwhise
      */
     public boolean deckFinished(){
-        return false;
+        return deckCards.isEmpty();
     }
 }

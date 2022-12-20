@@ -1,6 +1,7 @@
 package ss.uno.player;
 
 import ss.uno.cards.Card;
+import ss.uno.cards.Deck;
 
 public class AI extends AbstractPlayer {
 
@@ -13,4 +14,5 @@ public class AI extends AbstractPlayer {
 
         return null;
     }
+
 }

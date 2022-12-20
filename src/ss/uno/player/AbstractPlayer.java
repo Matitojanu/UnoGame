@@ -9,7 +9,9 @@ public abstract class AbstractPlayer implements Player {
     @Override
     public abstract Card determineMove();
 
-    public abstract Deck getHand();
+    public Deck getHand(){
+        return hand;
+    }
 
     public void setHand(Deck hand) {
         this.hand = hand;
