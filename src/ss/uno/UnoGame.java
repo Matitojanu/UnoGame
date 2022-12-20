@@ -13,11 +13,22 @@ import static ss.uno.cards.AbstractCard.Symbol.SKIPTURN;
 import static ss.uno.cards.AbstractCard.Symbol.CHANGECOLOR;
 
 public class UnoGame implements AbstractCard.Ability {
-    private static Board board;
+    private  Board board;
     private AbstractPlayer player1;
     private AbstractPlayer player2;
-    private AbstractPlayer playersTurn = player1;
+    private AbstractPlayer playersTurn;
 
+    public UnoGame( AbstractPlayer player1, AbstractPlayer player2){
+        Board board = new Board();
+        this.player1 = player1;
+        this.player2 = player2;
+        playersTurn=player1;
+    }
+
+
+    public void run(){
+
+    }
     /**
      * Returns the player that has to do a move
      * @return the player who's turn is it
