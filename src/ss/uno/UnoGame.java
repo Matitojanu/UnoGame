@@ -5,7 +5,6 @@ import ss.uno.cards.Card;
 import ss.uno.cards.Deck;
 import ss.uno.player.AbstractPlayer;
 import ss.uno.player.HumanPlayer;
-import ss.uno.player.Player;
 
 import static ss.uno.cards.AbstractCard.Symbol.PLUSFOUR;
 import static ss.uno.cards.AbstractCard.Symbol.REVERSE;
@@ -14,7 +13,7 @@ import static ss.uno.cards.AbstractCard.Symbol.SKIPTURN;
 import static ss.uno.cards.AbstractCard.Symbol.CHANGECOLOR;
 
 public class UnoGame implements AbstractCard.Ability {
-    private Board board;
+    private static Board board;
     private AbstractPlayer player1;
     private AbstractPlayer player2;
     private AbstractPlayer playersTurn = player1;

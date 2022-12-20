@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class Board {
     private Deck deckCards;
-    private Card lastCard;
+    private static Card lastCard;
 
     /**
      * Returns the last played card
@@ -24,6 +24,7 @@ public class Board {
      */
     public void setLastCard(Card lastCard) {
         this.lastCard = lastCard;
+
     }
 
     /**
@@ -42,9 +43,15 @@ public class Board {
         this.deckCards = deckCards;
     }
 
+    /**
+     * This function recievs the colour from the user, and changes the last card to the one given as input from the user
+     * @return the colour the player chose
+     */
     public AbstractCard.Colour pickColor(){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please pick a color out of RED, YELLOW, GREEN, BLUE: ");
-        return AbstractCard.Colour.valueOf(scanner.nextLine());
+        String input = scanner.nextLine();
+        lastCard.setColour(AbstractCard.Colour.valueOf(input));
+        return AbstractCard.Colour.valueOf(input);
     }
 }

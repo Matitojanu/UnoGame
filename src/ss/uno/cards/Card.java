@@ -4,7 +4,7 @@ import ss.uno.UnoGame;
 import ss.uno.cards.AbstractCard;
 
 public class Card extends AbstractCard{
-    private int number;
+    private static int number;
     private Symbol symbol;
 
     /**

@@ -42,6 +42,10 @@ public abstract class AbstractCard {
         return colour;
     }
 
+    public void setColour(Colour colour){
+        this.colour = colour;
+    }
+
 
     public interface Ability{
         /**
