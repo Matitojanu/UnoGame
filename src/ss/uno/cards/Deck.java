@@ -65,7 +65,12 @@ public class Deck {
      * @param cards the cards in the player's hands and the last played card
      */
     public Deck(ArrayList<AbstractCard> cards){
-
+        this();
+        for (int i = 0; i < cards.size(); i++) {
+            if(deckCards.contains(cards.get(i))){
+                deckCards.remove(cards.get(i));
+            }
+        }
         Collections.shuffle(deckCards);
     }
 
