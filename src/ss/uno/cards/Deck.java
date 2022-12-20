@@ -56,6 +56,8 @@ public class Deck {
             deckCards.add(count+7, new Card(AbstractCard.Colour.GREEN, i));
             deckCards.add(count+8, new Card(AbstractCard.Colour.GREEN, i));
             count+=8;
+
+
         }
     }
 
@@ -83,8 +85,8 @@ public class Deck {
 
     }
 
-    public static void main(String[] args) {
-        Deck deck = new Deck();
-        System.out.println(deck.getDeckCards());
+    public boolean isEmpty(){
+        return deckCards.size()==0;
     }
+
 }
