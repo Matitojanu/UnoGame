@@ -11,7 +11,6 @@ public class UnoTUI {
      */
 
     public static void main(String[] args) {
-
         Scanner scn1 = new Scanner(System.in);
         Scanner scn2 = new Scanner(System.in);
         System.out.println("Please input the first players' name of Uno: ");

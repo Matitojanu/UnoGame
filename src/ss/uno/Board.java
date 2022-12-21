@@ -10,6 +10,9 @@ public class Board {
     private Deck deckCards;
     private static Card lastCard;
 
+    public Board(Deck deckCards){
+        this.deckCards = deckCards;//idk...
+    }
     /**
      * Returns the last played card
      * @return last card that was played

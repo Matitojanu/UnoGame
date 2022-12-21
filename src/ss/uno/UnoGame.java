@@ -101,10 +101,10 @@ public class UnoGame implements AbstractCard.Ability {
      * @param card that will be drawn from the deck
      */
     public void drawCard(){
-        if( getTurn() == player1 ){
-            player1.getHand().add(board.getDeckCards().getCard());
+        if( playersTurn == player1 ){
+            player1.getHand().add(getBoard().getDeckCards().getCard());
         }else {
-            player2.getHand().add(board.getDeckCards().getCard());
+            player2.getHand().add(getBoard().getDeckCards().getCard());//i am looking to see if in any functions that use that is the cause
         }
     }
 

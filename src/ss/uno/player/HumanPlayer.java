@@ -49,8 +49,9 @@ public class HumanPlayer extends AbstractPlayer{
             for (int i = 0; i < getHand().size(); i++) {
                 System.out.println(i +" - " + getHand().get(i).toString());
             }
+            System.out.println("Last card: "+board.getLastCard().toString());
             Scanner scanner =  new Scanner(System.in);
-            System.out.println("Please input the index of the card you want to play: ");
+            System.out.println(getName().toString()+" please input the index of the card you want to play: ");
             int index = scanner.nextInt();
             if(existsValidMove(board)){
                 if(index<getHand().size()){

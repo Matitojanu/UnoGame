@@ -5,6 +5,7 @@ import ss.uno.cards.Card;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class Deck {
     private ArrayList<AbstractCard> deckCards =  new ArrayList<>();
@@ -15,11 +16,23 @@ public class Deck {
      */
     public Deck(){
         Card card;
-        deckCards.add(0, new Card(AbstractCard.Colour.RED, 0));
-        deckCards.add(1, new Card(AbstractCard.Colour.YELLOW, 0));
-        deckCards.add(2, new Card(AbstractCard.Colour.BLUE, 0));
-        deckCards.add(3, new Card(AbstractCard.Colour.GREEN, 0));
-
+        deckCards.add(0, new Card(AbstractCard.Colour.RED, AbstractCard.Symbol.ZERO));
+        deckCards.add(1, new Card(AbstractCard.Colour.YELLOW, AbstractCard.Symbol.ZERO));
+        deckCards.add(2, new Card(AbstractCard.Colour.BLUE, AbstractCard.Symbol.ZERO));
+        deckCards.add(3, new Card(AbstractCard.Colour.GREEN, AbstractCard.Symbol.ZERO));
+        List<AbstractCard.Symbol> enums = new ArrayList<>();
+        enums.add(AbstractCard.Symbol.REVERSE);
+        enums.add(AbstractCard.Symbol.PLUSTWO);
+        enums.add(AbstractCard.Symbol.SKIPTURN);
+        enums.add(AbstractCard.Symbol.ONE);
+        enums.add(AbstractCard.Symbol.TWO);
+        enums.add(AbstractCard.Symbol.THREE);
+        enums.add(AbstractCard.Symbol.FOUR);
+        enums.add(AbstractCard.Symbol.FIVE);
+        enums.add(AbstractCard.Symbol.SIX);
+        enums.add(AbstractCard.Symbol.SEVEN);
+        enums.add(AbstractCard.Symbol.EIGHT);
+        enums.add(AbstractCard.Symbol.NINE);
         int count = 3;
         for(int i = 0; i <4;i++){
             deckCards.add(count+1, new Card(AbstractCard.Colour.BLACK, AbstractCard.Symbol.CHANGECOLOR));
@@ -27,36 +40,28 @@ public class Deck {
             count+=2;
         }
 
-        for(int i=0; i<2; i++){
-            deckCards.add(count+1, new Card(AbstractCard.Colour.RED, AbstractCard.Symbol.PLUSTWO));
-            deckCards.add(count+2, new Card(AbstractCard.Colour.RED, AbstractCard.Symbol.REVERSE));
-            deckCards.add(count+3, new Card(AbstractCard.Colour.RED, AbstractCard.Symbol.SKIPTURN));
-
-            deckCards.add(count+1, new Card(AbstractCard.Colour.YELLOW, AbstractCard.Symbol.PLUSTWO));
-            deckCards.add(count+2, new Card(AbstractCard.Colour.YELLOW, AbstractCard.Symbol.REVERSE));
-            deckCards.add(count+3, new Card(AbstractCard.Colour.YELLOW, AbstractCard.Symbol.SKIPTURN));
-
-            deckCards.add(count+1, new Card(AbstractCard.Colour.GREEN, AbstractCard.Symbol.PLUSTWO));
-            deckCards.add(count+2, new Card(AbstractCard.Colour.GREEN, AbstractCard.Symbol.REVERSE));
-            deckCards.add(count+3, new Card(AbstractCard.Colour.GREEN, AbstractCard.Symbol.SKIPTURN));
-
-            deckCards.add(count+1, new Card(AbstractCard.Colour.BLUE, AbstractCard.Symbol.PLUSTWO));
-            deckCards.add(count+2, new Card(AbstractCard.Colour.BLUE, AbstractCard.Symbol.REVERSE));
-            deckCards.add(count+3, new Card(AbstractCard.Colour.BLUE, AbstractCard.Symbol.SKIPTURN));
-            count+=12;
+        for(AbstractCard.Symbol symbol: enums){
+            deckCards.add(count+1, new Card(AbstractCard.Colour.RED, symbol));
+            deckCards.add(count+2, new Card(AbstractCard.Colour.RED, symbol));
+            deckCards.add(count+3, new Card(AbstractCard.Colour.BLUE, symbol));
+            deckCards.add(count+4, new Card(AbstractCard.Colour.BLUE, symbol));
+            deckCards.add(count+5, new Card(AbstractCard.Colour.YELLOW, symbol));
+            deckCards.add(count+6, new Card(AbstractCard.Colour.YELLOW, symbol));
+            deckCards.add(count+7, new Card(AbstractCard.Colour.GREEN, symbol));
+            deckCards.add(count+8, new Card(AbstractCard.Colour.GREEN, symbol));
+           count=+8;
         }
-
-        for (int i = 1; i <= 9; i++) {
-            deckCards.add(count+1, new Card(AbstractCard.Colour.RED, i));
-            deckCards.add(count+2, new Card(AbstractCard.Colour.RED, i));
-            deckCards.add(count+3, new Card(AbstractCard.Colour.BLUE, i));
+        /* for (int i = 1; i <= 2; i++) {
+            deckCards.add(count+1, new Card(AbstractCard.Colour.RED, AbstractCard.Symbol.ONE));
+            deckCards.add(count+2, new Card(AbstractCard.Colour.BLUE, AbstractCard.Symbol.ONE));
+            deckCards.add(count+3, new Card(AbstractCard.Colour.YELLOW, AbstractCard.Symbol.TWO));
             deckCards.add(count+4, new Card(AbstractCard.Colour.BLUE, i));
             deckCards.add(count+5, new Card(AbstractCard.Colour.YELLOW, i));
             deckCards.add(count+6, new Card(AbstractCard.Colour.YELLOW, i));
             deckCards.add(count+7, new Card(AbstractCard.Colour.GREEN, i));
             deckCards.add(count+8, new Card(AbstractCard.Colour.GREEN, i));
             count+=8;
-        }
+        }*/
         Collections.shuffle(deckCards);
     }
 
@@ -65,7 +70,6 @@ public class Deck {
      * @param cards the cards in the player's hands and the last played card
      */
     public Deck(ArrayList<AbstractCard> cards){
-        this();
         for (int i = 0; i < cards.size(); i++) {
             if(deckCards.contains(cards.get(i))){
                 deckCards.remove(cards.get(i));
