@@ -31,8 +31,7 @@ public class HumanPlayer extends AbstractPlayer{
                 return getHand().get(index);
             }
             System.out.println("Wrong input! Please input again");
-    }
-
+        }
     }
 
 }

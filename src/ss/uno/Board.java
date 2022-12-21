@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class Board {
     private Deck deckCards;
-    private static Card lastCard;
+    public static Card lastCard;
 
     /**
      * Returns the last played card
