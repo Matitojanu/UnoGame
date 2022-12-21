@@ -24,6 +24,21 @@ public class HumanPlayer extends AbstractPlayer{
         this.name = name;
     }
 
+    @Override
+    public boolean existsValidMove(Board board){
+        for (int index = 0; index < getHand().size(); index++) {
+            if ( getHand().get(index).getColour() == board.getLastCard().getColour() ){
+                return true;
+            /*} else if ( ((Card) getHand().get(index)).getNumber() == board.getLastCard().getNumber() ) {
+                return true;*/
+            } else if ( ((Card) getHand().get(index)).getSymbol() == board.getLastCard().getSymbol() ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     /**
      * Returns a valid move from the player
      * @return card that is wither played or drawn from the deck
@@ -32,20 +47,19 @@ public class HumanPlayer extends AbstractPlayer{
     public int determineMove(Board board) {
         while (true){
             for (int i = 0; i < getHand().size(); i++) {
-                System.out.println(i +" - " + getHand().get(i)); //imma comit what we have now :thumbsup:
+                System.out.println(i +" - " + getHand().get(i).toString());
             }
             Scanner scanner =  new Scanner(System.in);
             System.out.println("Please input the index of the card you want to play: ");
             int index = scanner.nextInt();
-            if ( getHand().get(index).getColour() == board.getLastCard().getColour() ){
-                return index;
-            } else if ( ((Card) getHand().get(index)).getNumber() == board.getLastCard().getNumber() ) {
-                return index;
-            } else if ( ((Card) getHand().get(index)).getSymbol() == board.getLastCard().getSymbol() ) {
-                return index;
+            if(existsValidMove(board)){
+                if(index<getHand().size()){
+                    return index;
+                }
+                System.out.println("Wrong input! Please input again");
             }
-            System.out.println("Wrong input! Please input again");
-    }
+            return -1;
+        }
 
     }
 

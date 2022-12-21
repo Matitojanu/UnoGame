@@ -6,22 +6,29 @@ import ss.uno.cards.AbstractCard;
 import ss.uno.cards.Card;
 
 public class AI extends AbstractPlayer {
+    private int validMove;
+    @Override
+    public boolean existsValidMove(Board board){
+        for (int index = 0; index < getHand().size(); index++) {
+            if ( getHand().get(index).getColour() == board.getLastCard().getColour() ){
+                validMove = index;
+                return true;
+            /*} else if ( ((Card) getHand().get(index)).getNumber() == board.getLastCard().getNumber() ) {
+                validMove = index;
+                return true;*/
+            } else if ( ((Card) getHand().get(index)).getSymbol() == board.getLastCard().getSymbol() ) {
+                validMove = index;
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * Returns the move that the AI will do
      * @return the card the AI will play
      */
     @Override
     public int determineMove(Board board) {
-        while (true){
-            for (int i = 0; i < getHand().size(); i++) {
-                if ( getHand().get(i).getColour() == board.getLastCard().getColour() ) {
-                    return i;
-                } else if ( ((Card) getHand().get(i)).getNumber() == board.getLastCard().getNumber() ) {
-                    return i;
-                } else if ( ((Card) getHand().get(i)).getSymbol() == board.getLastCard().getSymbol() ) {
-                    return i;
-                }
-            }
-        }
+        return validMove;
     }
 }

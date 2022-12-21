@@ -46,4 +46,13 @@ public class Card extends AbstractCard{
     public void setSymbol(Symbol symbol) {
         this.symbol = symbol;
     }
+
+    @Override
+    public String toString(){
+        return symbol.toString() + "\n\n";
+        /*if(getSymbol()!= null){
+            return symbol.toString() + "\n\n";
+        }
+        return "Colour: " + getColour() + "\n" + "Number: " + getNumber() + "\n\n";*/
+    }
 }

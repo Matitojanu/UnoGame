@@ -18,8 +18,8 @@ public class UnoGame implements AbstractCard.Ability {
     private AbstractPlayer player2;
     private AbstractPlayer playersTurn;
 
-    public UnoGame( AbstractPlayer player1, AbstractPlayer player2){
-        Board board = new Board();
+    public UnoGame(AbstractPlayer player1, AbstractPlayer player2){
+        board = new Board(new Deck());
         this.player1 = player1;
         this.player2 = player2;
         for(int i = 0; i < 7; i++){
@@ -28,14 +28,17 @@ public class UnoGame implements AbstractCard.Ability {
             playersTurn=player1;
             drawCard();
         }
-
+        board.setLastCard((Card) board.getDeckCards().getCard());
     }
 
     public void run(){
         while(!isGameOver()){
-            playCard((Card) playersTurn.getHand().get(playersTurn.determineMove(board)));
-            abilityFunction();
-            getTurn(); //
+            if(playersTurn.existsValidMove(board)){
+                playCard((Card) playersTurn.getHand().get(playersTurn.determineMove(board)));
+                abilityFunction();
+            }
+            drawCard();
+            getTurn();
         }
         System.out.println("Player "+getWinner()+" won!");
     }
@@ -83,7 +86,7 @@ public class UnoGame implements AbstractCard.Ability {
      * @param card that will be played
      */
     public void playCard(Card card){
-        Deck deck = board.getDeckCards();
+        Deck deck = getBoard().getDeckCards();//yeah? idk
         if(playersTurn == player1){
             board.setLastCard(card);
             player1.getHand().remove(card);
