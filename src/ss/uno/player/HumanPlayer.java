@@ -10,6 +10,20 @@ import ss.uno.UnoGame;
 import java.util.Scanner;
 
 public class HumanPlayer extends AbstractPlayer{
+    private String name;
+
+    public HumanPlayer(String name){
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     /**
      * Returns a valid move from the player
      * @return card that is wither played or drawn from the deck
