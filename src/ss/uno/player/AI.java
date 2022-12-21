@@ -11,15 +11,15 @@ public class AI extends AbstractPlayer {
      * @return the card the AI will play
      */
     @Override
-    public AbstractCard determineMove(Board board) {
+    public int determineMove(Board board) {
         while (true){
             for (int i = 0; i < getHand().size(); i++) {
                 if ( getHand().get(i).getColour() == board.getLastCard().getColour() ) {
-                    return getHand().get(i);
+                    return i;
                 } else if ( ((Card) getHand().get(i)).getNumber() == board.getLastCard().getNumber() ) {
-                    return getHand().get(i);
+                    return i;
                 } else if ( ((Card) getHand().get(i)).getSymbol() == board.getLastCard().getSymbol() ) {
-                    return getHand().get(i);
+                    return i;
                 }
             }
         }

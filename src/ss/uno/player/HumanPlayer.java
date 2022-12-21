@@ -29,18 +29,18 @@ public class HumanPlayer extends AbstractPlayer{
      * @return card that is wither played or drawn from the deck
      */
     @Override
-    public AbstractCard determineMove(Board board) {
+    public int determineMove(Board board) {
         while (true){
             for (int i = 0; i < getHand().size(); i++) {
-                System.out.println(i +" - " + getHand().get(i));
+                System.out.println(i +" - " + getHand().get(i)); //imma comit what we have now :thumbsup:
             }
             Scanner scanner =  new Scanner(System.in);
             System.out.println("Please input the index of the card you want to play: ");
             int index = scanner.nextInt();
             if ( getHand().get(index).getColour() == board.getLastCard().getColour() ){
-                return getHand().get(index);
+                return index;
             } else if ( ((Card) getHand().get(index)).getNumber() == board.getLastCard().getNumber() ) {
-                return getHand().get(index);
+                return index;
             } else if ( ((Card) getHand().get(index)).getSymbol() == board.getLastCard().getSymbol() ) {
                 return getHand().get(index);
             }
