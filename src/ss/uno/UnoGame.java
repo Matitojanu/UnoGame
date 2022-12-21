@@ -22,12 +22,18 @@ public class UnoGame implements AbstractCard.Ability {
         Board board = new Board();
         this.player1 = player1;
         this.player2 = player2;
-        playersTurn=player1;
+        playersTurn=player2;
+        for(int i = 0; i < 7; i++){
+            playersTurn=player2;
+            drawCard();
+            playersTurn=player1;
+            drawCard();
+        }
+
     }
 
-
     public void run(){
-
+        
     }
     /**
      * Returns the player that has to do a move
@@ -71,7 +77,7 @@ public class UnoGame implements AbstractCard.Ability {
      * @param card that will be played
      */
     public void playCard(Card card){
-        Deck  deck = board.getDeckCards();
+        Deck deck = board.getDeckCards();
         if(playersTurn == player1){
             board.setLastCard(card);
             player1.getHand().remove(card);
