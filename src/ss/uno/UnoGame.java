@@ -85,26 +85,26 @@ public class UnoGame implements AbstractCard.Ability {
      *  This function draws a card from the deck
      * @param card that will be drawn from the deck
      */
-    public void drawCard(Card card){
+    public void drawCard(){
         if( getTurn() == player1 ){
-            player1.getHand().add(card);
+            player1.getHand().add(board.getDeckCards().getCard());
         }else {
-            player2.getHand().add(card);
+            player2.getHand().add(board.getDeckCards().getCard());
         }
     }
 
     public void abilityFunction(){
         Deck deck = board.getDeckCards();
-        Card card = (Card) deck.getCard(board.getLastCard());
+        Card card = (Card) board.getLastCard();
         switch (card.getSymbol()){
             case  PLUSTWO-> {
                 for(int i = 0; i<2; i++){
-                    drawCard(card);
+                    drawCard();
                 }
             }
             case PLUSFOUR -> {
                 for(int i = 0; i<4; i++){
-                    drawCard(card);
+                    drawCard();
                 }
                 board.pickColor();
             }

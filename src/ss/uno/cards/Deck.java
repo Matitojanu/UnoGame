@@ -82,13 +82,11 @@ public class Deck {
         return deckCards;
     }
 
-    public AbstractCard getCard(Card card){
-        for (int i = 0; i < deckCards.size(); i++) {
-            if ( deckCards.get(i) == card ){
-                return deckCards.get(i);
-            }
-        }
-        return null;
+    public AbstractCard getCard(){
+        Card card= (Card) deckCards.get(0);
+        deckCards.remove(0);
+        return card;
+
     }
 
     /**
