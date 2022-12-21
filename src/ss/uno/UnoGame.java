@@ -22,7 +22,6 @@ public class UnoGame implements AbstractCard.Ability {
         Board board = new Board();
         this.player1 = player1;
         this.player2 = player2;
-        playersTurn=player2;
         for(int i = 0; i < 7; i++){
             playersTurn=player2;
             drawCard();
@@ -33,7 +32,12 @@ public class UnoGame implements AbstractCard.Ability {
     }
 
     public void run(){
-        
+        while(!isGameOver()){
+            playCard((Card) playersTurn.getHand().get(playersTurn.determineMove(board)));
+            abilityFunction();
+            getTurn(); //
+        }
+        System.out.println("Player "+getWinner()+" won!");
     }
     /**
      * Returns the player that has to do a move
@@ -66,7 +70,9 @@ public class UnoGame implements AbstractCard.Ability {
      * @return true if the game has finished, false otherwhise
      */
     public boolean isGameOver(){
-        if(getWinner()!=null){
+        if(player1.getHand().size()==0){
+            return true;
+        } else if ( player2.getHand().size()==0 ) {
             return true;
         }
         return false;
