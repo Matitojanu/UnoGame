@@ -42,7 +42,7 @@ public class HumanPlayer extends AbstractPlayer{
             } else if ( ((Card) getHand().get(index)).getNumber() == board.getLastCard().getNumber() ) {
                 return index;
             } else if ( ((Card) getHand().get(index)).getSymbol() == board.getLastCard().getSymbol() ) {
-                return getHand().get(index);
+                return index;
             }
             System.out.println("Wrong input! Please input again");
     }

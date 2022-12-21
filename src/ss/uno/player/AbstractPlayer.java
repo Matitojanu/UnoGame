@@ -9,7 +9,7 @@ public abstract class AbstractPlayer implements Player {
     private ArrayList<AbstractCard> hand;
 
     @Override
-    public abstract AbstractCard determineMove(Board board);
+    public abstract int determineMove(Board board);
 
     public ArrayList<AbstractCard> getHand(){
         return hand;
