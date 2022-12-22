@@ -36,11 +36,12 @@ public class UnoGame implements AbstractCard.Ability {
             if(playersTurn.existsValidMove(board)){
                 playCard((Card) playersTurn.getHand().get(playersTurn.determineMove(board)));
                 abilityFunction();
+            }else{
+                drawCard();
             }
-            drawCard();
             getTurn();
         }
-        System.out.println("Player "+getWinner()+" won!");
+        System.out.println("Player "+getWinner().toString()+" won!");
     }
     /**
      * Returns the player that has to do a move
@@ -86,13 +87,13 @@ public class UnoGame implements AbstractCard.Ability {
      * @param card that will be played
      */
     public void playCard(Card card){
-        Deck deck = getBoard().getDeckCards();//yeah? idk
+        Deck deck = getBoard().getDeckCards();
         if(playersTurn == player1){
             board.setLastCard(card);
-            player1.getHand().remove(card);
+            player1.getHand().remove(player1.getHand().indexOf(card));
         }else{
             board.setLastCard(card);
-            player2.getHand().remove(card);
+            player2.getHand().remove(player2.getHand().indexOf(card));
         }
     }
 
@@ -126,18 +127,20 @@ public class UnoGame implements AbstractCard.Ability {
                 board.pickColor();
             }
             case REVERSE -> {
-                if (playersTurn == player1){
+                /*(if (playersTurn == player1){
                     playersTurn = player1;
                 } else {
                     playersTurn = player2;
-                }
+                }*/
+                getTurn();
             }
             case SKIPTURN -> {
-                if (playersTurn == player1){
+                /*if (playersTurn == player1){
                     playersTurn = player1;
                 } else {
                     playersTurn = player2;
-                }
+                }*/
+                getTurn();
             }
             case CHANGECOLOR -> {
                 board.pickColor();
