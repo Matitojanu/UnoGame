@@ -4,12 +4,22 @@ public abstract class AbstractCard {
     /**
      * All the possibilities of symbols a special card has
      */
-    public enum symbol{
+    public enum Symbol{
+        ONE,
+        TWO,
+        THREE,
+        FOUR,
+        FIVE,
+        SIX,
+        SEVEN,
+        EIGHT,
+        NINE,
         PLUSTWO,
         PLUSFOUR,
         CHANGECOLOR,
         SKIPTURN,
-        REVERSE
+        REVERSE,
+        ZERO
     }
 
     /**
@@ -31,7 +41,7 @@ public abstract class AbstractCard {
      * @param colour the color that the card has
      */
     public AbstractCard(Colour colour){
-
+        this.colour =  colour;
     }
 
     /**
@@ -40,6 +50,10 @@ public abstract class AbstractCard {
      */
     public Colour getColour() {
         return colour;
+    }
+
+    public void setColour(Colour colour){
+        this.colour = colour;
     }
 
 

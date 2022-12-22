@@ -1,10 +1,11 @@
 package ss.uno.player;
 
-import ss.uno.cards.Card;
+import ss.uno.Board;
+import ss.uno.cards.AbstractCard;
 
 public interface Player {
     /**
      * Returns a valid move
      */
-    public Card determineMove();
+    public int determineMove(Board board);
 }
