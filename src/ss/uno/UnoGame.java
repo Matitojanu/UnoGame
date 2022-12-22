@@ -114,11 +114,13 @@ public class UnoGame implements AbstractCard.Ability {
         switch (card.getSymbol()){
             case  PLUSTWO-> {
                 for(int i = 0; i<2; i++){
+                    getTurn();
                     drawCard();
                 }
             }
             case PLUSFOUR -> {
                 for(int i = 0; i<4; i++){
+                    getTurn();
                     drawCard();
                 }
                 board.pickColor();
