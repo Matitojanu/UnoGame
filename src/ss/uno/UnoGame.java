@@ -12,6 +12,8 @@ import static ss.uno.cards.AbstractCard.Symbol.PLUSTWO;
 import static ss.uno.cards.AbstractCard.Symbol.SKIPTURN;
 import static ss.uno.cards.AbstractCard.Symbol.CHANGECOLOR;
 
+//The games still has problems checking for valid moves, other than that drawing cards, playing cards with their abilities and deciding a winner works
+
 public class UnoGame implements AbstractCard.Ability {
     private  Board board;
     private AbstractPlayer player1;
