@@ -6,6 +6,9 @@ import ss.uno.cards.Deck;
 import ss.uno.player.AbstractPlayer;
 import ss.uno.player.HumanPlayer;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import static ss.uno.cards.AbstractCard.Symbol.PLUSFOUR;
 import static ss.uno.cards.AbstractCard.Symbol.REVERSE;
 import static ss.uno.cards.AbstractCard.Symbol.PLUSTWO;
@@ -16,20 +19,19 @@ import static ss.uno.cards.AbstractCard.Symbol.CHANGECOLOR;
 
 public class UnoGame implements AbstractCard.Ability {
     private Board board;
-    private AbstractPlayer player1;
-    private AbstractPlayer player2;
+    private ArrayList<AbstractPlayer> players = new ArrayList<>();
     private AbstractPlayer playersTurn;
 
-    public UnoGame(AbstractPlayer player1, AbstractPlayer player2){
+    public UnoGame(ArrayList<AbstractPlayer> playersParam){
         board = new Board(new Deck());
-        this.player1 = player1;
-        this.player2 = player2;
+        this.players = playersParam;
         for(int i = 0; i < 7; i++){
-            playersTurn=player2;
-            drawCard();
-            playersTurn=player1;
-            drawCard();
+            for (int j = 0; j < players.size(); j++) {
+                playersTurn = players.get(j);
+                drawCard();
+            }
         }
+        playersTurn = players.get(0);
         board.setLastCard((Card) board.getDeckCards().getCard());
     }
 
@@ -51,12 +53,17 @@ public class UnoGame implements AbstractCard.Ability {
      * @return the player who's turn is it
      */
     public AbstractPlayer getTurn(){
-        if (playersTurn == player1){
-            playersTurn = player2;
-        } else {
-            playersTurn = player1;
+        for (int i = 0; i < players.size()-1; i++) {
+            if(playersTurn == players.get(i)){
+                if(playersTurn == players.get(players.size()-1)){
+                    playersTurn = players.get(0);
+                }else{
+                    playersTurn = players.get(i++);
+                    return playersTurn;
+                }
+            }
         }
-        return playersTurn;
+        return null;
     }
 
     /**
@@ -64,23 +71,23 @@ public class UnoGame implements AbstractCard.Ability {
      * @return the player that has no more cards in their hand
      */
     public AbstractPlayer getWinner(){
-        if(player1.getHand().size()==0){
-            return player1;
-        } else if ( player2.getHand().size()==0 ) {
-            return player2;
+        for (int i = 0; i < players.size()-1; i++) {
+            if(players.get(i).getHand().size()==0){
+                return players.get(i);
+            }
         }
         return null;
     }
 
-    /**
+     /**
      * Returns whether the game is finished or not
      * @return true if the game has finished, false otherwhise
      */
     public boolean isGameOver(){
-        if(player1.getHand().size()==0){
-            return true;
-        } else if ( player2.getHand().size()==0 ) {
-            return true;
+        for (int i = 0; i < players.size()-1; i++) {
+            if(players.get(i).getHand().size()==0){
+                return true;
+            }
         }
         return false;
     }
@@ -91,13 +98,16 @@ public class UnoGame implements AbstractCard.Ability {
      */
     public void playCard(Card card){
         Deck deck = getBoard().getDeckCards();
-        if(playersTurn == player1){
-            board.setLastCard(card);
-            player1.getHand().remove(player1.getHand().indexOf(card));
-        }else{
-            board.setLastCard(card);
-            player2.getHand().remove(player2.getHand().indexOf(card));
+        for (int i = 0; i < players.size(); i++) {
+            if(playersTurn == players.get(i)){
+                board.setLastCard(card);
+                players.get(i).getHand().remove(players.get(i).getHand().indexOf(card));
+            }/*else{
+                board.setLastCard(card);
+                player2.getHand().remove(player2.getHand().indexOf(card));
+            }*/
         }
+
     }
 
     /**
@@ -105,11 +115,14 @@ public class UnoGame implements AbstractCard.Ability {
      * @param card that will be drawn from the deck
      */
     public void drawCard(){
-        if( playersTurn == player1 ){
-            player1.getHand().add(getBoard().getDeckCards().getCard());
-        }else {
-            player2.getHand().add(getBoard().getDeckCards().getCard());
+        for (int i = 0; i < players.size(); i++) {
+            if( playersTurn == players.get(i) ){
+                players.get(i).getHand().add(getBoard().getDeckCards().getCard());
+            }/*else {
+                player2.getHand().add(getBoard().getDeckCards().getCard());
+            }*/
         }
+
     }
 
     public void abilityFunction(){
@@ -130,19 +143,11 @@ public class UnoGame implements AbstractCard.Ability {
                 board.pickColor();
             }
             case REVERSE -> {
-                /*(if (playersTurn == player1){
-                    playersTurn = player1;
-                } else {
-                    playersTurn = player2;
-                }*/
+                Collections.reverse(players);
                 getTurn();
             }
             case SKIPTURN -> {
-                /*if (playersTurn == player1){
-                    playersTurn = player1;
-                } else {
-                    playersTurn = player2;
-                }*/
+                getTurn();
                 getTurn();
             }
             case CHANGECOLOR -> {
@@ -159,20 +164,12 @@ public class UnoGame implements AbstractCard.Ability {
         this.board = board;
     }
 
-    public AbstractPlayer getPlayer1() {
-        return player1;
+    public ArrayList<AbstractPlayer> getPlayers() {
+        return players;
     }
 
-    public void setPlayer1(AbstractPlayer player1) {
-        this.player1 = player1;
-    }
-
-    public AbstractPlayer getPlayer2() {
-        return player2;
-    }
-
-    public void setPlayer2(AbstractPlayer player2) {
-        this.player2 = player2;
+    public void setPlayers(ArrayList<AbstractPlayer> players) {
+        this.players = players;
     }
 
 }

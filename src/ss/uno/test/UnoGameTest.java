@@ -8,28 +8,33 @@ import ss.uno.player.AbstractPlayer;
 import ss.uno.player.HumanPlayer;
 import ss.uno.player.Player;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UnoGameTest {
-    private AbstractPlayer player1;
-    private AbstractPlayer player2;
+    ArrayList <AbstractPlayer> players = new ArrayList<>();
     UnoGame game;
     @BeforeEach
     public void setUp(){
-        player1 =  new HumanPlayer("Ami");
-        player2 =  new HumanPlayer("Matuesz");
-        game =  new UnoGame((AbstractPlayer) player1, (AbstractPlayer) player2);
+        players.add(0, new HumanPlayer("Amy"));
+        players.add(1, new HumanPlayer("Maty"));
+        players.add(2, new HumanPlayer("Pavvy"));
+        game =  new UnoGame(players);
     }
 
     @Test
     public void initialDrawCardTest(){
-        assertTrue(player1.getHand().size()==7);
-        assertTrue(player2.getHand().size()==7);
+        //for (int i = 0; i < players.size(); i++) {
+        assertTrue(players.get(0).getHand().size()==7);
+        assertTrue(players.get(1).getHand().size()==7);
+        assertTrue(players.get(2).getHand().size()==7);
+        //}
     }
 
     @Test
     public void testDrawCard(){
         game.drawCard();
-        assertTrue(player1.getHand().size() == 8);
+        assertTrue(players.get(0).getHand().size() == 8);
     }
 }
