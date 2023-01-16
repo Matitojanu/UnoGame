@@ -35,8 +35,8 @@ public class Deck {
         enums.add(AbstractCard.Symbol.NINE);
         int count = 3;
         for(int i = 0; i <4;i++){
-            deckCards.add(count+1, new Card(AbstractCard.Colour.BLACK, AbstractCard.Symbol.CHANGECOLOR));
-            deckCards.add(count+2, new Card(AbstractCard.Colour.BLACK, AbstractCard.Symbol.PLUSFOUR));
+            deckCards.add(count+1, new Card(AbstractCard.Colour.WILD, AbstractCard.Symbol.CHANGECOLOR));
+            deckCards.add(count+2, new Card(AbstractCard.Colour.WILD, AbstractCard.Symbol.PLUSFOUR));
             count+=2;
         }
 

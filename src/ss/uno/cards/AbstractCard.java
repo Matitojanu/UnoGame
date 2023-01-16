@@ -30,7 +30,7 @@ public abstract class AbstractCard {
         YELLOW,
         GREEN,
         BLUE,
-        BLACK
+        WILD
     }
 
     private Colour colour;
