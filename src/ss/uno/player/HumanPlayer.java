@@ -29,8 +29,6 @@ public class HumanPlayer extends AbstractPlayer{
         for (int index = 0; index < getHand().size(); index++) {
             if ( getHand().get(index).getColour() == board.getLastCard().getColour() ){
                 return true;
-            /*} else if ( ((Card) getHand().get(index)).getNumber() == board.getLastCard().getNumber() ) {
-                return true;*/
             } else if ( ((Card) getHand().get(index)).getSymbol() == board.getLastCard().getSymbol() ) {
                 return true;
             }
@@ -55,11 +53,16 @@ public class HumanPlayer extends AbstractPlayer{
             int index = scanner.nextInt();
             if(existsValidMove(board)){
                 if(index<getHand().size()){
-                    return index;
+                    if((getHand().get(index).getColour() == board.getLastCard().getColour() ||
+                            ( (Card) getHand().get(index) ).getSymbol() == board.getLastCard().getSymbol())){
+                        return index;
+                    }
+                    if(getHand().get(index).getColour() == AbstractCard.Colour.WILD) {
+                        return index;
+                    }
                 }
                 System.out.println("Wrong input! Please input again");
             }
-            return -1;
         }
 
     }

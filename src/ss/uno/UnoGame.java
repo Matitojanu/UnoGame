@@ -15,7 +15,7 @@ import static ss.uno.cards.AbstractCard.Symbol.CHANGECOLOR;
 //The games still has problems checking for valid moves, other than that drawing cards, playing cards with their abilities and deciding a winner works
 
 public class UnoGame implements AbstractCard.Ability {
-    private  Board board;
+    private Board board;
     private AbstractPlayer player1;
     private AbstractPlayer player2;
     private AbstractPlayer playersTurn;
@@ -39,6 +39,7 @@ public class UnoGame implements AbstractCard.Ability {
                 playCard((Card) playersTurn.getHand().get(playersTurn.determineMove(board)));
                 abilityFunction();
             }else{
+                System.out.println(playersTurn + "draws a card");
                 drawCard();
             }
             getTurn();
@@ -116,14 +117,14 @@ public class UnoGame implements AbstractCard.Ability {
         Card card = (Card) board.getLastCard();
         switch (card.getSymbol()){
             case  PLUSTWO-> {
+                getTurn();
                 for(int i = 0; i<2; i++){
-                    getTurn();
                     drawCard();
                 }
             }
             case PLUSFOUR -> {
+                getTurn();
                 for(int i = 0; i<4; i++){
-                    getTurn();
                     drawCard();
                 }
                 board.pickColor();
