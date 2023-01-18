@@ -10,28 +10,62 @@ import ss.uno.UnoGame;
 import java.util.Scanner;
 
 public class HumanPlayer extends AbstractPlayer{
+    private String name;
+
+    public HumanPlayer(String name){
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public boolean existsValidMove(Board board){
+        for (int index = 0; index < getHand().size(); index++) {
+            if ( getHand().get(index).getColour() == board.getLastCard().getColour() ){
+                return true;
+            } else if ( ((Card) getHand().get(index)).getSymbol() == board.getLastCard().getSymbol() ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     /**
      * Returns a valid move from the player
      * @return card that is wither played or drawn from the deck
      */
     @Override
-    public AbstractCard determineMove(Board board) {
+    public int determineMove(Board board) {
         while (true){
             for (int i = 0; i < getHand().size(); i++) {
-                System.out.println(i +" - " + getHand().get(i));
+                System.out.println(i +" - " + getHand().get(i).toString());
             }
+            System.out.println("Last card: "+board.getLastCard().toString());
             Scanner scanner =  new Scanner(System.in);
-            System.out.println("Please input the index of the card you want to play: ");
+            System.out.println(getName().toString()+" please input the index of the card you want to play: ");
             int index = scanner.nextInt();
-            if ( getHand().get(index).getColour() == board.getLastCard().getColour() ){
-                return getHand().get(index);
-            } else if ( ((Card) getHand().get(index)).getNumber() == board.getLastCard().getNumber() ) {
-                return getHand().get(index);
-            } else if ( ((Card) getHand().get(index)).getSymbol() == board.getLastCard().getSymbol() ) {
-                return getHand().get(index);
+            if(existsValidMove(board)){
+                if(index<getHand().size()){
+                    if((getHand().get(index).getColour() == board.getLastCard().getColour() ||
+                            ( (Card) getHand().get(index) ).getSymbol() == board.getLastCard().getSymbol())){
+                        return index;
+                    }
+                    if(getHand().get(index).getColour() == AbstractCard.Colour.WILD) {
+                        return index;
+                    }
+                }
+                System.out.println("Wrong input! Please input again");
             }
-            System.out.println("Wrong input! Please input again");
         }
+
     }
 
 }

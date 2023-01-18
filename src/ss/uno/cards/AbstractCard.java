@@ -5,11 +5,21 @@ public abstract class AbstractCard {
      * All the possibilities of symbols a special card has
      */
     public enum Symbol{
+        ONE,
+        TWO,
+        THREE,
+        FOUR,
+        FIVE,
+        SIX,
+        SEVEN,
+        EIGHT,
+        NINE,
         PLUSTWO,
         PLUSFOUR,
         CHANGECOLOR,
         SKIPTURN,
-        REVERSE
+        REVERSE,
+        ZERO
     }
 
     /**
@@ -20,7 +30,7 @@ public abstract class AbstractCard {
         YELLOW,
         GREEN,
         BLUE,
-        BLACK
+        WILD
     }
 
     private Colour colour;

@@ -7,5 +7,5 @@ public interface Player {
     /**
      * Returns a valid move
      */
-    public AbstractCard determineMove(Board board);
+    public int determineMove(Board board);
 }
