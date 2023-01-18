@@ -16,6 +16,7 @@ public class HumanPlayer extends AbstractPlayer{
         this.name = name;
     }
 
+    @Override
     public String getName() {
         return name;
     }

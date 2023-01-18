@@ -1,10 +1,9 @@
 package ss.uno;
 
+import ss.uno.player.AI;
 import ss.uno.player.AbstractPlayer;
 import ss.uno.player.HumanPlayer;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -15,19 +14,38 @@ public class UnoTUI {
      */
 
     public static void main(String[] args) {
-        Scanner scanner =  new Scanner(System.in);
-        boolean t = true;
-        ArrayList<String> names =  new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+        Scanner scn = new Scanner(System.in);
         ArrayList<AbstractPlayer> abstractPlayers = new ArrayList<>();
+
+        System.out.println("Hello! Welcome to UNO! \nThe minimum number of players is 2 and the maximum number is 10.\n" +
+                "Please input the number of players that want to play: ");
+        String nrOfPlay = scanner.nextLine();
+        while (true) {
+            try {
+                if ( Integer.parseInt(nrOfPlay) < 2 || Integer.parseInt(nrOfPlay) > 10 ) {
+                    System.out.println("The input is not corect! Please input a valid number of players that want to play: ");
+                    nrOfPlay = scanner.nextLine();
+                } else {
+                    break;
+                }
+
+            } catch(NumberFormatException e){
+                System.out.println("The input is not corect! Please input a valid number of players that want to play: ");
+                nrOfPlay = scanner.nextLine();
+        }
+    }
         int k=0;
-        Scanner numberOfPlayers = new Scanner(System.in);
-        System.out.println("Please input the number of players who want to play Uno : ");
-        int numOfPlay = numberOfPlayers.nextInt();
-        while (k < numOfPlay){
+        System.out.println("If you wish to add an AI player, you must put '-' at the begining of their name.");
+        while(k<Integer.parseInt(nrOfPlay)){
+            System.out.println("Please input the name of player " + (k+1) + ": ");
+            String name = scn.nextLine();
+            if ( name.charAt(0) == '-' ) {
+                abstractPlayers.add(k, new AI(name));
+            }else {
+                abstractPlayers.add(k, new HumanPlayer(name));
+            }
             k++;
-            System.out.println("Please input the name of player " + k + ": ");
-            names.add(k-1, scanner.nextLine());
-            abstractPlayers.add(k-1 ,new HumanPlayer(names.get(k-1)));
         }
         UnoGame game = new UnoGame(abstractPlayers);
         game.run();
