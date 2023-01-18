@@ -18,7 +18,7 @@ public class UnoGameTest {
     public void setUp(){
         player1 =  new HumanPlayer("Ami");
         player2 =  new HumanPlayer("Matuesz");
-        game =  new UnoGame((AbstractPlayer) player1, (AbstractPlayer) player2);
+        //game =  new UnoGame((AbstractPlayer) player1, (AbstractPlayer) player2);
     }
 
     @Test

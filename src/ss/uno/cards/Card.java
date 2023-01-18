@@ -49,7 +49,7 @@ public class Card extends AbstractCard{
 
     @Override
     public String toString(){
-        return symbol.toString() + "\n" + getColour().toString() + "\n";
+        return symbol.toString() + " " + getColour().toString() + "\n";
         /*if(getSymbol()!= null){
             return symbol.toString() + "\n\n";
         }
