@@ -13,7 +13,7 @@ public class Board {
     public static Card lastCard;
 
     public Board(Deck deckCards){
-        this.deckCards = deckCards;//idk...
+        this.deckCards = deckCards;
     }
     /**
      * Returns the last played card
