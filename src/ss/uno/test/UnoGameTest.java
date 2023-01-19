@@ -43,4 +43,20 @@ public class UnoGameTest {
         game.drawCard();
         assertTrue(player1.getHand().size() == 8);
     }
+
+    @Test
+    public void testCardAbilityPlusTwo(){
+
+    }
+
+    @Test
+    public void testCardAbilityReverse(){
+
+    }
+
+    @Test
+    public void testCardAbilitySkipTurn(){
+
+    }
+
 }
