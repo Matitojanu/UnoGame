@@ -63,9 +63,9 @@ public class Board {
             System.out.println("Please pick a color out of RED, YELLOW, GREEN, BLUE: ");
             String input = scanner.nextLine();
             for (AbstractCard.Colour color : colours) {
-                if ( color.toString().equals(input) ) {
-                    lastCard.setColour(AbstractCard.Colour.valueOf(input));
-                    return AbstractCard.Colour.valueOf(input);
+                if ( color.toString().equals(input.toUpperCase()) ) {
+                    lastCard.setColour(AbstractCard.Colour.valueOf(input.toUpperCase()));
+                    return AbstractCard.Colour.valueOf(input.toUpperCase());
                 }
             }
             System.out.println("Wrong input! Please try again");

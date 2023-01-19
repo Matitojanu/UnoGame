@@ -6,6 +6,11 @@ import ss.uno.cards.AbstractCard;
 import ss.uno.cards.Card;
 
 public class AI extends AbstractPlayer {
+    private String name;
+
+    public AI(String name){
+        this.name = name;
+    }
     private int validMove;
     @Override
     public boolean existsValidMove(Board board){
@@ -30,5 +35,10 @@ public class AI extends AbstractPlayer {
     @Override
     public int determineMove(Board board) {
         return validMove;
+    }
+
+    @Override
+    public String getName() {
+        return "AI" + name;
     }
 }
