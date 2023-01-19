@@ -1,22 +1,21 @@
 package ss.uno.client;
 
 import java.io.*;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 
 public class Client implements Runnable {
+    private String name;
     private Socket sock;
     private PrintWriter out;
 
-    public Client() throws IOException {
-        this.sock = null;
+    public Client(Socket socket) throws IOException {
+        this.sock = socket;
     }
 
-    public  boolean connect(InetAddress address, int port){
+    public  boolean connect(){
         try{
-            sock = new Socket(address, port);
+            out = new PrintWriter(sock.getOutputStream());
             new Thread(this).start();
             return true;
         } catch (IOException e) {
@@ -34,7 +33,6 @@ public class Client implements Runnable {
         }
     }
 
-
     @Override
     public void run() {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()))) {
@@ -42,5 +40,21 @@ public class Client implements Runnable {
         } catch (IOException e) {
 
         }
+    }
+
+    /**
+     * This method sends the username of the client to its cleint handler
+     * @param name the username of the client
+     */
+    public void sendUserName(String name){
+
+    }
+
+    /**
+     * This method sends the move of the client to the client handler
+     * @param move the move of the client
+     */
+    public void sendMove(int move){
+
     }
 }
