@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Board {
     private Deck deckCards;
-    public static Card lastCard;
+    private static Card lastCard;
 
     public Board(Deck deckCards){
         this.deckCards = deckCards;
@@ -40,11 +40,11 @@ public class Board {
         return deckCards.isEmpty();
     }
 
-    public Deck getDeckCards() {
+    public Deck getDeck() {
         return deckCards;
     }
 
-    public void setDeckCards(Deck deckCards) {
+    public void setDeck(Deck deckCards) {
         this.deckCards = deckCards;
     }
 

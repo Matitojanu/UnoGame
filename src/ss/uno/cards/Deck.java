@@ -80,8 +80,8 @@ public class Deck {
     }
 
     /**
-     * Returns the deck of cards
-     * @return the cards that are in the deck;
+     * Returns the array of all the cars in the deck
+     * @return the array of cards that are in the deck;
      */
     public ArrayList<AbstractCard> getDeckCards() {
         return deckCards;
