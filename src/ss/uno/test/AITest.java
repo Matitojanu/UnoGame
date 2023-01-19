@@ -3,10 +3,10 @@ package ss.uno.test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ss.uno.Board;
-import ss.uno.UnoGame;
 import ss.uno.cards.AbstractCard;
 import ss.uno.cards.Card;
 import ss.uno.cards.Deck;
+import ss.uno.player.AI;
 import ss.uno.player.AbstractPlayer;
 import ss.uno.player.HumanPlayer;
 
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
 
-public class HumanPlayerTest {
+public class AITest {
     private Deck deck;
     private AbstractPlayer player1;
     private ArrayList<AbstractCard> deckCards;
@@ -22,7 +22,7 @@ public class HumanPlayerTest {
 
     @BeforeEach
     public void setUp(){
-        player1 = new HumanPlayer("Human");
+        player1 = new AI("Human");
         deck = new Deck();
         deckCards = new ArrayList<>();
         board = new Board(deck);

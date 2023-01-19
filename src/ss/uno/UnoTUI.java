@@ -9,10 +9,10 @@ import java.util.Scanner;
 
 public class UnoTUI {
     private static UnoGame game;
+
     /**
      * The function will run the entire game
      */
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Scanner scn = new Scanner(System.in);
