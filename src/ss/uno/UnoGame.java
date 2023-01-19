@@ -4,16 +4,9 @@ import ss.uno.cards.AbstractCard;
 import ss.uno.cards.Card;
 import ss.uno.cards.Deck;
 import ss.uno.player.AbstractPlayer;
-import ss.uno.player.HumanPlayer;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
-import static ss.uno.cards.AbstractCard.Symbol.PLUSFOUR;
-import static ss.uno.cards.AbstractCard.Symbol.REVERSE;
-import static ss.uno.cards.AbstractCard.Symbol.PLUSTWO;
-import static ss.uno.cards.AbstractCard.Symbol.SKIPTURN;
-import static ss.uno.cards.AbstractCard.Symbol.CHANGECOLOR;
 
 public class UnoGame implements AbstractCard.Ability {
     private Board board;
@@ -25,7 +18,7 @@ public class UnoGame implements AbstractCard.Ability {
     public UnoGame(ArrayList<AbstractPlayer> abstractPlayers){
         this.players = abstractPlayers;
         board = new Board(new Deck());
-        board.setLastCard((Card) board.getDeckCards().getCard());
+        board.setLastCard((Card) board.getDeck().getCard());
         while(true) {
             if ( board.getLastCard().getColour() == AbstractCard.Colour.WILD ) {
                 board = new Board(new Deck());
@@ -52,6 +45,10 @@ public class UnoGame implements AbstractCard.Ability {
             }else{
                 System.out.println(playersTurn.getName() + " draws a card \n");
                 drawCard();
+                if(playersTurn.existsValidMove(board)){
+                    Card playedCard = (Card) playersTurn.getHand().get(playersTurn.determineMove(board));
+                    playCard(playedCard);
+                }
             }
             getTurn();
         }
@@ -109,7 +106,7 @@ public class UnoGame implements AbstractCard.Ability {
      * @param card that will be played
      */
     public void playCard(Card card){
-        Deck deck = board.getDeckCards();
+        Deck deck = board.getDeck();
         for (int i = 0; i < players.size(); i++) {
             if ( playersTurn == players.get(i) ) {
                 players.get(i).getHand().remove(players.get(i).getHand().indexOf(card));
@@ -130,16 +127,16 @@ public class UnoGame implements AbstractCard.Ability {
                     for (AbstractPlayer player: players) {
                         playersHands.addAll(player.getHand());
                     }
-                    board.setDeckCards(new Deck(playersHands));
+                    board.setDeck(new Deck(playersHands));
                     System.out.println("The deck has been reshuffled! \n");
                 }
-                players.get(i).getHand().add(board.getDeckCards().getCard());
+                players.get(i).getHand().add(board.getDeck().getCard());
             }
         }
     }
 
     public void abilityFunction(){
-        Deck deck = board.getDeckCards();
+        Deck deck = board.getDeck();
         Card card = (Card) board.getLastCard();
         switch (card.getSymbol()){
             case  PLUSTWO-> {
