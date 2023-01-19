@@ -1,9 +1,15 @@
 package ss.uno;
 
+import ss.uno.client.Client;
 import ss.uno.player.AI;
 import ss.uno.player.AbstractPlayer;
 import ss.uno.player.HumanPlayer;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,7 +23,38 @@ public class UnoTUI {
         Scanner scanner = new Scanner(System.in);
         Scanner scn = new Scanner(System.in);
         ArrayList<AbstractPlayer> abstractPlayers = new ArrayList<>();
+        Socket socket;
+        Client client;
 
+        System.out.println("Hello!");
+        while(true){
+            System.out.println("To join Uno! please input the IP adress: ");
+            String adress = scanner.nextLine();
+            System.out.println("Please input the port: ");
+            String port = scanner.nextLine();
+            int portNr = Integer.parseInt(port);
+            try{
+                socket = new Socket(adress, portNr);
+                client = new Client(socket);
+                break;
+            } catch (UnknownHostException e) {
+                System.out.println("Sorry, The IP adress is invalid. Please try again");
+            } catch (IOException e) {
+                System.out.println("Sorry, an error has occured while trying to connect to the server. Please try again");
+            } catch (IllegalArgumentException e){
+                System.out.println("Sorry, the port is invalid. Please try again.");
+            }
+        }
+
+        System.out.println("input name");
+        String name = scanner.nextLine();
+        HumanPlayer player = new HumanPlayer(name);
+        client.sendUserName(name);
+        //we can't continue the client untill we know the protocol better because we don't know how it will interact with the server
+
+
+
+/*
         System.out.println("Hello! Welcome to UNO! \nThe minimum number of players is 2 and the maximum number is 10.\n" +
                 "Please input the number of players that want to play: ");
         String nrOfPlay = scanner.nextLine();
@@ -49,5 +86,7 @@ public class UnoTUI {
         }
         UnoGame game = new UnoGame(abstractPlayers);
         game.run();
+
+ */
     }
 }
