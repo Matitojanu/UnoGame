@@ -50,6 +50,8 @@ public class UnoTUI {
         String name = scanner.nextLine();
         HumanPlayer player = new HumanPlayer(name);
         client.sendUserName(name);
+        client.run();
+
         //we can't continue the client untill we know the protocol better because we don't know how it will interact with the server
 
 

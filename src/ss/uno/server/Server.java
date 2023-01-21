@@ -13,16 +13,30 @@ public class Server implements Runnable {
     public static int port;
     private List<ClientHandler> handlers;
     private ServerSocket serverSocket;
+    private boolean running = true;
 
     public Server(ServerSocket serverSocket){
         this.handlers = new ArrayList<>();
         this.serverSocket = serverSocket;
     }
 
+    public void start(){
+        new Thread(this).start();
+    }
+
+    public void shutDown(){
+        running = false;
+        try{
+            serverSocket.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void run() {
         setUp();
-        boolean running = true;
+        running = true;
         int threadCount = 0;
         while(running){
             try {
@@ -36,6 +50,7 @@ public class Server implements Runnable {
                 running = false;
             }
         }
+        shutDown();
     }
 
     public void setUp(){

@@ -3,6 +3,7 @@ package ss.uno.client;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.regex.Pattern;
 
 public class Client implements Runnable {
     private String name;
@@ -37,8 +38,11 @@ public class Client implements Runnable {
     public void run() {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()))) {
         String msj;
-        } catch (IOException e) {
+        while ((msj = in.readLine()) != null){
 
+        }
+        } catch (IOException e) {
+            this.close();
         }
     }
 
@@ -47,7 +51,7 @@ public class Client implements Runnable {
      * @param name the username of the client
      */
     public void sendUserName(String name){
-
+        out.write(name);
     }
 
     /**
