@@ -3,11 +3,11 @@ package ss.uno.test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ss.uno.UnoGame;
-import ss.uno.cards.Deck;
+import ss.uno.cards.AbstractCard;
+import ss.uno.cards.Card;
 import ss.uno.player.AI;
 import ss.uno.player.AbstractPlayer;
 import ss.uno.player.HumanPlayer;
-import ss.uno.player.Player;
 
 import java.util.ArrayList;
 
@@ -45,8 +45,25 @@ public class UnoGameTest {
     }
 
     @Test
-    public void testCardAbilityPlusTwo(){
+    public void testPlayCard(){
+        game.drawCard();
+        Card card = (Card) player1.getHand().get(0);
+        game.playCard(card);
+        assertTrue(game.getBoard().getLastCard() == card );
 
+    }
+    @Test
+    public void testCardAbilityPlusTwo(){
+        Card card = new Card(AbstractCard.Colour.RED, AbstractCard.Symbol.PLUSTWO);
+        Card lastCard =  new Card(AbstractCard.Colour.RED, AbstractCard.Symbol.ONE);
+        ArrayList<AbstractCard> hand = new ArrayList<>();
+        hand.add(card);
+        player1.setHand(hand);
+        game.getBoard().setLastCard(lastCard);
+        game.playCard(card);
+        game.getBoard().setLastCard(card);
+        game.abilityFunction();
+        assertTrue(player2.getHand().size()==2);
     }
 
     @Test

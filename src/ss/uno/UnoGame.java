@@ -50,15 +50,15 @@ public class UnoGame implements AbstractCard.Ability {
                     playCard(playedCard);
                 }
             }
-            getTurn();
+            changeTurn();
         }
         System.out.println("Player "+getWinner().getName()+" won!");
     }
     /**
-     * Returns the player that has to do a move
+     * Checks whose player's turn is it and changes it to the next one
      * @return the player who's turn is it
      */
-    public AbstractPlayer getTurn(){
+    public AbstractPlayer changeTurn(){
         for (int i = 0; i < players.size(); i++) {
             if(playersTurn == players.get(i)){
                 if(playersTurn == players.get(players.size()-1)){
@@ -135,18 +135,21 @@ public class UnoGame implements AbstractCard.Ability {
         }
     }
 
+    /**
+     * Does the ability function based on the last card, and changes the turn before applying it
+     */
     public void abilityFunction(){
         Deck deck = board.getDeck();
         Card card = (Card) board.getLastCard();
         switch (card.getSymbol()){
             case  PLUSTWO-> {
-                getTurn();
+                changeTurn();
                 for(int i = 0; i<2; i++){
                     drawCard();
                 }
             }
             case PLUSFOUR -> {
-                getTurn();
+                changeTurn();
                 for(int i = 0; i<4; i++){
                     drawCard();
                 }
@@ -156,7 +159,7 @@ public class UnoGame implements AbstractCard.Ability {
                 Collections.reverse(players);
             }
             case SKIPTURN -> {
-                getTurn();
+                changeTurn();
             }
             case CHANGECOLOR -> {
                 board.pickColor();
