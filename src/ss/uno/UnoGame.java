@@ -210,4 +210,8 @@ public class UnoGame implements AbstractCard.Ability {
     public void setBoard(Board board) {
         this.board = board;
     }
+
+    public AbstractPlayer getPlayersTurn() {
+        return playersTurn;
+    }
 }

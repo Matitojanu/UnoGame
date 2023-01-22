@@ -4,6 +4,7 @@ import ss.uno.client.Client;
 import ss.uno.player.AI;
 import ss.uno.player.AbstractPlayer;
 import ss.uno.player.HumanPlayer;
+import ss.uno.server.Server;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -19,45 +20,33 @@ public class UnoTUI {
     /**
      * The function will run the entire game
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         Scanner scn = new Scanner(System.in);
-        ArrayList<AbstractPlayer> abstractPlayers = new ArrayList<>();
-        /*Socket socket;
-        Client client;
+        Socket socket =  new Socket(args[0], Integer.parseInt(args[1]));
+        Client client = new Client(socket);
+        String name;
 
         System.out.println("Hello!");
         while(true){
-            System.out.println("To join Uno! please input the IP adress: ");
-            String adress = scanner.nextLine();
-            System.out.println("Please input the port: ");
-            String port = scanner.nextLine();
-            int portNr = Integer.parseInt(port);
-            try{
-                socket = new Socket(adress, portNr);
-                client = new Client(socket);
-                break;
-            } catch (UnknownHostException e) {
-                System.out.println("Sorry, The IP adress is invalid. Please try again");
-            } catch (IOException e) {
-                System.out.println("Sorry, an error has occured while trying to connect to the server. Please try again");
-            } catch (IllegalArgumentException e){
-                System.out.println("Sorry, the port is invalid. Please try again.");
+            System.out.println("To join pleaser input your name");
+            if( client.connect() ){
+                client.sendProtocol(Protocol.HANDSHAKE);
+                client.run();
+                name = scanner.nextLine();
+
+
             }
+
         }
 
-        System.out.println("input name");
-        String name = scanner.nextLine();
-        HumanPlayer player = new HumanPlayer(name);
-        client.sendUserName(name);
-        client.run();*/
 
         //we can't continue the client untill we know the protocol better because we don't know how it will interact with the server
 
 
 
 
-        System.out.println("Hello! Welcome to UNO! \nThe minimum number of players is 2 and the maximum number is 10.\n" +
+        /*System.out.println("Hello! Welcome to UNO! \nThe minimum number of players is 2 and the maximum number is 10.\n" +
                 "Please input the number of players that want to play: ");
         String nrOfPlay = scanner.nextLine();
         while (true) {
@@ -88,6 +77,8 @@ public class UnoTUI {
         }
         UnoGame game = new UnoGame(abstractPlayers);
         game.run();
+
+         */
 
 
     }
