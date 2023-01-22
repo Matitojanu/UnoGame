@@ -68,12 +68,31 @@ public class UnoGameTest {
 
     @Test
     public void testCardAbilityReverse(){
+        Card card = new Card(AbstractCard.Colour.RED, AbstractCard.Symbol.REVERSE);
+        Card lastcard = new Card(AbstractCard.Colour.RED, AbstractCard.Symbol.ONE);
+        ArrayList<AbstractCard> hand = player1.getHand();
+        hand.add(card);
+        game.getBoard().setLastCard(lastcard);
+        game.playCard(card);
+        game.getBoard().setLastCard(card);
+        game.abilityFunction();
+        game.changeTurn();
+        assertTrue((game.getPlayersTurn())==player4);
 
     }
 
     @Test
     public void testCardAbilitySkipTurn(){
-
+        Card card = new Card(AbstractCard.Colour.RED, AbstractCard.Symbol.SKIPTURN);
+        Card lastcard = new Card(AbstractCard.Colour.RED, AbstractCard.Symbol.ONE);
+        ArrayList<AbstractCard> hand = player1.getHand();
+        hand.add(card);
+        game.getBoard().setLastCard(lastcard);
+        game.playCard(card);
+        game.getBoard().setLastCard(card);
+        game.abilityFunction();
+        game.changeTurn();
+        assertTrue((game.getPlayersTurn())==player3);
     }
 
 }
