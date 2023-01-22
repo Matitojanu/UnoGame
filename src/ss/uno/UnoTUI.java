@@ -23,7 +23,7 @@ public class UnoTUI {
         Scanner scanner = new Scanner(System.in);
         Scanner scn = new Scanner(System.in);
         ArrayList<AbstractPlayer> abstractPlayers = new ArrayList<>();
-        Socket socket;
+        /*Socket socket;
         Client client;
 
         System.out.println("Hello!");
@@ -50,13 +50,13 @@ public class UnoTUI {
         String name = scanner.nextLine();
         HumanPlayer player = new HumanPlayer(name);
         client.sendUserName(name);
-        client.run();
+        client.run();*/
 
         //we can't continue the client untill we know the protocol better because we don't know how it will interact with the server
 
 
 
-/*
+
         System.out.println("Hello! Welcome to UNO! \nThe minimum number of players is 2 and the maximum number is 10.\n" +
                 "Please input the number of players that want to play: ");
         String nrOfPlay = scanner.nextLine();
@@ -89,6 +89,6 @@ public class UnoTUI {
         UnoGame game = new UnoGame(abstractPlayers);
         game.run();
 
- */
+
     }
 }

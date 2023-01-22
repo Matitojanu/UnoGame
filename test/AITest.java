@@ -11,8 +11,7 @@ import ss.uno.player.AbstractPlayer;
 import ss.uno.player.HumanPlayer;
 
 import java.util.ArrayList;
-
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AITest {
     private Deck deck;

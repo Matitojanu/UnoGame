@@ -7,6 +7,7 @@ import ss.uno.player.AbstractPlayer;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class UnoGame implements AbstractCard.Ability {
     private Board board;
@@ -38,16 +39,43 @@ public class UnoGame implements AbstractCard.Ability {
     public void run(){
         while(!isGameOver()){
             if(playersTurn.existsValidMove(board)){
-                Card playedCard = (Card) playersTurn.getHand().get(playersTurn.determineMove(board));
-                playCard(playedCard);
-                System.out.println(playersTurn.getName() + " played the card: " + playedCard.toString());
-                abilityFunction();
+                if(playersTurn.determineMove(board) != playersTurn.getHand().size()){
+                    Card playedCard = (Card) playersTurn.getHand().get(playersTurn.determineMove(board));
+                    playCard(playedCard);
+                    System.out.println(playersTurn.getName() + " played the card: " + playedCard.toString());
+                    abilityFunction();
+                }else{
+                    System.out.println(playersTurn.getName() + " draws a card \n");
+                    drawCard();
+                    Card drawnCard = (Card) playersTurn.getHand().get(playersTurn.getHand().size()-1);
+                    if(drawnCard.getColour() == board.getLastCard().getColour()|| drawnCard.getSymbol() == board.getLastCard().getSymbol()){
+                        Scanner scanner =  new Scanner(System.in);
+                        System.out.println("Drawn card: "+drawnCard.toString());
+                        System.out.println("Do you want to play the drawn card?  Y/N");
+                        String input = scanner.nextLine();
+                        if(input.toUpperCase().equals("Y")){
+                            playCard(drawnCard);
+                            System.out.println(playersTurn.getName() + " played the card: " + drawnCard.toString());
+                            abilityFunction();
+                        } else if (input.toUpperCase().equals("N")) {
+
+                        }
+                    }
+                }
+
             }else{
                 System.out.println(playersTurn.getName() + " draws a card \n");
                 drawCard();
-                if(playersTurn.existsValidMove(board)){
-                    Card playedCard = (Card) playersTurn.getHand().get(playersTurn.determineMove(board));
-                    playCard(playedCard);
+                Card drawnCard = (Card) playersTurn.getHand().get(playersTurn.getHand().size()-1);
+                if(drawnCard.getColour() == board.getLastCard().getColour()|| drawnCard.getSymbol() == board.getLastCard().getSymbol()){
+                    Scanner scanner =  new Scanner(System.in);
+                    System.out.println("Do you want to play the drawn card?  Y/N");
+                    String input = scanner.nextLine();
+                    if(input.toUpperCase().equals("Y")){
+                        playCard(drawnCard);
+                        System.out.println(playersTurn.getName() + " played the card: " + drawnCard.toString());
+                        abilityFunction();
+                    }
                 }
             }
             changeTurn();
@@ -97,7 +125,6 @@ public class UnoGame implements AbstractCard.Ability {
                 return true;
             }
         }
-
         return false;
     }
 
