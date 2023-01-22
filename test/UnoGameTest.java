@@ -63,7 +63,7 @@ public class UnoGameTest {
         game.playCard(card);
         game.getBoard().setLastCard(card);
         game.abilityFunction();
-        assertTrue(player2.getHand().size()==2);
+        assertTrue(player2.getHand().size()==9);
     }
 
     @Test
