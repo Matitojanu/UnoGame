@@ -40,12 +40,13 @@ public class UnoGame implements AbstractCard.Ability {
     public void run(){
         while(!isGameOver()){
             if(playersTurn.existsValidMove(board)){
-                Card playedCard = (Card) playersTurn.getHand().get(playersTurn.determineMove(board));
-                if(playersTurn.getHand().indexOf(playedCard) < playersTurn.getHand().size()){
+                int indexOfCard = playersTurn.determineMove(board);
+                if(indexOfCard < playersTurn.getHand().size()){
+                    Card playedCard = (Card) playersTurn.getHand().get(indexOfCard);
                     playCard(playedCard);
                     System.out.println(playersTurn.getName() + " played the card: " + playedCard.toString());
                     abilityFunction();
-                }else if(playersTurn.determineMove(board) == playersTurn.getHand().size()){
+                }else if(indexOfCard == playersTurn.getHand().size()){
                     System.out.println(playersTurn.getName() + " draws a card \n");
                     drawCard();
                     Card drawnCard = (Card) playersTurn.getHand().get(playersTurn.getHand().size()-1);
@@ -53,6 +54,7 @@ public class UnoGame implements AbstractCard.Ability {
                         playDrawnCard(drawnCard);
                     }
                 }
+
             }else{
                 System.out.println(playersTurn.getName() + " draws a card \n");
                 drawCard();
@@ -119,12 +121,6 @@ public class UnoGame implements AbstractCard.Ability {
         Deck deck = board.getDeck();
         playersTurn.getHand().remove(playersTurn.getHand().indexOf(card));
         board.setLastCard(card);
-        /*for (int i = 0; i < players.size(); i++) {
-            if ( playersTurn == players.get(i) ) {
-                players.get(i).getHand().remove(players.get(i).getHand().indexOf(card));
-                board.setLastCard((card));
-            }
-        }*/
     }
 
     /**
@@ -189,16 +185,28 @@ public class UnoGame implements AbstractCard.Ability {
                 for(int i = 0; i<4; i++){
                     drawCard();
                 }
-                board.pickColor();
+                if(playersTurn instanceof HumanPlayer) {
+                    board.pickColor();
+                }else{
+                    board.getLastCard().setColour(board.getLastCard().getColour());
+                }
             }
             case REVERSE -> {
-                Collections.reverse(players);
+                if(players.size() == 2){
+                    changeTurn();
+                }else{
+                    Collections.reverse(players);
+                }
             }
             case SKIPTURN -> {
                 changeTurn();
             }
             case CHANGECOLOR -> {
-                board.pickColor();
+                if(playersTurn instanceof HumanPlayer) {
+                    board.pickColor();
+                }else{
+                    board.getLastCard().setColour(board.getLastCard().getColour());
+                }
             }
         }
     }

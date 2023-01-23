@@ -1,20 +1,42 @@
 package ss.uno;
 
+import ss.uno.client.Client;
 
-import ss.uno.player.AI;
-import ss.uno.player.AbstractPlayer;
-import ss.uno.player.HumanPlayer;
-
-import java.util.ArrayList;
+import java.io.IOException;
+import java.net.Socket;
 import java.util.Scanner;
 
-public class UnoTUI {
-    public static void main(String[] args) {
+public class ClientTUI {
+    private static UnoGame game;
+
+    /**
+     * The function will run the entire game
+     */
+    public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         Scanner scn = new Scanner(System.in);
-        ArrayList<AbstractPlayer> abstractPlayers = new ArrayList<>();
+        Socket socket =  new Socket(args[0], Integer.parseInt(args[1]));
+        Client client = new Client(socket);
+        String name;
 
-        System.out.println("Hello! Welcome to UNO! \nThe minimum number of players is 2 and the maximum number is 10.\n" +
+        System.out.println("Hello!");
+        while(true){
+            System.out.println("To join please input your name");
+            if( client.connect() ){
+                client.sendProtocol(Protocol.HANDSHAKE);
+                client.run();
+                name = scanner.nextLine();
+            }
+
+        }
+
+
+        //we can't continue the client untill we know the protocol better because we don't know how it will interact with the server
+
+
+
+
+        /*System.out.println("Hello! Welcome to UNO! \nThe minimum number of players is 2 and the maximum number is 10.\n" +
                 "Please input the number of players that want to play: ");
         String nrOfPlay = scanner.nextLine();
         while (true) {
@@ -45,5 +67,9 @@ public class UnoTUI {
         }
         UnoGame game = new UnoGame(abstractPlayers);
         game.run();
+
+         */
+
+
     }
 }
