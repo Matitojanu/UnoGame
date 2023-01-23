@@ -34,6 +34,7 @@ public abstract class AbstractCard {
     }
 
     private Colour colour;
+    private Symbol symbol;
     private Ability ability;
 
     /**
@@ -54,6 +55,13 @@ public abstract class AbstractCard {
 
     public void setColour(Colour colour){
         this.colour = colour;
+    }
+    public Symbol getSymbol(){
+        return symbol;
+    }
+
+    public void setSymbol(Symbol symbol){
+        this.symbol = symbol;
     }
 
 

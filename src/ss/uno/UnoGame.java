@@ -6,8 +6,10 @@ import ss.uno.cards.Deck;
 import ss.uno.player.AbstractPlayer;
 import ss.uno.player.HumanPlayer;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class UnoGame implements AbstractCard.Ability {
@@ -16,56 +18,68 @@ public class UnoGame implements AbstractCard.Ability {
     private AbstractPlayer player2;
     private AbstractPlayer playersTurn;
     private ArrayList<AbstractPlayer> players;
+    private HashMap<AbstractPlayer, Integer> playersPoints = new HashMap<>();
 
-    public UnoGame(ArrayList<AbstractPlayer> abstractPlayers){
+
+    public UnoGame(ArrayList<AbstractPlayer> abstractPlayers) {
         this.players = abstractPlayers;
         board = new Board(new Deck());
-        board.setLastCard((Card) board.getDeck().getCard());
-        while(true) {
-            if ( board.getLastCard().getColour() == AbstractCard.Colour.WILD ) {
-                board = new Board(new Deck());
-            } else {
-                break;
-            }
+        for (AbstractPlayer player : abstractPlayers) {
+            playersPoints.put(player, 0);
         }
-        for(int i = 0; i < 7; i++){
-            for (int j = 0; j < players.size(); j++) {
-                playersTurn = players.get(j);
-                drawCard();
-            }
-        }
-        playersTurn= players.get(0);
     }
 
-    public void run(){
-        while(!isGameOver()){
-            if(playersTurn.existsValidMove(board)){
-                int indexOfCard = playersTurn.determineMove(board);
-                if(indexOfCard < playersTurn.getHand().size()){
-                    Card playedCard = (Card) playersTurn.getHand().get(indexOfCard);
-                    playCard(playedCard);
-                    System.out.println(playersTurn.getName() + " played the card: " + playedCard.toString());
-                    abilityFunction();
-                }else if(indexOfCard == playersTurn.getHand().size()){
+    public void run() {
+        while (!isGameOver()){
+            board = new Board(new Deck());
+            board.setLastCard((Card) board.getDeck().getCard());
+            while (true) {
+                if (board.getLastCard().getColour() == AbstractCard.Colour.WILD) {
+                    board = new Board(new Deck());
+                } else {
+                    break;
+                }
+            }
+            for (int i = 0; i < 7; i++) {
+                for (int j = 0; j < players.size(); j++) {
+                    playersTurn = players.get(j);
+                    drawCard();
+                }
+            }
+            playersTurn = players.get(0);
+            System.out.println("New round begins! \n");
+            while (!isRoundOver()) {
+                if (playersTurn.existsValidMove(board)) {
+                    int indexOfCard = playersTurn.determineMove(board);
+                    if (indexOfCard < playersTurn.getHand().size()) {
+                        Card playedCard = (Card) playersTurn.getHand().get(indexOfCard);
+                        playCard(playedCard);
+                        System.out.println(playersTurn.getName() + " played the card: " + playedCard.toString());
+                        abilityFunction();
+                    } else if (indexOfCard == playersTurn.getHand().size()) {
+                        System.out.println(playersTurn.getName() + " draws a card \n");
+                        drawCard();
+                        Card drawnCard = (Card) playersTurn.getHand().get(playersTurn.getHand().size() - 1);
+                        if (drawnCard.getColour() == board.getLastCard().getColour() || drawnCard.getColour() == AbstractCard.Colour.WILD || drawnCard.getSymbol() == board.getLastCard().getSymbol()) {
+                            playDrawnCard(drawnCard);
+                        }
+                    }
+
+                } else {
                     System.out.println(playersTurn.getName() + " draws a card \n");
                     drawCard();
-                    Card drawnCard = (Card) playersTurn.getHand().get(playersTurn.getHand().size()-1);
-                    if(drawnCard.getColour() == board.getLastCard().getColour() || drawnCard.getColour() == AbstractCard.Colour.WILD || drawnCard.getSymbol() == board.getLastCard().getSymbol()) {
+                    Card drawnCard = (Card) playersTurn.getHand().get(playersTurn.getHand().size() - 1);
+                    if (drawnCard.getColour() == board.getLastCard().getColour() || drawnCard.getColour() == AbstractCard.Colour.WILD || drawnCard.getSymbol() == board.getLastCard().getSymbol()) {
                         playDrawnCard(drawnCard);
                     }
                 }
-
-            }else{
-                System.out.println(playersTurn.getName() + " draws a card \n");
-                drawCard();
-                Card drawnCard = (Card) playersTurn.getHand().get(playersTurn.getHand().size()-1);
-                if(drawnCard.getColour() == board.getLastCard().getColour() || drawnCard.getColour() == AbstractCard.Colour.WILD || drawnCard.getSymbol() == board.getLastCard().getSymbol()) {
-                    playDrawnCard(drawnCard);
-                }
+                changeTurn();
             }
-            changeTurn();
+            distributePoints();
+            System.out.println("Player " + getRoundWinner().getName() + " won the round!");
+            System.out.println("Player " + getRoundWinner().getName() + " currently has: " + playersPoints.get(getRoundWinner()) + " points.");
         }
-        System.out.println("Player "+getWinner().getName()+" won!");
+        System.out.println("Player " + getGameWinner().getName() + " won the game!");
     }
     /**
      * Checks whose player's turn is it and changes it to the next one
@@ -88,10 +102,10 @@ public class UnoGame implements AbstractCard.Ability {
     }
 
     /**
-     * Returns the player that has won the game
+     * Returns the player that has won the round
      * @return the player that has no more cards in their hand
      */
-    public AbstractPlayer getWinner(){
+    public AbstractPlayer getRoundWinner(){
         for (int i = 0; i < players.size(); i++) {
             if(players.get(i).getHand().size()==0){
                 return players.get(i);
@@ -101,16 +115,101 @@ public class UnoGame implements AbstractCard.Ability {
     }
 
     /**
-     * Returns whether the game is finished or not
-     * @return true if the game has finished, false otherwhise
+     * Returns the player that has won the game
+     * @return the player that has
      */
-    public boolean isGameOver(){
+    public AbstractPlayer getGameWinner(){
+        for(AbstractPlayer player : playersPoints.keySet()){
+            if(playersPoints.get(player) >= 500){
+                return player;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns whether the round is finished or not
+     * @return true if the round has finished, false otherwhise
+     */
+    public boolean isRoundOver(){
         for (int i = 0; i < players.size(); i++) {
             if(players.get(i).getHand().size()==0){
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * Returns whether the game is finished or not
+     * @return true if the game has finished, false otherwhise
+     */
+    public boolean isGameOver(){
+        for(AbstractPlayer player : playersPoints.keySet()){
+            if(playersPoints.get(player) >= 500){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Calculates the points from a round and assigns them to the winner
+     */
+    public void distributePoints(){
+        int totalPoints = playersPoints.get(getRoundWinner());
+        for(AbstractPlayer player : playersPoints.keySet()){
+            for(AbstractCard card : player.getHand()){
+                switch(card.getSymbol()){
+                    case ZERO -> {
+
+                    }
+                    case ONE -> {
+                        totalPoints++;
+                    }
+                    case TWO -> {
+                        totalPoints = totalPoints+2;
+                    }
+                    case THREE -> {
+                        totalPoints = totalPoints+3;
+                    }
+                    case FOUR -> {
+                        totalPoints = totalPoints+4;
+                    }
+                    case FIVE -> {
+                        totalPoints = totalPoints+5;
+                    }
+                    case SIX -> {
+                        totalPoints = totalPoints+6;
+                    }
+                    case SEVEN -> {
+                        totalPoints = totalPoints+7;
+                    }
+                    case EIGHT -> {
+                        totalPoints = totalPoints+8;
+                    }
+                    case NINE -> {
+                        totalPoints = totalPoints+9;
+                    }
+                    case PLUSTWO -> {
+                        totalPoints = totalPoints+20;
+                    }
+                    case REVERSE -> {
+                        totalPoints = totalPoints+20;
+                    }
+                    case SKIPTURN -> {
+                        totalPoints = totalPoints+20;
+                    }
+                    case PLUSFOUR -> {
+                        totalPoints = totalPoints+50;
+                    }
+                    case CHANGECOLOR -> {
+                        totalPoints = totalPoints+50;
+                    }
+                }
+            }
+        }
+        playersPoints.replace(getRoundWinner(), totalPoints);
     }
 
     /**
@@ -125,7 +224,6 @@ public class UnoGame implements AbstractCard.Ability {
 
     /**
      *  This function draws a card from the deck
-     * @param card that will be drawn from the deck
      */
     public void drawCard() {
         for (int i = 0; i < players.size(); i++) {
@@ -143,6 +241,10 @@ public class UnoGame implements AbstractCard.Ability {
         }
     }
 
+    /**
+     * Asks the player whether he wants to play the drawn card. AI always plays the card
+     * @param drawnCard card drawn by the player that can be played
+     */
     public void playDrawnCard(Card drawnCard){
         if(playersTurn instanceof HumanPlayer) {
             Scanner scanner = new Scanner(System.in);
@@ -204,8 +306,15 @@ public class UnoGame implements AbstractCard.Ability {
             case CHANGECOLOR -> {
                 if(playersTurn instanceof HumanPlayer) {
                     board.pickColor();
+                    System.out.println("Player " + playersTurn.getName() + " changed the colour to " + board.getLastCard().getColour().toString() + "\n");
                 }else{
-                    board.getLastCard().setColour(board.getLastCard().getColour());
+                    for(AbstractCard card1 : playersTurn.getHand()) {
+                        if (card1.getColour() != AbstractCard.Colour.WILD) {
+                            System.out.println("Player " + playersTurn.getName() + " changed the colour to " + card1.getColour().toString() + "\n");
+                            board.getLastCard().setColour(card1.getColour());
+                            break;
+                        }
+                    }
                 }
             }
         }
