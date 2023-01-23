@@ -20,7 +20,11 @@ public class Client implements Runnable {
         sock.setSoTimeout(180000);
     }
 
-    public  boolean connect(){
+    /**
+     * This method tries to connect the client to the server by sending the "HANDSHAKE" protocol
+     * @return True if the server sends back to the clienty the same protocol, false if it doesn't send the right protocol
+     */
+    public boolean connect(){
         try{
             out = new PrintWriter(sock.getOutputStream());
             this.sendProtocol(Protocol.HANDSHAKE);
@@ -39,6 +43,9 @@ public class Client implements Runnable {
         }
     }
 
+    /**
+     * This method closes the socket, which means it closes the conection between the server and the client
+     */
     public void close(){
         try {
             sock.close();
@@ -49,6 +56,9 @@ public class Client implements Runnable {
         }
     }
 
+    /**
+     * This method will be called when a nea thread for this class has started
+     */
     @Override
     public void run() {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()))) {
