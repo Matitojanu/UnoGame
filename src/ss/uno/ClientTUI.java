@@ -20,56 +20,25 @@ public class ClientTUI {
         String name;
 
         System.out.println("Hello!");
+        System.out.println("To join please input your name");
         while(true){
-            System.out.println("To join please input your name");
             if( client.connect() ){
                 client.sendProtocol(Protocol.HANDSHAKE);
                 client.run();
                 name = scanner.nextLine();
-            }
-
-        }
-
-
-        //we can't continue the client untill we know the protocol better because we don't know how it will interact with the server
-
-
-
-
-        /*System.out.println("Hello! Welcome to UNO! \nThe minimum number of players is 2 and the maximum number is 10.\n" +
-                "Please input the number of players that want to play: ");
-        String nrOfPlay = scanner.nextLine();
-        while (true) {
-            try {
-                if ( Integer.parseInt(nrOfPlay) < 2 || Integer.parseInt(nrOfPlay) > 10 ) {
-                    System.out.println("The input is not corect! Please input a valid number of players that want to play: ");
-                    nrOfPlay = scanner.nextLine();
-                } else {
+                if(client.sendName(name)){
+                    System.out.println("Successful! Loading...");
                     break;
+                } else {
+                    System.out.println("Name is already taken. Try again.");
                 }
 
-            } catch(NumberFormatException e){
-                System.out.println("The input is not corect! Please input a valid number of players that want to play: ");
-                nrOfPlay = scanner.nextLine();
-        }
-    }
-        int k=0;
-        System.out.println("If you wish to add an AI player, you must put '-' at the begining of their name.");
-        while(k<Integer.parseInt(nrOfPlay)){
-            System.out.println("Please input the name of player " + (k+1) + ": ");
-            String name = scn.nextLine();
-            if ( name.charAt(0) == '-' ) {
-                abstractPlayers.add(k, new AI(name));
-            }else {
-                abstractPlayers.add(k, new HumanPlayer(name));
+            } else {
+                System.out.println("Sorry, we could not establish a connection.");
+                return;
             }
-            k++;
         }
-        UnoGame game = new UnoGame(abstractPlayers);
-        game.run();
-
-         */
-
+        //De facut de la NEWGAME in jos
 
     }
 }
