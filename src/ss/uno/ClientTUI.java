@@ -16,7 +16,7 @@ public class ClientTUI {
         Scanner scanner = new Scanner(System.in);
         Scanner scn = new Scanner(System.in);
         Socket socket =  new Socket(args[0], Integer.parseInt(args[1]));
-        Client client = new Client(socket);
+        Client client = new Client();
         String name;
 
         System.out.println("Hello!");

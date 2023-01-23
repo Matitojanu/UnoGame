@@ -4,19 +4,21 @@ import ss.uno.Protocol;
 import ss.uno.UnoGame;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.regex.Pattern;
 
 public class Client implements Runnable {
     private String name;
     private Socket sock;
     private PrintWriter out;
     private UnoGame game;
+    private final int PORT = 24042;
+    private final InetAddress ADDRESS = InetAddress.getByName("localhost");
 
-    public Client(Socket socket) throws IOException {
-        this.sock = socket;
+    public Client() throws IOException {
+        this.sock = new Socket(ADDRESS, PORT);
         sock.setSoTimeout(180000);
     }
 
@@ -57,7 +59,7 @@ public class Client implements Runnable {
     }
 
     /**
-     * This method will be called when a nea thread for this class has started
+     * This method will be called when a new thread for this class has started
      */
     @Override
     public void run() {
@@ -66,6 +68,7 @@ public class Client implements Runnable {
         while ((msj = in.readLine()) != null){
             switch (msj){
                 //TO DO: all cases of input from server
+
             }
 
         }
@@ -87,7 +90,7 @@ public class Client implements Runnable {
      * @param move the move of the client
      */
     public void sendMove(int move){
-        out.println(move);//TO DO: to send it according to protocol
+        out.println(Protocol.MOVE + Protocol.DELIMITER + move);
     }
 
     /**
@@ -96,13 +99,13 @@ public class Client implements Runnable {
      * @return True if the name isn't already taken and sets the name of the client to the input, False if the name is indeed taken
      */
     public boolean sendName(String name){
-        out.println(Protocol.SETPLAYERNAME + Protocol.DELIMITER + name);
+        out.println(Protocol.PLAYERNAME + Protocol.DELIMITER + name);
         try (BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()))){
             String msgFromServer = in.readLine();
-            if(msgFromServer.equals(Protocol.SETPLAYERNAME + Protocol.DELIMITER + Protocol.ACCEPTED )){
+            if(msgFromServer.equals(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.ACCEPTED )){
                 this.name = name;
                 return true;
-            } else if ( msgFromServer.equals(Protocol.SETPLAYERNAME + Protocol.DELIMITER + Protocol.DENIED )){
+            } else if ( msgFromServer.equals(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.DENIED )){
                 return false;
             }
         } catch (SocketTimeoutException e){
