@@ -15,12 +15,9 @@ public class AI extends AbstractPlayer {
     @Override
     public boolean existsValidMove(Board board){
         for (int index = 0; index < getHand().size(); index++) {
-            if ( getHand().get(index).getColour() == board.getLastCard().getColour() ){
+            if ( getHand().get(index).getColour() == board.getLastCard().getColour() || getHand().get(index).getColour() == AbstractCard.Colour.WILD ){
                 validMove = index;
                 return true;
-            /*} else if ( ((Card) getHand().get(index)).getNumber() == board.getLastCard().getNumber() ) {
-                validMove = index;
-                return true;*/
             } else if ( ((Card) getHand().get(index)).getSymbol() == board.getLastCard().getSymbol() ) {
                 validMove = index;
                 return true;
