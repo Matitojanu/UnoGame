@@ -11,8 +11,7 @@ public class Protocol {
 
     public static final String JOINSERVER = "JOINSERVER";
     public static final String ERROR = "ERROR";
-    public static final String SERVERFULL = "SERVERFULL";
-    public static final String NAMETAKEN = "NAMETAKEN";
+    public static final String SERVERFULL = "SERVERFULL"; //will not be used for now
 
     public static final String NEWGAME = "NEWGAME";
     public static final String JOINGAME = "JOINGAME";
