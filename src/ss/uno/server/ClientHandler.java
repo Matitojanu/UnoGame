@@ -23,6 +23,7 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
+        System.out.println("Client started");
         while(running) {
             try {
                 String message = in.readLine();
@@ -41,7 +42,7 @@ public class ClientHandler implements Runnable {
     }
 
     public void handleMessage(String message){
-
+        out.println(message);
     }
 
 

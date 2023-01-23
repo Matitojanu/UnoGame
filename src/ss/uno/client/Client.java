@@ -10,16 +10,16 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 public class Client implements Runnable {
-    private String name;
-    private Socket sock;
-    private PrintWriter out;
-    private UnoGame game;
+    private String _name;
+    private Socket _sock;
+    private PrintWriter _out;
+    private UnoGame _game;
     private final int PORT = 24042;
     private final InetAddress ADDRESS = InetAddress.getByName("localhost");
 
     public Client() throws IOException {
-        this.sock = new Socket(ADDRESS, PORT);
-        sock.setSoTimeout(180000);
+        this._sock = new Socket(ADDRESS, PORT);
+        _sock.setSoTimeout(180000);
     }
 
     /**
@@ -28,9 +28,9 @@ public class Client implements Runnable {
      */
     public boolean connect(){
         try{
-            out = new PrintWriter(sock.getOutputStream());
+            _out = new PrintWriter(_sock.getOutputStream());
             this.sendProtocol(Protocol.HANDSHAKE);
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()))){
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(_sock.getInputStream()))){
                 String msgFromServer = in.readLine();
                 if(msgFromServer.equals(Protocol.HANDSHAKE)){ //this can wait for the server infinetly so we need to find solution about it
                     new Thread(this).start();
@@ -50,7 +50,7 @@ public class Client implements Runnable {
      */
     public void close(){
         try {
-            sock.close();
+            _sock.close();
         } catch (SocketException e){
             System.out.println("Socket was closed");
         } catch (IOException e) {
@@ -63,11 +63,13 @@ public class Client implements Runnable {
      */
     @Override
     public void run() {
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()))) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(_sock.getInputStream()))) {
         String msj;
         while ((msj = in.readLine()) != null){
             switch (msj){
+                default :
                 //TO DO: all cases of input from server
+                _out.println(msj);
 
             }
 
@@ -82,7 +84,7 @@ public class Client implements Runnable {
      * @param name the username of the client
      */
     public void sendUserNameForChat (String name){
-        out.println("[ " + name + " ] : ");
+        _out.println("[ " + name + " ] : ");
     }
 
     /**
@@ -90,7 +92,7 @@ public class Client implements Runnable {
      * @param move the move of the client
      */
     public void sendMove(int move){
-        out.println(Protocol.MOVE + Protocol.DELIMITER + move);
+        _out.println(Protocol.MOVE + Protocol.DELIMITER + move);
     }
 
     /**
@@ -99,11 +101,11 @@ public class Client implements Runnable {
      * @return True if the name isn't already taken and sets the name of the client to the input, False if the name is indeed taken
      */
     public boolean sendName(String name){
-        out.println(Protocol.PLAYERNAME + Protocol.DELIMITER + name);
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()))){
+        _out.println(Protocol.PLAYERNAME + Protocol.DELIMITER + name);
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(_sock.getInputStream()))){
             String msgFromServer = in.readLine();
             if(msgFromServer.equals(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.ACCEPTED )){
-                this.name = name;
+                this._name = name;
                 return true;
             } else if ( msgFromServer.equals(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.DENIED )){
                 return false;
@@ -121,14 +123,14 @@ public class Client implements Runnable {
      * @param mesage the protocol
      */
     public void sendProtocol(String mesage){
-        out.println(mesage);
+        _out.println(mesage);
     }
 
     public UnoGame getGame() {
-        return game;
+        return _game;
     }
 
     public void setGame(UnoGame game) {
-        this.game = game;
+        this._game = game;
     }
 }
