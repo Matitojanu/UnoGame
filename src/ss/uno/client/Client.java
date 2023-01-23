@@ -33,7 +33,6 @@ public class Client implements Runnable {
             } catch (SocketTimeoutException e){
                 System.out.println("The server has not responded");
             }
-
             return false;
         } catch (IOException e) {
             return false;
@@ -74,22 +73,27 @@ public class Client implements Runnable {
     }
 
     /**
-     * This method sends the move of the client to the client handler
+     * This method sends the move of the client to the client handler, according to the protocol
      * @param move the move of the client
      */
     public void sendMove(int move){
-        out.println(move); //TO DO: to check for protocol
+        out.println(move);//TO DO: to send it according to protocol
     }
 
+    /**
+     * This method sends the name of the player to the server for the first time and waits for the server to send whether it si accepted or denied, according to the protocol
+     * @param name of the client
+     * @return True if the name isn't already taken and sets the name of the client to the input, False if the name is indeed taken
+     */
     public boolean sendName(String name){
         out.println(Protocol.SETPLAYERNAME + Protocol.DELIMITER + name);
         try (BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()))){
             String msgFromServer = in.readLine();
             if(msgFromServer.equals(Protocol.SETPLAYERNAME + Protocol.DELIMITER + Protocol.ACCEPTED )){
-                System.out.println("Successful! Loading...");
+                this.name = name;
                 return true;
             } else if ( msgFromServer.equals(Protocol.SETPLAYERNAME + Protocol.DELIMITER + Protocol.DENIED )){
-                System.out.println("Name is already Taken. Try again");
+                return false;
             }
         } catch (SocketTimeoutException e){
             System.out.println("The server has not responded");
@@ -99,7 +103,19 @@ public class Client implements Runnable {
         return false;
     }
 
+    /**
+     * This method sends to the server a protocol message
+     * @param mesage the protocol
+     */
     public void sendProtocol(String mesage){
         out.println(mesage);
+    }
+
+    public UnoGame getGame() {
+        return game;
+    }
+
+    public void setGame(UnoGame game) {
+        this.game = game;
     }
 }
