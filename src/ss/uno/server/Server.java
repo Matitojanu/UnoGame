@@ -1,23 +1,20 @@
 package ss.uno.server;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Server implements Runnable {
     public static int port;
-    private List<ClientHandler> handlers;
-    private ServerSocket serverSocket;
-    private boolean running = true;
+    private List<ClientHandler> _handlers; //_ is best practice to diferentiate members of the class from local parameters
+    private ServerSocket _serverSocket;
+    private boolean _running = true;
 
-    public Server(ServerSocket serverSocket){
-        this.handlers = new ArrayList<>();
-        this.serverSocket = serverSocket;
+    public Server() throws IOException {
+        this._handlers = new ArrayList<>();
     }
 
     public void start(){
@@ -25,9 +22,9 @@ public class Server implements Runnable {
     }
 
     public void shutDown(){
-        running = false;
+        _running = false;
         try{
-            serverSocket.close();
+            _serverSocket.close();
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -36,18 +33,18 @@ public class Server implements Runnable {
     @Override
     public void run() {
         setUp();
-        running = true;
+        _running = true;
         int threadCount = 0;
-        while(running){
+        while(_running){
             try {
-                Socket socket = serverSocket.accept();
+                Socket socket = _serverSocket.accept();
                 ClientHandler clientHandler = new ClientHandler(socket, "thread-"+threadCount);
                 threadCount++;
-                handlers.add(clientHandler);
+                _handlers.add(clientHandler);
                 new Thread(clientHandler).start();
             } catch (IOException e){
                 System.out.println("Error");
-                running = false;
+                _running = false;
             }
         }
         shutDown();
@@ -58,9 +55,10 @@ public class Server implements Runnable {
         System.out.println("Enter port number: ");
         port = scanner.nextInt();
         try{
-            ServerSocket serverSocket = new ServerSocket(port);
+
             System.out.println("Started server at port "+port);
-            Server server = new Server(serverSocket);
+            _serverSocket = new ServerSocket(port);
+            //Server server = new Server(port);
 
         } catch (IOException e) {
             System.out.println("Could not start server at port "+port);
