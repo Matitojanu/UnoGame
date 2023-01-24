@@ -8,8 +8,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.sql.SQLOutput;
 
-public class Client implements Runnable {
+public class  Client implements Runnable {
     private String _name;
     private Socket _sock;
     private PrintWriter _out;
@@ -21,10 +22,9 @@ public class Client implements Runnable {
         this._sock = new Socket(ADDRESS, PORT);
         _sock.setSoTimeout(180000);
     }
-
     /**
      * This method tries to connect the client to the server by sending the "HANDSHAKE" protocol
-     * @return True if the server sends back to the clienty the same protocol, false if it doesn't send the right protocol
+     * @return True if the server sends back to the client the same protocol, false if it doesn't send the right protocol
      */
     public boolean connect(){
         try{
@@ -102,6 +102,7 @@ public class Client implements Runnable {
      */
     public boolean sendName(String name){
         _out.println(Protocol.PLAYERNAME + Protocol.DELIMITER + name);
+        _out.flush();
         try (BufferedReader in = new BufferedReader(new InputStreamReader(_sock.getInputStream()))){
             String msgFromServer = in.readLine();
             if(msgFromServer.equals(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.ACCEPTED )){
@@ -117,13 +118,13 @@ public class Client implements Runnable {
         }
         return false;
     }
-
     /**
      * This method sends to the server a protocol message
-     * @param mesage the protocol
+     * @param message the protocol
      */
-    public void sendProtocol(String mesage){
-        _out.println(mesage);
+    public void sendProtocol(String message){
+        _out.println(message);
+        _out.flush();
     }
 
     public UnoGame getGame() {

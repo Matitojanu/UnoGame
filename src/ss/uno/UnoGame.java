@@ -165,46 +165,46 @@ public class UnoGame implements AbstractCard.Ability {
 
                     }
                     case ONE -> {
-                        totalPoints++;
+                        totalPoints += 1;
                     }
                     case TWO -> {
-                        totalPoints = totalPoints+2;
+                        totalPoints += 2;
                     }
                     case THREE -> {
-                        totalPoints = totalPoints+3;
+                        totalPoints += 3;
                     }
                     case FOUR -> {
-                        totalPoints = totalPoints+4;
+                        totalPoints += 4;
                     }
                     case FIVE -> {
-                        totalPoints = totalPoints+5;
+                        totalPoints += 5;
                     }
                     case SIX -> {
-                        totalPoints = totalPoints+6;
+                        totalPoints += 6;
                     }
                     case SEVEN -> {
-                        totalPoints = totalPoints+7;
+                        totalPoints += 7;
                     }
                     case EIGHT -> {
-                        totalPoints = totalPoints+8;
+                        totalPoints += 8;
                     }
                     case NINE -> {
-                        totalPoints = totalPoints+9;
+                        totalPoints += 9;
                     }
                     case PLUSTWO -> {
-                        totalPoints = totalPoints+20;
+                        totalPoints += 20;
                     }
                     case REVERSE -> {
-                        totalPoints = totalPoints+20;
+                        totalPoints += 20;
                     }
                     case SKIPTURN -> {
-                        totalPoints = totalPoints+20;
+                        totalPoints += 20;
                     }
                     case PLUSFOUR -> {
-                        totalPoints = totalPoints+50;
+                        totalPoints += 50;
                     }
                     case CHANGECOLOR -> {
-                        totalPoints = totalPoints+50;
+                        totalPoints += 50;
                     }
                 }
             }
