@@ -64,16 +64,16 @@ public class  Client implements Runnable {
     @Override
     public void run() {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(_sock.getInputStream()))) {
-        String msj;
-        while ((msj = in.readLine()) != null){
-            switch (msj){
-                default :
-                //TO DO: all cases of input from server
-                _out.println(msj);
+            String msj;
+            while ((msj = in.readLine()) != null){
+                switch (msj){
+                    default :
+                    //TO DO: all cases of input from server
+                    _out.println(msj);
+
+                }
 
             }
-
-        }
         } catch (IOException e) {
             this.close();
         }

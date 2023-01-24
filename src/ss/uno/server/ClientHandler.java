@@ -36,18 +36,23 @@ public class ClientHandler implements Runnable {
             System.out.println("Failed to Handshake");
         }
         System.out.println("Starting thread ");
-        while(_running) {
-            try (_in) {
-                String message = _in.readLine();
-                if ( message == null ) {
-                    System.out.println("The message is null!");
-                    _running = false;
-                    continue;
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(_socket.getInputStream()))) {
+            String line;
+            while ((line = _in.readLine()) != null) {
+                try (_in) {
+                    String message = _in.readLine();
+                    if (message == null) {
+                        System.out.println("The message is null!");
+                        _running = false;
+                        continue;
+                    }
+                    handleMessage(message);
+                } catch (IOException e) {
+                    System.out.println("Error");
                 }
-                handleMessage(message);
-            } catch (IOException e) {
-                System.out.println("Input not initialized");
             }
+        }catch (IOException e){
+            System.out.println("Error");
         }
     }
 
@@ -73,7 +78,6 @@ public class ClientHandler implements Runnable {
     }
 
     public void checkName(String name) throws IOException {
-        _name = name;
         sendProtocol(Protocol.ACCEPTED);
     }
 }
