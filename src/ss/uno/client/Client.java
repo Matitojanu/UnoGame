@@ -1,30 +1,35 @@
 package ss.uno.client;
 
+import ss.uno.ClientTUI;
 import ss.uno.Protocol;
 import ss.uno.UnoGame;
+import ss.uno.cards.AbstractCard;
+import ss.uno.cards.Card;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.sql.SQLOutput;
+import java.util.ArrayList;
 
-public class  Client implements Runnable {
+import static ss.uno.ClientTUI.*;
+
+public class Client implements Runnable {
     private String _name;
     private Socket _sock;
     private PrintWriter _out;
     private UnoGame _game;
-    private final int PORT = 24042;
-    private final InetAddress ADDRESS = InetAddress.getByName("localhost");
+
 
     public Client() throws IOException {
-        this._sock = new Socket(ADDRESS, PORT);
+        this._sock = new Socket(Protocol.IPADDRESS, Protocol.PORT);
         _sock.setSoTimeout(180000);
     }
+
     /**
      * This method tries to connect the client to the server by sending the "HANDSHAKE" protocol
-     * @return True if the server sends back to the client the same protocol, false if it doesn't send the right protocol
+     * @return True if the server sends back to the clienty the same protocol, false if it doesn't send the right protocol
      */
     public boolean connect(){
         try{
@@ -64,16 +69,47 @@ public class  Client implements Runnable {
     @Override
     public void run() {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(_sock.getInputStream()))) {
-            String msj;
-            while ((msj = in.readLine()) != null){
-                switch (msj){
-                    default :
-                    //TO DO: all cases of input from server
-                    _out.println(msj);
+            String line;
+            while ((line = in.readLine()) != null){
+                String[] words  = line.split(Protocol.DELIMITER);
+                switch (words[0]){
+                    case Protocol.ERROR:{
+                        if(words[1] == Protocol.JOINERROR) {
+                            joinErrorTUI();
+                        }
+                    }
+                    case Protocol.CURRENTPLAYER: {
+                        currentPlayerTUI(_game.getPlayersTurn().getName());
+                    }
+                    case Protocol.UPDATEFIELD :{
+                        AbstractCard.Colour cardColour = null;
+                        AbstractCard.Symbol cardSymbol = null;
+                        for(AbstractCard.Colour colour : AbstractCard.Colour.values()){
+                            if(colour.toString().toUpperCase() == words[1].split(Protocol.DELIMITERINITEMS)[0].toUpperCase()){
+                                cardColour = colour;
+                            }
+                        }
+                        for(AbstractCard.Symbol symbol : AbstractCard.Symbol.values()){
+                            if(symbol.toString().toUpperCase() == words[1].split(Protocol.DELIMITERINITEMS)[1].toUpperCase()){
+                                cardSymbol = symbol;
+                            }
+                        }
+                        Card card = new Card(cardColour, cardSymbol);
+                        _game.playCard(card);
+                        updatedFieldTUI(card);
+                    }
+                    case Protocol.MOVE:{
 
-                }
+                    }
+                    case Protocol.DRAW:{
+
+                    }
+
+
 
             }
+
+        }
         } catch (IOException e) {
             this.close();
         }
@@ -118,6 +154,7 @@ public class  Client implements Runnable {
         }
         return false;
     }
+
     /**
      * This method sends to the server a protocol message
      * @param message the protocol
