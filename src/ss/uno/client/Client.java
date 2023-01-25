@@ -4,11 +4,13 @@ import ss.uno.Protocol;
 import ss.uno.UnoGame;
 import ss.uno.cards.AbstractCard;
 import ss.uno.cards.Card;
+import ss.uno.player.AbstractPlayer;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static ss.uno.ClientTUI.*;
@@ -20,6 +22,7 @@ public class Client implements Runnable {
     private UnoGame _game;
     private BufferedReader _in;
     private boolean _handshakeComplete;
+    private boolean _inGame = false;
 
 
     public Client() throws IOException {
@@ -69,14 +72,26 @@ public class Client implements Runnable {
     public void run() {
         try  {
             String line;
+            String[] servers;
             while ((line = _in.readLine()) != null){
                 String[] words  = line.split(Protocol.DELIMITER);
                 if(_handshakeComplete){
                     switch (words[0]){
+                        case Protocol.SERVERLIST:{
+                            servers = words[1].split(Protocol.DELIMITER);
+                            serverListTUI(servers);
+                        }
                         case Protocol.ERROR:{
                             if(words[1] == Protocol.JOINERROR) {
                                 joinErrorTUI();
+                                _inGame = false;
                             }
+                        }
+                        case Protocol.WAIT:{
+                            _inGame = true;
+                        }
+                        case Protocol.START:{
+                            _inGame = true;
                         }
                         case Protocol.CURRENTPLAYER: {
                             currentPlayerTUI(_game.getPlayersTurn().getName());
@@ -97,15 +112,23 @@ public class Client implements Runnable {
                             Card card = new Card(cardColour, cardSymbol);
                             if( _game.isCardValid(card) ) {
                                 _game.playCard(card);
+                                _game.abilityFunction();
                                 updatedFieldTUI(card);
                             }
                         }
                         case Protocol.MOVE:{
+                            AbstractPlayer player = _game.getPlayersTurn();
+                            showPlayerHandTUI(player);
+                            ArrayList<AbstractCard> hand = player.getHand();
+                            int move = getMoveFromUserTUI();
+                            if(player.existsValidMove(_game.getBoard())){
+                                if(_game.isCardValid((Card) player.getHand().get(move))){
+                                    _out.println(Protocol.MOVE + Protocol.DELIMITER + move);
+                                }
+                            }
 
-                        }
-                        case Protocol.DRAW:{
-
-                        }
+                        }//not done
+                        case Protocol.DRAW:{}
 
 
 
@@ -131,7 +154,16 @@ public class Client implements Runnable {
      * @param move the move of the client
      */
     public void sendMove(int move){
-        _out.println(Protocol.MOVE + Protocol.DELIMITER + move);
+
+        try {
+            String msgServer;
+            if ( (msgServer = _in.readLine()) != null ){
+                _out.println(Protocol.MOVE + Protocol.DELIMITER + move);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     /**
@@ -153,7 +185,7 @@ public class Client implements Runnable {
         } catch (SocketTimeoutException e){
             System.out.println("The server has not responded");
         } catch (IOException e) {
-            System.out.println("IO exception");
+            System.out.println("IO exception when sending name");
         }
         return false;
     }
@@ -194,5 +226,9 @@ public class Client implements Runnable {
 
     public void setGame(UnoGame game) {
         this._game = game;
+    }
+
+    public boolean is_inGame() {
+        return _inGame;
     }
 }
