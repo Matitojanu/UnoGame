@@ -1,17 +1,15 @@
 package ss.uno.client;
 
-import ss.uno.ClientTUI;
 import ss.uno.Protocol;
 import ss.uno.UnoGame;
 import ss.uno.cards.AbstractCard;
 import ss.uno.cards.Card;
 
 import java.io.*;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
+import java.util.List;
 
 import static ss.uno.ClientTUI.*;
 
@@ -20,11 +18,13 @@ public class Client implements Runnable {
     private Socket _sock;
     private PrintWriter _out;
     private UnoGame _game;
+    private BufferedReader _in;
 
 
     public Client() throws IOException {
         this._sock = new Socket(Protocol.IPADDRESS, Protocol.PORT);
         _sock.setSoTimeout(180000);
+        _in = new BufferedReader(new InputStreamReader(_sock.getInputStream()));
     }
 
     /**
@@ -35,8 +35,8 @@ public class Client implements Runnable {
         try{
             _out = new PrintWriter(_sock.getOutputStream());
             this.sendProtocol(Protocol.HANDSHAKE);
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(_sock.getInputStream()))){
-                String msgFromServer = in.readLine();
+            try {
+                String msgFromServer = _in.readLine();
                 if(msgFromServer.equals(Protocol.HANDSHAKE)){ //this can wait for the server infinetly so we need to find solution about it
                     new Thread(this).start();
                     return true;
@@ -68,9 +68,9 @@ public class Client implements Runnable {
      */
     @Override
     public void run() {
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(_sock.getInputStream()))) {
+        try  {
             String line;
-            while ((line = in.readLine()) != null){
+            while ((line = _in.readLine()) != null){
                 String[] words  = line.split(Protocol.DELIMITER);
                 switch (words[0]){
                     case Protocol.ERROR:{
@@ -139,8 +139,8 @@ public class Client implements Runnable {
     public boolean sendName(String name){
         _out.println(Protocol.PLAYERNAME + Protocol.DELIMITER + name);
         _out.flush();
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(_sock.getInputStream()))){
-            String msgFromServer = in.readLine();
+        try {
+            String msgFromServer = _in.readLine();
             if(msgFromServer.equals(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.ACCEPTED )){
                 this._name = name;
                 return true;
@@ -162,6 +162,27 @@ public class Client implements Runnable {
     public void sendProtocol(String message){
         _out.println(message);
         _out.flush();
+    }
+
+    /**
+     * This function sends the List of features as a String to the server, according to the protocol
+     * @param features the list of functionalities the client chose
+     */
+    public void sendFunctionalities(List<String> features) {
+        try {
+            if(_in.readLine() == Protocol.FUNCTIONALITIES) {
+                String protocolMsg = features.get(0);
+                for (int i = 1; i < features.size(); i++) {
+                    if ( !protocolMsg.contains(features.get(i)) ) {
+                        protocolMsg = Protocol.DELIMITER + features.get(i);
+                    }
+                }
+                _out.println(protocolMsg);
+                _out.flush();
+            }
+        } catch (IOException e){
+            System.out.println("The server did not request list of functionalities.");
+        }
     }
 
     public UnoGame getGame() {
