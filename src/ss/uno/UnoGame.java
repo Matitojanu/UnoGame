@@ -212,6 +212,14 @@ public class UnoGame implements AbstractCard.Ability {
         playersPoints.replace(getRoundWinner(), totalPoints);
     }
 
+    public boolean isCardValid(Card card){
+        Card lastCard = getBoard().getLastCard();
+        if(card.getSymbol()== lastCard.getSymbol() || card.getColour()==lastCard.getColour()){
+            return true;
+        }
+        return false;
+    }
+
     /**
      * This function plays the card that is given as parameters
      * @param card that will be played
