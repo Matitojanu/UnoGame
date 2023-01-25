@@ -1,17 +1,18 @@
 package ss.uno;
 
+import ss.uno.cards.AbstractCard;
 import ss.uno.cards.Card;
 import ss.uno.client.Client;
 import ss.uno.player.AbstractPlayer;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class ClientTUI {
     private static UnoGame game;
+    private static Scanner _scanner = new Scanner(System.in);
 
     public static void currentPlayerTUI(String name){
         System.out.println("It is players' " + name + " turn!");
@@ -25,41 +26,109 @@ public class ClientTUI {
         System.out.println("The index you inputed is not valid. Please try again.");
     }
 
+    public static int getMoveFromUserTUI(){
+        _scanner = new Scanner(System.in);
+        System.out.println("Please input the index of the card you wish to play:");
+        String strMove = _scanner.nextLine();
+        int move = Integer.parseInt(strMove);
+        return move;
+    }
+
+    public static int getIndexOfServerFromUserTUI(){
+        System.out.println("Please input the index of the server you wish to join. If ypu wish to create a game, press 0. If you do not wish to continue, input -1:");
+        String strIndex = _scanner.nextLine();
+        int i = Integer.parseInt(strIndex);
+        return i;
+    }
+
+    public static void showPlayerHandTUI(AbstractPlayer player){
+        ArrayList<AbstractCard> hand = player.getHand();
+        for (int i = 1; i <=hand.size(); i++) {
+            System.out.println(i + hand.get(i-1).toString());
+        }
+    }
+
+    public static void serverListTUI(String[] servers){
+        for (int i = 0; i < servers.length; i++) {
+            String[] arguments = servers[i].split(Protocol.DELIMITERINITEMS);
+            String serverName = arguments[0];
+            int maxPlayers = Integer.parseInt(arguments[1]);
+            int playerAmmount = Integer.parseInt(arguments[2]);
+
+            System.out.println((i+1) + ": " + serverName + " (" + maxPlayers + " max players, " + playerAmmount + " players already in game)");
+        }
+    }
+
+    public static String createNewGameTUI(){
+        String result;
+        System.out.println("Please input the name of the server:");
+        String serverName  = _scanner.nextLine();
+        int maxPlayers;
+        while(true) {
+            System.out.println("Please input the maximum amount of players allowed in this game:");
+            maxPlayers = Integer.parseInt(_scanner.nextLine());
+            if(maxPlayers>1){
+                break;
+            }
+            System.out.println("Wrong input. The minimum amount of players is 2. Please try again.");
+        }
+        return result = serverName + " " + maxPlayers;
+    }
+
     /**
      * The function will run the entire game
      */
     public static void main(String[] args) throws IOException {
-        Scanner scanner = new Scanner(System.in);
-        Scanner scn = new Scanner(System.in);
+
         Client client = new Client();
         String name;
         List<String> functionalitiesChosen =  new ArrayList<>();
+        boolean addingFunctionality = true;
+        boolean wishToPlay= true;
 
         System.out.println("Hello!");
         if( client.connect() ){
             while (true) {
                 System.out.println("To join please input your name");
-                name = scanner.nextLine();
+                name = _scanner.nextLine();
                 if ( client.sendName(name) ) {
                     System.out.println("Successful! Loading...");
-                    while (true) {
+                    while (addingFunctionality) {
                         System.out.println("Please input the index of the functionality you wish to add:");
                         for (int i = 0; i < Protocol.FUNCTIONALITYUSER.length; i++) {
                             System.out.println((i + 1) + " - " + Protocol.FUNCTIONALITYUSER[i]);
                         }
                         System.out.println("If you don't want any additional functionalities, press 0.");
-                        int functionalityIndex = Integer.parseInt(scanner.nextLine());
+                        int functionalityIndex = Integer.parseInt(_scanner.nextLine());
                         if(functionalityIndex==0){
-                            break;
+                            addingFunctionality = false;
                         }
                         functionalitiesChosen.add(Protocol.FUNCTIONALITYARR[functionalityIndex-1]);
                         System.out.println("If you wish add more functionalities, press 'y'. Otherwise press 'n'.");
-                        String response = scanner.nextLine();
+                        String response = _scanner.nextLine();
                         if ( response.toLowerCase().equals("n") ) {
-                            break;
+                            addingFunctionality = false;
                         }
                     }
                     client.sendFunctionalities(functionalitiesChosen);
+                    new Thread(client).start(); //TODO: hopefully servers are shown here
+                    while(wishToPlay) {
+                        while(!client.is_inGame()){
+                            int index = getIndexOfServerFromUserTUI();
+                            if(index==-1){
+                                System.out.println("You have been disconected. Goodbye!");
+                                client.close();
+                                return;
+                            }
+                            if(index==0){
+                                String[] newGameString = createNewGameTUI().split(" ");
+                                String serverName = newGameString[0];
+                                int maxPlayers = Integer.parseInt(newGameString[1]);
+                                client.sendProtocol(Protocol.NEWGAME + Protocol.DELIMITER + serverName + Protocol.DELIMITER + maxPlayers);
+                            } //TODO: to verrify that they don't ask for gamemode when creating game
+                            client.sendProtocol(Protocol.JOINGAME + Protocol.DELIMITER + index);
+                        }
+                    }
                 } else {
                     System.out.println("Name is already taken. Try again.");
                 }
@@ -69,7 +138,7 @@ public class ClientTUI {
             return;
         }
 
-        //De facut de la NEWGAME
+        //TODO: from WAIT down
 
     }
 }
