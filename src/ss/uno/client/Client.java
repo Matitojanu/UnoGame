@@ -19,12 +19,15 @@ public class Client implements Runnable {
     private PrintWriter _out;
     private UnoGame _game;
     private BufferedReader _in;
+    private boolean _handshakeComplete;
 
 
     public Client() throws IOException {
         this._sock = new Socket(Protocol.IPADDRESS, Protocol.PORT);
         _sock.setSoTimeout(180000);
         _in = new BufferedReader(new InputStreamReader(_sock.getInputStream()));
+        _out = new PrintWriter(_sock.getOutputStream());
+        _handshakeComplete = false;
     }
 
     /**
@@ -32,22 +35,18 @@ public class Client implements Runnable {
      * @return True if the server sends back to the clienty the same protocol, false if it doesn't send the right protocol
      */
     public boolean connect(){
-        try{
-            _out = new PrintWriter(_sock.getOutputStream());
-            this.sendProtocol(Protocol.HANDSHAKE);
-            try {
-                String msgFromServer = _in.readLine();
-                if(msgFromServer.equals(Protocol.HANDSHAKE)){ //this can wait for the server infinetly so we need to find solution about it
-                    new Thread(this).start();
-                    return true;
-                }
-            } catch (SocketTimeoutException e){
-                System.out.println("The server has not responded");
+        this.sendProtocol(Protocol.HANDSHAKE);
+        try {
+            String msgFromServer = _in.readLine();
+            if(msgFromServer.equals(Protocol.HANDSHAKE)){ //this can wait for the server infinetly so we need to find solution about it
+                new Thread(this).start();
+                _handshakeComplete=true;
+                return true;
             }
-            return false;
-        } catch (IOException e) {
-            return false;
+        } catch (IOException e){
+            System.out.println("IO exception while handshake");
         }
+        return false;
     }
 
     /**
@@ -72,44 +71,48 @@ public class Client implements Runnable {
             String line;
             while ((line = _in.readLine()) != null){
                 String[] words  = line.split(Protocol.DELIMITER);
-                switch (words[0]){
-                    case Protocol.ERROR:{
-                        if(words[1] == Protocol.JOINERROR) {
-                            joinErrorTUI();
-                        }
-                    }
-                    case Protocol.CURRENTPLAYER: {
-                        currentPlayerTUI(_game.getPlayersTurn().getName());
-                    }
-                    case Protocol.UPDATEFIELD :{
-                        AbstractCard.Colour cardColour = null;
-                        AbstractCard.Symbol cardSymbol = null;
-                        for(AbstractCard.Colour colour : AbstractCard.Colour.values()){
-                            if(colour.toString().toUpperCase() == words[1].split(Protocol.DELIMITERINITEMS)[0].toUpperCase()){
-                                cardColour = colour;
+                if(_handshakeComplete){
+                    switch (words[0]){
+                        case Protocol.ERROR:{
+                            if(words[1] == Protocol.JOINERROR) {
+                                joinErrorTUI();
                             }
                         }
-                        for(AbstractCard.Symbol symbol : AbstractCard.Symbol.values()){
-                            if(symbol.toString().toUpperCase() == words[1].split(Protocol.DELIMITERINITEMS)[1].toUpperCase()){
-                                cardSymbol = symbol;
+                        case Protocol.CURRENTPLAYER: {
+                            currentPlayerTUI(_game.getPlayersTurn().getName());
+                        }
+                        case Protocol.UPDATEFIELD :{
+                            AbstractCard.Colour cardColour = null;
+                            AbstractCard.Symbol cardSymbol = null;
+                            for(AbstractCard.Colour colour : AbstractCard.Colour.values()){
+                                if(colour.toString().toUpperCase() == words[1].split(Protocol.DELIMITERINITEMS)[0].toUpperCase()){
+                                    cardColour = colour;
+                                }
+                            }
+                            for(AbstractCard.Symbol symbol : AbstractCard.Symbol.values()){
+                                if(symbol.toString().toUpperCase() == words[1].split(Protocol.DELIMITERINITEMS)[1].toUpperCase()){
+                                    cardSymbol = symbol;
+                                }
+                            }
+                            Card card = new Card(cardColour, cardSymbol);
+                            if( _game.isCardValid(card) ) {
+                                _game.playCard(card);
+                                updatedFieldTUI(card);
                             }
                         }
-                        Card card = new Card(cardColour, cardSymbol);
-                        _game.playCard(card);
-                        updatedFieldTUI(card);
-                    }
-                    case Protocol.MOVE:{
+                        case Protocol.MOVE:{
+
+                        }
+                        case Protocol.DRAW:{
+
+                        }
+
+
 
                     }
-                    case Protocol.DRAW:{
-
-                    }
-
-
+                }
 
             }
-
-        }
         } catch (IOException e) {
             this.close();
         }
