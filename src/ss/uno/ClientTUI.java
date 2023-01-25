@@ -125,7 +125,7 @@ public class ClientTUI {
                                 String serverName = newGameString[0];
                                 int maxPlayers = Integer.parseInt(newGameString[1]);
                                 client.sendProtocol(Protocol.NEWGAME + Protocol.DELIMITER + serverName + Protocol.DELIMITER + maxPlayers);
-                            } //TODO: to verrify that they don't ask for gamemode when creating game
+                            } //TODO: to add gamemode when creating game
                             client.sendProtocol(Protocol.JOINGAME + Protocol.DELIMITER + index);
                         }
                     }
