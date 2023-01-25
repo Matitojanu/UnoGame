@@ -6,6 +6,8 @@ import ss.uno.player.AbstractPlayer;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class ClientTUI {
@@ -31,6 +33,7 @@ public class ClientTUI {
         Scanner scn = new Scanner(System.in);
         Client client = new Client();
         String name;
+        List<String> functionalitiesChosen =  new ArrayList<>();
 
         System.out.println("Hello!");
         if( client.connect() ){
@@ -39,14 +42,24 @@ public class ClientTUI {
                 name = scanner.nextLine();
                 if ( client.sendName(name) ) {
                     System.out.println("Successful! Loading...");
-                    System.out.println("Please input the index of the functionality you wish to add:");
-                    String functionalities = scanner.nextLine();
-                    String[] functionalitiesArr = functionalities.split(",");
-                    for(String feature : functionalitiesArr){
-
+                    while (true) {
+                        System.out.println("Please input the index of the functionality you wish to add:");
+                        for (int i = 0; i < Protocol.FUNCTIONALITYUSER.length; i++) {
+                            System.out.println((i + 1) + " - " + Protocol.FUNCTIONALITYUSER[i]);
+                        }
+                        System.out.println("If you don't want any additional functionalities, press 0.");
+                        int functionalityIndex = Integer.parseInt(scanner.nextLine());
+                        if(functionalityIndex==0){
+                            break;
+                        }
+                        functionalitiesChosen.add(Protocol.FUNCTIONALITYARR[functionalityIndex-1]);
+                        System.out.println("If you wish add more functionalities, press 'y'. Otherwise press 'n'.");
+                        String response = scanner.nextLine();
+                        if ( response.toLowerCase().equals("n") ) {
+                            break;
+                        }
                     }
-
-
+                    client.sendFunctionalities(functionalitiesChosen);
                 } else {
                     System.out.println("Name is already taken. Try again.");
                 }
@@ -56,7 +69,7 @@ public class ClientTUI {
             return;
         }
 
-        //De facut de la FUNCTIONALITIES
+        //De facut de la NEWGAME
 
     }
 }
