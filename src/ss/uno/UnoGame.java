@@ -207,8 +207,10 @@ public class UnoGame implements AbstractCard.Ability {
                         totalPoints += 50;
                     }
                 }
-                player.getHand().remove(card);
             }
+        }
+        for(AbstractPlayer player : players){
+            player.getHand().clear();
         }
         playersPoints.replace(getRoundWinner(), totalPoints);
     }
@@ -299,7 +301,11 @@ public class UnoGame implements AbstractCard.Ability {
                 if(playersTurn instanceof HumanPlayer) {
                     board.pickColor();
                 }else{
-                    board.getLastCard().setColour(board.getLastCard().getColour());
+                    if(board.getLastCard().getColour() == AbstractCard.Colour.WILD){
+                        board.getLastCard().setColour(AbstractCard.Colour.RED);
+                    }else {
+                        board.getLastCard().setColour(board.getLastCard().getColour());
+                    }
                 }
             }
             case REVERSE -> {
