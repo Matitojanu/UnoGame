@@ -35,7 +35,7 @@ public class ClientTUI {
     }
 
     public static int getIndexOfServerFromUserTUI(){
-        System.out.println("Please input the index of the server you wish to join. If ypu wish to create a game, press 0. If you do not wish to continue, input -1:");
+        System.out.println("Please input the index of the server you wish to join. If you wish to create a game, press 0. If you do not wish to continue, input -1:");
         String strIndex = _scanner.nextLine();
         int i = Integer.parseInt(strIndex);
         return i;
@@ -64,6 +64,8 @@ public class ClientTUI {
         System.out.println("Please input the name of the server:");
         String serverName  = _scanner.nextLine();
         int maxPlayers;
+        int index;
+        String functionalities = "";
         while(true) {
             System.out.println("Please input the maximum amount of players allowed in this game:");
             maxPlayers = Integer.parseInt(_scanner.nextLine());
@@ -72,7 +74,20 @@ public class ClientTUI {
             }
             System.out.println("Wrong input. The minimum amount of players is 2. Please try again.");
         }
-        return result = serverName + " " + maxPlayers;
+        while (true) {
+            for (int i = 0; i < Protocol.FUNCTIONALITYUSER.length; i++) {
+                System.out.println((i+1)+" - " + Protocol.FUNCTIONALITYUSER[i]);
+            }
+            System.out.println("Please input the index of the additional functionality you wish to add to the newly created game. If you do not wish any, press 0.");
+            index = Integer.parseInt(_scanner.nextLine());
+            if(index==0){
+                break;
+            }
+            if(!functionalities.contains(Protocol.FUNCTIONALITYARR[index-1])) {
+                functionalities =functionalities + Protocol.FUNCTIONALITYARR[index - 1] + "-";
+            }
+        }
+        return result = serverName + " " + maxPlayers + " " + functionalities;
     }
 
     /**
@@ -124,8 +139,13 @@ public class ClientTUI {
                                 String[] newGameString = createNewGameTUI().split(" ");
                                 String serverName = newGameString[0];
                                 int maxPlayers = Integer.parseInt(newGameString[1]);
-                                client.sendProtocol(Protocol.NEWGAME + Protocol.DELIMITER + serverName + Protocol.DELIMITER + maxPlayers);
-                            } //TODO: to add gamemode when creating game
+                                String[] functionalitiesString = newGameString[2].split("-");
+                                List<String> features =new ArrayList<>();
+                                for (int i = 0; i < functionalitiesString.length; i++) {
+                                    features.add(functionalitiesString[i]);
+                                }
+                                client.sendProtocol(Protocol.NEWGAME + Protocol.DELIMITER + serverName + Protocol.DELIMITER + maxPlayers + Protocol.DELIMITER + client.formatFunctionalities(features));
+                            }
                             client.sendProtocol(Protocol.JOINGAME + Protocol.DELIMITER + index);
                         }
                     }
