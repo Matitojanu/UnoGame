@@ -7,6 +7,7 @@ public class Protocol {
     public static final String IPADDRESS = "localhost";
 
     public static final String HANDSHAKE = "HANDSHAKE";
+    public static final String HELLO = "Hello";
     public static final String DELIMITER = "|";
     public static final String DELIMITERINITEMS = "-";
     public static final String PLAYERNAME = "PLAYERNAME";
