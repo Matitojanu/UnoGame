@@ -117,12 +117,21 @@ public class ClientTUI {
         List<String> functionalitiesChosen =  new ArrayList<>();
         boolean addingFunctionality = true;
         boolean wishToPlay= true;
+        boolean userInitialization =  true;
 
         System.out.println("Hello!");
         if( client.connect() ){
-            while (true) {
+            while (userInitialization) {
                 System.out.println("To join please input your name");
                 name = _scanner.nextLine();
+                synchronized (client) {
+                    try {
+                        client.wait(180000);
+                    } catch (InterruptedException e) {
+                        System.out.println("Tread interrupted");
+                    }
+                }
+
                 if ( client.sendName(name) ) {
                     System.out.println("Successful! Loading...");
                     while (addingFunctionality) {
@@ -144,28 +153,7 @@ public class ClientTUI {
                     }
                     client.sendFunctionalities(functionalitiesChosen);
                     new Thread(client).start(); //TODO: hopefully servers are shown here
-                    while(wishToPlay) {
-                        while(!client.is_inGame()){
-                            int index = getIndexOfServerFromUserTUI();
-                            if(index==-1){
-                                System.out.println("You have been disconected. Goodbye!");
-                                client.close();
-                                return;
-                            }
-                            if(index==0){
-                                String[] newGameString = createNewGameTUI().split(" ");
-                                String serverName = newGameString[0];
-                                int maxPlayers = Integer.parseInt(newGameString[1]);
-                                String[] functionalitiesString = newGameString[2].split("-");
-                                List<String> features =new ArrayList<>();
-                                for (int i = 0; i < functionalitiesString.length; i++) {
-                                    features.add(functionalitiesString[i]);
-                                }
-                                client.sendProtocol(Protocol.NEWGAME + Protocol.DELIMITER + serverName + Protocol.DELIMITER + maxPlayers + Protocol.DELIMITER + client.formatFunctionalities(features));
-                            }
-                            client.sendProtocol(Protocol.JOINGAME + Protocol.DELIMITER + index);
-                        }
-                    }
+                    userInitialization = false;
                 } else {
                     System.out.println("Name is already taken. Try again.");
                 }
@@ -175,6 +163,31 @@ public class ClientTUI {
             return;
         }
 
+
+        while(wishToPlay) {
+            while(!client.is_inGame()){
+                int index = getIndexOfServerFromUserTUI();
+                if(index==-1){
+                    System.out.println("You have been disconected. Goodbye!");
+                    client.close();
+                    return;
+                } else if(index==0){
+                    String[] newGameString = createNewGameTUI().split(" ");
+                    String serverName = newGameString[0];
+                    int maxPlayers = Integer.parseInt(newGameString[1]);
+                    String[] functionalitiesString = newGameString[2].split("-");
+                    List<String> features =new ArrayList<>();
+                    for (int i = 0; i < functionalitiesString.length; i++) {
+                        features.add(functionalitiesString[i]);
+                    }
+                    client.sendProtocol(Protocol.NEWGAME + Protocol.DELIMITER + serverName + Protocol.DELIMITER + maxPlayers + Protocol.DELIMITER + client.formatFunctionalities(features));
+                } else {
+                    client.sendProtocol(Protocol.JOINGAME + Protocol.DELIMITER + index);
+                }
+            }
+
+
+        }
         //TODO: from WAIT down
 
     }
