@@ -33,6 +33,8 @@ public class Protocol {
     public static final String REQUESTMOVE= "REQUESTMOVE";
 
     public static final String MOVE = "MOVE";
+    public static final String CHOOSECOLOR = "CHOOSECOLOR";
+    public static final String COLOR = "COLOR";
 
     public static final String DRAW = "DRAW";
     public static final String INSTANTDISCARD = "INSTANTDISCARD";
