@@ -43,6 +43,7 @@ public class Client implements Runnable {
             String msgFromServer = _in.readLine();
             if(msgFromServer.equals(Protocol.HANDSHAKE+Protocol.DELIMITER+Protocol.HELLO)){ //this can wait for the server infinetly so we need to find solution about it
                 new Thread(this).start();
+                System.out.println("Handshake!");
                 _handshakeComplete=true;
                 return true;
             }

@@ -27,29 +27,24 @@ public class ClientHandler implements Runnable {
     public void run() {
         try {
             String msgFromClient = _in.readLine();
-            if (msgFromClient.equals(Protocol.HANDSHAKE)) {
+            if (msgFromClient.equals(Protocol.HANDSHAKE+Protocol.DELIMITER+Protocol.HELLO)) {
                 try {
-                    sendProtocol(Protocol.HANDSHAKE);
+                    handleMessage(msgFromClient);
+                    //sendProtocol(Protocol.HANDSHAKE+Protocol.DELIMITER+Protocol.HELLO);
                     System.out.println("Handshake!");
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    System.out.println("Failed to handshake");
                 }
             }
         }catch (IOException e){
-            System.out.println("Failed to Handshake");
+            System.out.println("Failed to handshake");
         }
         System.out.println("Starting thread ");
         try (BufferedReader in = new BufferedReader(new InputStreamReader(_socket.getInputStream()))) {
             String line;
             while ((line = _in.readLine()) != null) {
                 try (_in) {
-                    String message = _in.readLine();
-                    if (message == null) {
-                        System.out.println("The message is null!");
-                        _running = false;
-                        continue;
-                    }
-                    handleMessage(message);
+                    handleMessage(line);
                 } catch (IOException e) {
                     System.out.println("Error");
                 }
@@ -60,7 +55,10 @@ public class ClientHandler implements Runnable {
     }
 
     public void handleMessage(String message) throws IOException {
-        String[] messageArr = message.split(Protocol.DELIMITER);
+        String[] messageArr = message.split(Protocol.DELIMITER, 0);
+        System.out.println(messageArr[0]);
+        System.out.println(messageArr[1]);
+        System.out.println(messageArr[2]);
         switch (messageArr[0]){
             case Protocol.HANDSHAKE -> {
                 sendProtocol(Protocol.HANDSHAKE+Protocol.DELIMITER+Protocol.HELLO);
