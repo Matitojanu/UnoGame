@@ -78,7 +78,6 @@ public class ClientHandler implements Runnable {
 
     public void sendProtocol(String message) throws IOException {
         _out.println(message);
-        _out.flush();
     }
 
     public void checkName(String name) throws IOException {
