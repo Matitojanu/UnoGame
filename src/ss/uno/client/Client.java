@@ -204,21 +204,28 @@ public class Client implements Runnable {
      * @param features the list of functionalities the client chose
      */
     public void sendFunctionalities(List<String> features) {
+
         try {
-            if(_in.readLine() == Protocol.FUNCTIONALITIES) {
-                String protocolMsg = features.get(0);
-                for (int i = 1; i < features.size(); i++) {
-                    if ( !protocolMsg.contains(features.get(i)) ) {
-                        protocolMsg = Protocol.DELIMITER + features.get(i);
-                    }
-                }
-                _out.println(protocolMsg);
+            if ( _in.readLine() == Protocol.FUNCTIONALITIES ) {
+                _out.println(formatFunctionalities(features));
                 _out.flush();
             }
-        } catch (IOException e){
-            System.out.println("The server did not request list of functionalities.");
+        } catch (Exception e) {
+            System.out.println("An exception while sending functionalities");
         }
     }
+
+    public String formatFunctionalities(List<String> features) {
+        String protocolMsg = "";
+        protocolMsg = features.get(0);
+        for (int i = 1; i < features.size(); i++) {
+            if ( !protocolMsg.contains(features.get(i)) ) {
+                protocolMsg = Protocol.DELIMITER + features.get(i).toUpperCase();
+            }
+        }
+        return protocolMsg;
+    }
+
 
     public UnoGame getGame() {
         return _game;
