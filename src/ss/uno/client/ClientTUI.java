@@ -16,13 +16,22 @@ public class ClientTUI {
     private static UnoGame game;
     private static Scanner _scanner = new Scanner(System.in);
 
+    /**
+     * This method prints into the terminal the TUI for the player who has to make a move.
+     * @param name the name of the player
+     */
     public static void currentPlayerTUI(String name){
         System.out.println("It is players' " + name + " turn!");
     }
 
+    /**
+     * This method prints into the terminal the TUI what the last played card.
+     * @param card the card that will be the last one played
+     */
     public static void updatedFieldTUI(Card card){
         System.out.println("The last played card is " + card.getColour().toString() + " - " + card.getSymbol().toString());
     }
+
 
     public static void joinErrorTUI(){
         System.out.println("The index you inputed is not valid. Please try again.");
