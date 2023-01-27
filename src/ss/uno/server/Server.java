@@ -1,5 +1,7 @@
 package ss.uno.server;
 
+import ss.uno.Protocol;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -9,7 +11,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Server implements Runnable {
-    public final int port = 24042;
+    public final int port = Protocol.PORT;
     private List<ClientHandler> _handlers; //_ is best practice to diferentiate members of the class from local parameters
     private ServerSocket _serverSocket;
     private Socket _socket;
@@ -53,6 +55,7 @@ public class Server implements Runnable {
         } catch (IOException e) {
             System.out.println("Could not start server at port "+port);
         }
+        System.out.println("Starting server!");
         start();
         /*_running = true;
         int threadCount = 0;
