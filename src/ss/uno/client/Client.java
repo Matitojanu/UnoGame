@@ -38,7 +38,7 @@ public class Client implements Runnable {
      * @return True if the server sends back to the clienty the same protocol, false if it doesn't send the right protocol
      */
     public boolean connect(){
-        this.sendProtocol(Protocol.HANDSHAKE);
+        this.sendProtocol(Protocol.HANDSHAKE+Protocol.DELIMITER+Protocol.HELLO);
         try {
             String msgFromServer = _in.readLine();
             if(msgFromServer.equals(Protocol.HANDSHAKE+Protocol.DELIMITER+Protocol.HELLO)){ //this can wait for the server infinetly so we need to find solution about it
@@ -123,6 +123,7 @@ public class Client implements Runnable {
                             int move = getMoveFromUserTUI();
                             if(player.existsValidMove(_game.getBoard())){
                                 if(_game.isCardValid((Card) player.getHand().get(move))){
+                                    //TODO: when the card is a PLUSFOUR or pcik color
                                     sendMove(move);
                                 }
                             } else {
