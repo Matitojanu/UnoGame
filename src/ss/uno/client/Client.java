@@ -13,7 +13,7 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ss.uno.ClientTUI.*;
+import static ss.uno.client.ClientTUI.*;
 
 public class Client implements Runnable {
     private String _name;
@@ -29,7 +29,7 @@ public class Client implements Runnable {
         this._sock = new Socket(Protocol.IPADDRESS, Protocol.PORT);
         _sock.setSoTimeout(180000);
         _in = new BufferedReader(new InputStreamReader(_sock.getInputStream()));
-        _out = new PrintWriter(_sock.getOutputStream());
+        _out = new PrintWriter(_sock.getOutputStream(), true);
         _handshakeComplete = false;
     }
 
@@ -41,7 +41,7 @@ public class Client implements Runnable {
         this.sendProtocol(Protocol.HANDSHAKE);
         try {
             String msgFromServer = _in.readLine();
-            if(msgFromServer.equals(Protocol.HANDSHAKE)){ //this can wait for the server infinetly so we need to find solution about it
+            if(msgFromServer.equals(Protocol.HANDSHAKE+Protocol.DELIMITER+Protocol.HELLO)){ //this can wait for the server infinetly so we need to find solution about it
                 new Thread(this).start();
                 _handshakeComplete=true;
                 return true;
@@ -123,11 +123,12 @@ public class Client implements Runnable {
                             int move = getMoveFromUserTUI();
                             if(player.existsValidMove(_game.getBoard())){
                                 if(_game.isCardValid((Card) player.getHand().get(move))){
-                                    _out.println(Protocol.MOVE + Protocol.DELIMITER + move);
+                                    sendMove(move);
                                 }
+                            } else {
+                                sendProtocol(Protocol.DRAW);
                             }
-
-                        }//not done
+                        }
                         case Protocol.DRAW:{}
 
 
