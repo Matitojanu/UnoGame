@@ -75,38 +75,55 @@ public class Client implements Runnable {
             String line;
             String[] servers;
             while ((line = _in.readLine()) != null){
-                String[] words  = line.split("\\|");
+                String[] words  = line.split("\\" + Protocol.DELIMITER );
                 if(_handshakeComplete){
                     switch (words[0]){
+                        case Protocol.PLAYERNAME:{
+                            this.notify();
+                            break;
+                        }
                         case Protocol.SERVERLIST:{
-                            servers = words[1].split("\\|");
+                            servers = words[1].split("\\" + Protocol.DELIMITER);
                             serverListTUI(servers);
+                            break;
                         }
                         case Protocol.ERROR:{
                             if(words[1] == Protocol.JOINERROR) {
                                 joinErrorTUI();
                                 _inGame = false;
                             }
+                            break;
                         }
                         case Protocol.WAIT:{
+                            String gameName = words[1];
+                            int maxPlayers = Integer.parseInt(words[2]);
+                            int ammountPlayers = Integer.parseInt(words[3]);
+                            waitTUI(gameName, maxPlayers, ammountPlayers);
                             _inGame = true;
+                            break;
                         }
                         case Protocol.START:{
+                            startTUI();
                             _inGame = true;
+                            break;
                         }
+
+                        //GameplayLoop cases
+                        case Protocol.NEWROUND:{}
                         case Protocol.CURRENTPLAYER: {
                             currentPlayerTUI(_game.getPlayersTurn().getName());
+                            break;
                         }
                         case Protocol.UPDATEFIELD :{
                             AbstractCard.Colour cardColour = null;
                             AbstractCard.Symbol cardSymbol = null;
                             for(AbstractCard.Colour colour : AbstractCard.Colour.values()){
-                                if(colour.toString().toUpperCase() == words[1].split("\\|")[0].toUpperCase()){
+                                if(colour.toString().toUpperCase() == words[1].split(Protocol.DELIMITERINITEMS)[0].toUpperCase()){
                                     cardColour = colour;
                                 }
                             }
                             for(AbstractCard.Symbol symbol : AbstractCard.Symbol.values()){
-                                if(symbol.toString().toUpperCase() == words[1].split("\\|")[1].toUpperCase()){
+                                if(symbol.toString().toUpperCase() == words[1].split(Protocol.DELIMITERINITEMS)[1].toUpperCase()){
                                     cardSymbol = symbol;
                                 }
                             }
@@ -116,6 +133,7 @@ public class Client implements Runnable {
                                 _game.abilityFunction();
                                 updatedFieldTUI(card);
                             }
+                            break;
                         }
                         case Protocol.MOVE:{
                             AbstractPlayer player = _game.getPlayersTurn();
@@ -130,11 +148,12 @@ public class Client implements Runnable {
                             } else {
                                 sendProtocol(Protocol.DRAW);
                             }
+                            break;
                         }
                         case Protocol.DRAW:{}
-
-
-
+                        case Protocol.INSTANTDISCARD:{}
+                        case Protocol.DISPLAYRESULTS:{}
+                        case Protocol.GAMEOVER:{}
                     }
                 }
 
@@ -157,14 +176,13 @@ public class Client implements Runnable {
      * @param move the move of the client
      */
     public void sendMove(int move){
-
         try {
             String msgServer;
             if ( (msgServer = _in.readLine()) != null ){
                 _out.println(Protocol.MOVE + Protocol.DELIMITER + move);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("IO exception while sending move");
         }
 
     }
@@ -240,5 +258,9 @@ public class Client implements Runnable {
 
     public boolean is_inGame() {
         return _inGame;
+    }
+
+    public void set_inGame(boolean _inGame) {
+        this._inGame = _inGame;
     }
 }
