@@ -1,5 +1,7 @@
-package ss.uno;
+package ss.uno.client;
 
+import ss.uno.Protocol;
+import ss.uno.UnoGame;
 import ss.uno.cards.AbstractCard;
 import ss.uno.cards.Card;
 import ss.uno.client.Client;
@@ -89,6 +91,8 @@ public class ClientTUI {
         }
         return result = serverName + " " + maxPlayers + " " + functionalities;
     }
+
+
 
     /**
      * The function will run the entire game
