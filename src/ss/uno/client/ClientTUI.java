@@ -56,8 +56,14 @@ public class ClientTUI {
             String serverName = arguments[0];
             int maxPlayers = Integer.parseInt(arguments[1]);
             int playerAmmount = Integer.parseInt(arguments[2]);
-
-            System.out.println((i+1) + ": " + serverName + " (" + maxPlayers + " max players, " + playerAmmount + " players already in game)");
+            String gamemodes = "";
+            if( arguments[3] !=null){
+                gamemodes = arguments[3];
+                for (int j = 4; j < arguments.length; j++) {
+                    gamemodes+= "-" + arguments[i];
+                }
+            }
+            System.out.println((i+1) + ": " + serverName + " (" + maxPlayers + " max players, " + playerAmmount + " players already in game, "+ "gamemodes: " + gamemodes + ")");
         }
     }
 
@@ -92,6 +98,13 @@ public class ClientTUI {
         return result = serverName + " " + maxPlayers + " " + functionalities;
     }
 
+    public static void waitTUI(String gameName, int maxPlayers, int nrPlayers){
+        System.out.println("The game: " + gameName + " is now waiting for more players. There are currently " + nrPlayers + "/" + maxPlayers + "players waiting.");
+    }
+
+    public static void startTUI(){
+        System.out.println("Everyone is connected. The game will now start!");
+    }
 
 
     /**
