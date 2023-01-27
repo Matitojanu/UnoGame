@@ -75,11 +75,11 @@ public class Client implements Runnable {
             String line;
             String[] servers;
             while ((line = _in.readLine()) != null){
-                String[] words  = line.split(Protocol.DELIMITER);
+                String[] words  = line.split("\\|");
                 if(_handshakeComplete){
                     switch (words[0]){
                         case Protocol.SERVERLIST:{
-                            servers = words[1].split(Protocol.DELIMITER);
+                            servers = words[1].split("\\|");
                             serverListTUI(servers);
                         }
                         case Protocol.ERROR:{
@@ -101,12 +101,12 @@ public class Client implements Runnable {
                             AbstractCard.Colour cardColour = null;
                             AbstractCard.Symbol cardSymbol = null;
                             for(AbstractCard.Colour colour : AbstractCard.Colour.values()){
-                                if(colour.toString().toUpperCase() == words[1].split(Protocol.DELIMITERINITEMS)[0].toUpperCase()){
+                                if(colour.toString().toUpperCase() == words[1].split("\\|")[0].toUpperCase()){
                                     cardColour = colour;
                                 }
                             }
                             for(AbstractCard.Symbol symbol : AbstractCard.Symbol.values()){
-                                if(symbol.toString().toUpperCase() == words[1].split(Protocol.DELIMITERINITEMS)[1].toUpperCase()){
+                                if(symbol.toString().toUpperCase() == words[1].split("\\|")[1].toUpperCase()){
                                     cardSymbol = symbol;
                                 }
                             }

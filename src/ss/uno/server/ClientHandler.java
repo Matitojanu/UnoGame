@@ -30,15 +30,42 @@ public class ClientHandler implements Runnable {
             if (msgFromClient.equals(Protocol.HANDSHAKE+Protocol.DELIMITER+Protocol.HELLO)) {
                 try {
                     handleMessage(msgFromClient);
-                    //sendProtocol(Protocol.HANDSHAKE+Protocol.DELIMITER+Protocol.HELLO);
                     System.out.println("Handshake!");
                 } catch (IOException e) {
                     System.out.println("Failed to handshake");
                 }
             }
         }catch (IOException e){
-            System.out.println("Failed to handshake");
+            System.out.println("Client disconnected");
         }
+
+        try {
+            sendProtocol(Protocol.FUNCTIONALITIES);
+            String msgFromClient = _in.readLine();
+            if (msgFromClient.contains(Protocol.PLAYERNAME)) {
+                try {
+                    handleMessage(msgFromClient);
+                } catch (IOException e) {
+                    System.out.println("Couldn't get player name");
+                }
+            }
+        }catch (IOException e){
+            System.out.println("Client disconnected");
+        }
+
+        try {
+            String msgFromClient = _in.readLine();
+            if (msgFromClient.equals(Protocol.HANDSHAKE+Protocol.DELIMITER+Protocol.HELLO)) {
+                try {
+                    handleMessage(msgFromClient);
+                } catch (IOException e) {
+                    System.out.println("Failed to handshake");
+                }
+            }
+        }catch (IOException e){
+            System.out.println("Client disconnected");
+        }
+
         System.out.println("Starting thread ");
         try (BufferedReader in = new BufferedReader(new InputStreamReader(_socket.getInputStream()))) {
             String line;
@@ -55,10 +82,7 @@ public class ClientHandler implements Runnable {
     }
 
     public void handleMessage(String message) throws IOException {
-        String[] messageArr = message.split(Protocol.DELIMITER, 0);
-        System.out.println(messageArr[0]);
-        System.out.println(messageArr[1]);
-        System.out.println(messageArr[2]);
+        String[] messageArr = message.split("\\|", 0);
         switch (messageArr[0]){
             case Protocol.HANDSHAKE -> {
                 sendProtocol(Protocol.HANDSHAKE+Protocol.DELIMITER+Protocol.HELLO);
@@ -83,6 +107,7 @@ public class ClientHandler implements Runnable {
             sendProtocol(Protocol.PLAYERNAME+Protocol.DELIMITER+Protocol.DENIED);
         }else {
             _playerNames.add(name);
+            System.out.println(_playerNames);
             sendProtocol(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.ACCEPTED);
         }
     }
