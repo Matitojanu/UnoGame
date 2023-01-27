@@ -56,7 +56,7 @@ public class Server implements Runnable {
             System.out.println("Could not start server at port "+port);
         }
         System.out.println("Starting server!");
-        start();
+            start();
         /*_running = true;
         int threadCount = 0;
         while(_running){

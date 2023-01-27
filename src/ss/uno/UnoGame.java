@@ -207,6 +207,7 @@ public class UnoGame implements AbstractCard.Ability {
                         totalPoints += 50;
                     }
                 }
+                player.getHand().remove(card);
             }
         }
         playersPoints.replace(getRoundWinner(), totalPoints);
