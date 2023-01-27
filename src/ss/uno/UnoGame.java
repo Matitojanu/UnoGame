@@ -7,21 +7,18 @@ import ss.uno.player.AbstractPlayer;
 import ss.uno.player.HumanPlayer;
 
 import java.sql.SQLOutput;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 public class UnoGame implements AbstractCard.Ability {
     private Board board;
     private AbstractPlayer player1;
     private AbstractPlayer player2;
     private AbstractPlayer playersTurn;
-    private ArrayList<AbstractPlayer> players;
+    private List<AbstractPlayer> players;
     private HashMap<AbstractPlayer, Integer> playersPoints = new HashMap<>();
 
 
-    public UnoGame(ArrayList<AbstractPlayer> abstractPlayers) {
+    public UnoGame(List<AbstractPlayer> abstractPlayers) {
         this.players = abstractPlayers;
         board = new Board(new Deck());
         for (AbstractPlayer player : abstractPlayers) {
