@@ -202,8 +202,6 @@ public class ClientTUI {
         System.out.println("Hello!");
         if( client.connect() ){
             while (userInitialization) {
-                System.out.println("To join please input your name");
-                name = _scanner.nextLine();
                 synchronized (client) {
                     try {
                         client.wait(180000);
@@ -211,6 +209,8 @@ public class ClientTUI {
                         System.out.println("Thread interrupted");
                     }
                 }
+                System.out.println("To join please input your name");
+                name = _scanner.nextLine();
 
                 if ( client.sendName(name) ) {
                     System.out.println("Successful! Loading...");
