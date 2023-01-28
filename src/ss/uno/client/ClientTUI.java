@@ -52,8 +52,7 @@ public class ClientTUI {
         return i;
     }
 
-    public static void showPlayerHandTUI(AbstractPlayer player){
-        ArrayList<AbstractCard> hand = player.getHand();
+    public static void showPlayerHandTUI(List<Card> hand){
         for (int i = 1; i <=hand.size(); i++) {
             System.out.println(i + hand.get(i-1).toString());
         }
@@ -115,6 +114,21 @@ public class ClientTUI {
         System.out.println("Everyone is connected. The game will now start!");
     }
 
+    public static AbstractCard.Colour choseColorFromUser(){
+
+        System.out.println("Please input the color you wish to change the last card to, from: Yellow, Red, Blue, Green");
+        String userColor = _scanner.nextLine();
+        for (AbstractCard.Colour colour: AbstractCard.Colour.values()){
+            if(userColor.toUpperCase().equals(colour.toString().toUpperCase())){
+                return colour;
+            }
+        }
+        return null;
+    }
+
+    public static void drawnCardPrint(Card card){
+        System.out.println("The card you have drawn is: " +card.toString());
+    }
 
     /**
      * The function will run the entire game
@@ -193,6 +207,20 @@ public class ClientTUI {
                 } else {
                     client.sendProtocol(Protocol.JOINGAME + Protocol.DELIMITER + index);
                 }
+
+            }
+            synchronized (client){
+                try {
+                    client.wait();
+                } catch (InterruptedException e) {
+                    System.out.println("Thread interrupted!!!");
+                }
+            }
+            System.out.println("This game is over. Do you wish to play and choose another game server to join or create? Press Y for Yes or N for No");
+            String response = _scanner.nextLine();
+            if(response.equalsIgnoreCase("N")){
+                wishToPlay=false;
+                System.out.println("You have been disconected! Goodbye!");
             }
 
 
