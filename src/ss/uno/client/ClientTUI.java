@@ -1,11 +1,8 @@
 package ss.uno.client;
 
 import ss.uno.Protocol;
-import ss.uno.UnoGame;
 import ss.uno.cards.AbstractCard;
 import ss.uno.cards.Card;
-import ss.uno.client.Client;
-import ss.uno.player.AbstractPlayer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,31 +10,36 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ClientTUI {
-    private static UnoGame game;
     private static Scanner _scanner = new Scanner(System.in);
 
     /**
-     * This method prints into the terminal the TUI for the player who has to make a move.
+     * This method prints into the terminal the text representation of the player who has to make a move.
      * @param name the name of the player
      */
-    public static void currentPlayerTUI(String name){
+    public static void printCurrentPlayerText(String name){
         System.out.println("It is players' " + name + " turn!");
     }
 
     /**
-     * This method prints into the terminal the TUI what the last played card.
+     * This method prints into the terminal the text for updating the last played card.
      * @param card the card that will be the last one played
      */
-    public static void updatedFieldTUI(Card card){
+    public static void printUpdatedFieldText(Card card){
         System.out.println("The last played card is " + card.getColour().toString() + " - " + card.getSymbol().toString());
     }
 
-
-    public static void joinErrorTUI(){
+    /**
+     * This method prints into the terminal the text representation of the error when the user inputs the wrong index of a server.
+     */
+    public static void printJoinErrorText(){
         System.out.println("The index you inputed is not valid. Please try again.");
     }
 
-    public static int getMoveFromUserTUI(){
+    /**
+     * This method prints into the terminal the text representation of requesting a move from the user and returns it.
+     * @return the index of the card/ move the user wishes to do
+     */
+    public static int getMoveFromUserText(){
         _scanner = new Scanner(System.in);
         System.out.println("Please input the index of the card you wish to play:");
         String strMove = _scanner.nextLine();
@@ -45,20 +47,32 @@ public class ClientTUI {
         return move;
     }
 
-    public static int getIndexOfServerFromUserTUI(){
+    /**
+     * This method prints into the terminal the text for getting the server index from the user.
+     * @return the index of the server the user wishes to join.
+     */
+    public static int getIndexOfServerFromUserText(){
         System.out.println("Please input the index of the server you wish to join. If you wish to create a game, press 0. If you do not wish to continue, input -1:");
         String strIndex = _scanner.nextLine();
         int i = Integer.parseInt(strIndex);
         return i;
     }
 
-    public static void showPlayerHandTUI(List<Card> hand){
+    /**
+     * This method prints into the terminal the text representation of the players' hand.
+     * @param hand the hand of the player, containing the cards.
+     */
+    public static void printShowPlayerHandText(List<Card> hand){
         for (int i = 1; i <=hand.size(); i++) {
             System.out.println(i + hand.get(i-1).toString());
         }
     }
 
-    public static void serverListTUI(String[] servers){
+    /**
+     * This method prints into the terminal the text representation of the server list.
+     * @param servers the servers the user can join
+     */
+    public static void printServerListText(String[] servers){
         for (int i = 0; i < servers.length; i++) {
             String[] arguments = servers[i].split(Protocol.DELIMITERINITEMS);
             String serverName = arguments[0];
@@ -75,8 +89,13 @@ public class ClientTUI {
         }
     }
 
-    public static String createNewGameTUI(){
-        String result;
+    /**
+     * This method prints into the terminal the text for the creation of a new game, which means
+     * it requests for the name of the game server, the maximum amount of players allowed in it and the functionalities,
+     * with which the game is created
+     * @return a string containing the name of the game server, the max players number and the functionalities.
+     */
+    public static String createNewGameText(){
         System.out.println("Please input the name of the server:");
         String serverName  = _scanner.nextLine();
         int maxPlayers;
@@ -103,18 +122,31 @@ public class ClientTUI {
                 functionalities =functionalities + Protocol.FUNCTIONALITYARR[index - 1] + "-";
             }
         }
-        return result = serverName + " " + maxPlayers + " " + functionalities;
+        return  serverName + " " + maxPlayers + " " + functionalities;
     }
 
-    public static void waitTUI(String gameName, int maxPlayers, int nrPlayers){
+    /**
+     * This method prints into the terminal the text representation of waiting, until there are enough players to start the game
+     * @param gameName the game servers' name
+     * @param maxPlayers the maximum amount of players allowed in that game
+     * @param nrPlayers how many players have currently joined the game and are waiting for it to start
+     */
+    public static void printWaitText(String gameName, int maxPlayers, int nrPlayers){
         System.out.println("The game: " + gameName + " is now waiting for more players. There are currently " + nrPlayers + "/" + maxPlayers + "players waiting.");
     }
 
-    public static void startTUI(){
+    /**
+     * This method prints into the terminal the text representation of the start of the game.
+     */
+    public static void printStartText(){
         System.out.println("Everyone is connected. The game will now start!");
     }
 
-    public static AbstractCard.Colour choseColorFromUser(){
+    /**
+     * This method prints into the terminal the text for requesting of a color from the user
+     * @return the color the user chose as an instance of <code>AbstractCard.Colour</code>
+     */
+    public static AbstractCard.Colour choseColorFromUserText(){
 
         System.out.println("Please input the color you wish to change the last card to, from: Yellow, Red, Blue, Green");
         String userColor = _scanner.nextLine();
@@ -126,14 +158,25 @@ public class ClientTUI {
         return null;
     }
 
-    public static void drawnCardPrint(Card card){
+    /**
+     * This methods prints into the terminal the text representation of the drawn card
+     * @param card the card that has been drawn
+     */
+    public static void printDrawnCardText(Card card){
         System.out.println("The card you have drawn is: " +card.toString());
     }
 
-    public static void ptintNewRoundText(){
+    /**
+     * This method prints into the terminal the text for a new round.
+     */
+    public static void printNewRoundText(){
         System.out.println("A new round has started!");
     }
 
+    /**
+     * This method prints into the terminat the text for the list of players and the ammount of points they have.
+     * @param playersPointsList a string array that contains teh name of the player and how many points they have
+     */
     public static void printResultsText(String[] playersPointsList){
         for (int i = 0; i < playersPointsList.length; i++) {
             String[] playersArguments = playersPointsList[i].split(Protocol.DELIMITERINITEMS);
@@ -144,7 +187,8 @@ public class ClientTUI {
     }
 
     /**
-     * The function will run the entire game
+     * The method contains the initialization of the client with a name, and list of functionalities, and then manages if the user wishes to continue playing, exit or join a gameserver
+     *
      */
     public static void main(String[] args) throws IOException {
 
@@ -202,13 +246,13 @@ public class ClientTUI {
 
         while(wishToPlay) {
             while(!client.is_inGame()){
-                int index = getIndexOfServerFromUserTUI();
+                int index = getIndexOfServerFromUserText();
                 if(index==-1){
                     System.out.println("You have been disconected. Goodbye!");
                     client.close();
                     return;
                 } else if(index==0){
-                    String[] newGameString = createNewGameTUI().split(" ");
+                    String[] newGameString = createNewGameText().split(" ");
                     String serverName = newGameString[0];
                     int maxPlayers = Integer.parseInt(newGameString[1]);
                     String[] functionalitiesString = newGameString[2].split("-");
