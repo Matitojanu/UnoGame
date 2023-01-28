@@ -5,6 +5,7 @@ import ss.uno.UnoGame;
 import ss.uno.cards.AbstractCard;
 import ss.uno.cards.Card;
 import ss.uno.player.AbstractPlayer;
+import ss.uno.player.HumanPlayer;
 
 import java.io.*;
 import java.net.Socket;
@@ -23,6 +24,8 @@ public class Client implements Runnable {
     private BufferedReader _in;
     private boolean _handshakeComplete;
     private boolean _inGame = false;
+    private int _maxPlayers;
+    private HumanPlayer _humanPlayerClient = new HumanPlayer(_name);
 
 
     public Client() throws IOException {
@@ -67,7 +70,9 @@ public class Client implements Runnable {
     }
 
     /**
-     * This method will be called when a new thread for this class has started
+     * This method will be called when a new thread for this class has started. 
+     * The method creates an UnoGame object, which constly updates the last card, based on what the server sends, 
+     * but in rest, it only stores the important information with which the client of that coresponding user needs in order to make moves, drawe or play.   
      */
     @Override
     public void run() {
@@ -79,8 +84,7 @@ public class Client implements Runnable {
                 if(_handshakeComplete){
                     switch (words[0]){
                         case Protocol.PLAYERNAME:{
-                            //notify();
-                            sendName(_name);
+                            this.notify();
                             break;
                         }
                         case Protocol.SERVERLIST:{
@@ -97,64 +101,83 @@ public class Client implements Runnable {
                         }
                         case Protocol.WAIT:{
                             String gameName = words[1];
-                            int maxPlayers = Integer.parseInt(words[2]);
+                            _maxPlayers = Integer.parseInt(words[2]);
                             int ammountPlayers = Integer.parseInt(words[3]);
-                            waitTUI(gameName, maxPlayers, ammountPlayers);
+                            waitTUI(gameName, _maxPlayers, ammountPlayers);
                             _inGame = true;
                             break;
                         }
                         case Protocol.START:{
                             startTUI();
                             _inGame = true;
+                            List<AbstractPlayer> playerList = new ArrayList<>();
+                            playerList.add(_humanPlayerClient);
+                            for (int i = 0; i < _maxPlayers - 1; i++) {
+                                playerList.add(new HumanPlayer("Player " + i));
+                            }
+                            _game = new UnoGame(playerList);
                             break;
                         }
 
-                        //GameplayLoop cases
-                        case Protocol.NEWROUND:{}
+                        case Protocol.NEWROUND:{
+                            _game.drawCardsInitial();
+
+
+                        }
                         case Protocol.CURRENTPLAYER: {
-                            currentPlayerTUI(_game.getPlayersTurn().getName());
+                            currentPlayerTUI(words[1]);
                             break;
                         }
                         case Protocol.UPDATEFIELD :{
-                            AbstractCard.Colour cardColour = null;
-                            AbstractCard.Symbol cardSymbol = null;
-                            for(AbstractCard.Colour colour : AbstractCard.Colour.values()){
-                                if(colour.toString().toUpperCase() == words[1].split(Protocol.DELIMITERINITEMS)[0].toUpperCase()){
-                                    cardColour = colour;
-                                }
-                            }
-                            for(AbstractCard.Symbol symbol : AbstractCard.Symbol.values()){
-                                if(symbol.toString().toUpperCase() == words[1].split(Protocol.DELIMITERINITEMS)[1].toUpperCase()){
-                                    cardSymbol = symbol;
-                                }
-                            }
-                            Card card = new Card(cardColour, cardSymbol);
+                            Card card = parseCard(words);
                             if( _game.isCardValid(card) ) {
-                                _game.playCard(card);
-                                _game.abilityFunction();
+                                _game.getBoard().setLastCard(card);
+                                if(card.getColour()!= AbstractCard.Colour.WILD){
+                                    _game.abilityFunction();
+                                }
                                 updatedFieldTUI(card);
                             }
                             break;
                         }
                         case Protocol.MOVE:{
-                            AbstractPlayer player = _game.getPlayersTurn();
-                            showPlayerHandTUI(player);
-                            ArrayList<AbstractCard> hand = player.getHand();
+                            if(words[1] == Protocol.CHOOSECOLOR){
+                                AbstractCard.Colour pickedColor = choseColorFromUser();
+                                sendProtocol(Protocol.CHOOSECOLOR+Protocol.DELIMITER+Protocol.COLOR+Protocol.DELIMITER+pickedColor.toString());
+                                _game.getBoard().getLastCard().setColour(pickedColor);
+                                break;
+                            }
+                            AbstractPlayer player = _humanPlayerClient;
+                            List<Card> hand = new ArrayList<>();
+                            for (int i = 1; i < words.length; i++) {
+                                hand.add(parseCard(words[i].split(Protocol.DELIMITERINITEMS)));
+                            }
+
+                            showPlayerHandTUI(hand);
+
                             int move = getMoveFromUserTUI();
-                            if(player.existsValidMove(_game.getBoard())){
-                                if(_game.isCardValid((Card) player.getHand().get(move))){
-                                    //TODO: when the card is a PLUSFOUR or pcik color
-                                    sendMove(move);
-                                }
-                            } else {
+                            if(_game.isCardValid((Card) hand.get(move))){
+                                _game.getBoard().setLastCard(hand.get(move));
+                                sendMove(move);
+                            }
+                            if(move == hand.size()+1){
                                 sendProtocol(Protocol.DRAW);
                             }
                             break;
                         }
-                        case Protocol.DRAW:{}
+                        case Protocol.DRAW:{
+                            Card card = parseCard(words[1].split(Protocol.DELIMITERINITEMS));
+                            drawnCardPrint(card);
+
+                        }
                         case Protocol.INSTANTDISCARD:{}
-                        case Protocol.DISPLAYRESULTS:{}
-                        case Protocol.GAMEOVER:{}
+                        case Protocol.DISPLAYRESULTS:{
+
+                        }
+                        case Protocol.GAMEOVER:{
+                            synchronized (this){
+                                notify();
+                            }
+                        }
                     }
                 }
 
@@ -162,6 +185,28 @@ public class Client implements Runnable {
         } catch (IOException e) {
             this.close();
         }
+    }
+
+    /**
+     * This method takes as parameters a string array that contains the colour and the symbol of a card, and returns the Card instance of it.
+     * @param words - the card arguments, first the colour, then the symbol of the card
+     * @return the card object created from the parameters
+     */
+    private static Card parseCard(String[] words) {
+        AbstractCard.Colour cardColour = null;
+        AbstractCard.Symbol cardSymbol = null;
+        for(AbstractCard.Colour colour : AbstractCard.Colour.values()){
+            if(colour.toString().toUpperCase() == words[1].split(Protocol.DELIMITERINITEMS)[0].toUpperCase()){
+                cardColour = colour;
+            }
+        }
+        for(AbstractCard.Symbol symbol : AbstractCard.Symbol.values()){
+            if(symbol.toString().toUpperCase() == words[1].split(Protocol.DELIMITERINITEMS)[1].toUpperCase()){
+                cardSymbol = symbol;
+            }
+        }
+        Card card = new Card(cardColour, cardSymbol);
+        return card;
     }
 
     /**
