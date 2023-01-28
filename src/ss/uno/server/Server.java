@@ -57,4 +57,8 @@ public class Server implements Runnable {
         System.out.println("Starting server!");
         start();
     }
+
+    public List<ClientHandler> get_handlers() {
+        return _handlers;
+    }
 }

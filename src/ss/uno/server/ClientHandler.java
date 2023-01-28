@@ -3,6 +3,8 @@ package ss.uno.server;
 import ss.uno.Protocol;
 import ss.uno.UnoGame;
 import ss.uno.player.AbstractPlayer;
+import ss.uno.player.HumanPlayer;
+import ss.uno.player.OnlinePlayer;
 
 import java.io.*;
 import java.net.Socket;
@@ -105,7 +107,11 @@ public class ClientHandler implements Runnable {
         }catch (IOException e){
             System.out.println("Client disconnected");
         }
+    }
 
+    @Override
+    public void run() {
+        setUp();
         try (BufferedReader in = new BufferedReader(new InputStreamReader(_socket.getInputStream()))) {
             String line;
             while ((line = _in.readLine()) != null) {
@@ -121,7 +127,7 @@ public class ClientHandler implements Runnable {
     }
 
     public void handleMessage(String message) throws IOException {
-        String[] messageArr = message.split("\\|");
+        String[] messageArr = message.split("\\"+Protocol.DELIMITER);
         switch (messageArr[0]){
             case Protocol.HANDSHAKE -> {
                 sendProtocol(Protocol.HANDSHAKE+Protocol.DELIMITER+Protocol.HELLO);
@@ -137,10 +143,15 @@ public class ClientHandler implements Runnable {
             case Protocol.NEWGAME -> {
                 String[] itemSplit = messageArr[1].split("-");
                 Lobby lobby = new Lobby(itemSplit[1],valueOf(itemSplit[2]),itemSplit[3]);
+                lobby.start();
+                lobby.addPlayer(_players.get(_players.indexOf(_name)));
                 _lobbyList.add(lobby);
+                while(lobby.waiting()){
+
+                }
             }
             case Protocol.JOINGAME -> {
-
+                _lobbyList.get(valueOf(messageArr[1])).getPlayers().add(_players.get(_players.indexOf(_name)));
             }
 
             //Gameplay loop
@@ -155,12 +166,6 @@ public class ClientHandler implements Runnable {
 
             }
         }
-    }
-
-    @Override
-    public void run() {
-        setUp();
-
     }
 
     public void sendMessage(String message){
@@ -178,6 +183,8 @@ public class ClientHandler implements Runnable {
             sendProtocol(Protocol.PLAYERNAME);
         }else {
             _playerNames.add(name);
+            AbstractPlayer player = new HumanPlayer(name);
+            _players.add(player);
             System.out.println(_playerNames);
             sendProtocol(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.ACCEPTED);
         }
