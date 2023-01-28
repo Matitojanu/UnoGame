@@ -16,6 +16,7 @@ public class Server implements Runnable {
     private ServerSocket _serverSocket;
     private Socket _socket;
 
+
     public Server() throws IOException {
         this._handlers = new ArrayList<>();
     }
@@ -52,13 +53,39 @@ public class Server implements Runnable {
         try {
             _serverSocket = new ServerSocket(port);
         } catch (IOException e) {
-            System.out.println("Could not start server at port " + port);
+            System.out.println("Could not start server at port "+port);
         }
         System.out.println("Starting server!");
-        start();
+            start();
+        /*_running = true;
+        int threadCount = 0;
+        while(_running){
+            try {
+                _socket = _serverSocket.accept();
+                ClientHandler clientHandler = new ClientHandler(_socket, "thread-"+threadCount);
+                threadCount++;
+                _handlers.add(clientHandler);
+                new Thread(clientHandler).start();
+            } catch (IOException e){
+                System.out.println("Error");
+                _running = false;
+            }
+        }
+        shutDown();*/
     }
 
-    public List<ClientHandler> get_handlers() {
-        return _handlers;
+    public void setUp(){
+        /*Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter port number: ");
+        port = scanner.nextInt();
+        try{
+
+            System.out.println("Started server at port "+port);
+            _serverSocket = new ServerSocket(port);
+            //Server server = new Server(port);
+
+        } catch (IOException e) {
+            System.out.println("Could not start server at port "+port);
+        }*/
     }
 }
