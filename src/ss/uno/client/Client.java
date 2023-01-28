@@ -79,7 +79,8 @@ public class Client implements Runnable {
                 if(_handshakeComplete){
                     switch (words[0]){
                         case Protocol.PLAYERNAME:{
-                            this.notify();
+                            //notify();
+                            sendName(_name);
                             break;
                         }
                         case Protocol.SERVERLIST:{
