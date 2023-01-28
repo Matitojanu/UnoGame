@@ -17,6 +17,7 @@ public class Board {
     }
     /**
      * Returns the last played card
+     * @requires the last card to be not null
      * @return last card that was played
      */
     public Card getLastCard() {
@@ -25,6 +26,7 @@ public class Board {
 
     /**
      * Changes the last played card to the current card
+     * @ensures lastCard will be set to the provided Card
      * @param lastCard - the card that will be set as the last card
      */
     public void setLastCard(Card lastCard) {
@@ -43,6 +45,7 @@ public class Board {
 
     /**
      * Returns the Deck
+     * @requires deckCards to be not null
      * @return the Deck
      */
     public Deck getDeck() {
@@ -51,6 +54,7 @@ public class Board {
 
     /**
      * Sets the deck
+     * @ensures the deck is set to the provided parameter
      * @param deckCards - the cards that will be in the deck
      */
     public void setDeck(Deck deckCards) {
