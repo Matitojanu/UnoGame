@@ -28,7 +28,7 @@ public class Server implements Runnable {
                 _socket = _serverSocket.accept();
                 ClientHandler clientHandler = new ClientHandler(_socket, "thread-"+threadCount);
                 _handlers.add(clientHandler);
-                threadCount+=1;
+                threadCount += 1;
                 new Thread(clientHandler).start();
             } catch (IOException e){
                 System.out.println("Error");

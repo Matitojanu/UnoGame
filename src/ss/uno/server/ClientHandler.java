@@ -2,6 +2,8 @@ package ss.uno.server;
 
 import ss.uno.Protocol;
 import ss.uno.UnoGame;
+import ss.uno.cards.AbstractCard;
+import ss.uno.cards.Card;
 import ss.uno.player.AbstractPlayer;
 import ss.uno.player.HumanPlayer;
 import ss.uno.player.OnlinePlayer;
@@ -11,6 +13,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.Integer.valueOf;
 
@@ -23,6 +26,7 @@ public class ClientHandler implements Runnable {
     private ArrayList<String> _playerNames;
     private ArrayList<AbstractPlayer> _players;
     private ArrayList<Lobby> _lobbyList;
+    private Lobby lobby;
 
     public ClientHandler(Socket socket, String name) throws IOException {
         this._socket = socket;
@@ -41,7 +45,6 @@ public class ClientHandler implements Runnable {
             if (msgFromClient.equals(Protocol.HANDSHAKE + Protocol.DELIMITER + Protocol.HELLO)) {
                 try {
                     handleMessage(msgFromClient);
-                    System.out.println("Handshake!");
                 } catch (IOException e) {
                     System.out.println("Failed to handshake");
                 }
@@ -66,22 +69,16 @@ public class ClientHandler implements Runnable {
         }
 
         System.out.println("Starting thread for user: " + _name);
-
-        try {
+        /*try {
             sendProtocol(Protocol.FUNCTIONALITIES);
             String msgFromClient = _in.readLine();
             String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
             if (msgArray[0].equals(Protocol.FUNCTIONALITYARR)) {
-                try {
-                    wait();
-                    formatFunctionalities(Collections.singletonList(msgArray[1]));
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                formatFunctionalities(Collections.singletonList(msgArray[1]));
             }
         } catch (IOException e) {
             System.out.println("Client disconnected");
-        }
+        }*/
 
         try {
             for (Lobby lobby : _lobbyList) {
@@ -89,19 +86,11 @@ public class ClientHandler implements Runnable {
             }
             String msgFromClient = _in.readLine();
             String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
-            if (msgArray[0].equals(Protocol.NEWGAME)) {
+            if (msgArray[0].equals(Protocol.NEWGAME)||msgArray[0].equals(Protocol.JOINGAME)) {
                 try {
-                    wait();
                     handleMessage(msgFromClient);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            } else if (msgArray[0].equals(Protocol.JOINGAME)) {
-                try {
-                    wait();
-                    handleMessage(msgFromClient);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    System.out.println("Couldn't get client choice");
                 }
             }
         } catch (IOException e) {
@@ -112,7 +101,7 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         setUp();
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(_socket.getInputStream()))) {
+        try (_in) {
             String line;
             while ((line = _in.readLine()) != null) {
                 try (_in) {
@@ -142,23 +131,23 @@ public class ClientHandler implements Runnable {
             }
             case Protocol.NEWGAME -> {
                 String[] itemSplit = messageArr[1].split("-");
-                Lobby lobby = new Lobby(itemSplit[1], valueOf(itemSplit[2]), itemSplit[3]);
+                lobby = new Lobby(itemSplit[1], valueOf(itemSplit[2]), itemSplit[3]);
                 lobby.start();
                 lobby.addPlayer(_players.get(_players.indexOf(_name)));
                 _lobbyList.add(lobby);
-                while (lobby.waiting()) {
-
-                }
             }
             case Protocol.JOINGAME -> {
-
-                _lobbyList.get(valueOf(messageArr[1])).getPlayers().add(_players.get(_players.indexOf(_name)));
+                _lobbyList.get(_lobbyList.indexOf(lobby)).getPlayers().add(_players.get(_players.indexOf(_name)));
             }
 
             //Gameplay loop
 
             case Protocol.MOVE -> {
-
+                if(messageArr[1].equals(Protocol.COLOR)){
+                    lobby.getUnoGame().getBoard().getLastCard().setColour(AbstractCard.Colour.valueOf(messageArr[2]));
+                }else{
+                    lobby.getUnoGame().playCard((Card) lobby.getUnoGame().getPlayersTurn().getHand().get(Integer.parseInt((messageArr[1]))));
+                }
             }
             case Protocol.DRAW -> {
 
@@ -184,9 +173,9 @@ public class ClientHandler implements Runnable {
             sendProtocol(Protocol.PLAYERNAME);
         } else {
             _playerNames.add(name);
+            this._name = name;
             AbstractPlayer player = new HumanPlayer(name);
             _players.add(player);
-            System.out.println(_playerNames);
             sendProtocol(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.ACCEPTED);
         }
     }

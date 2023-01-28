@@ -39,7 +39,6 @@ public class UnoGame implements AbstractCard.Ability {
             }
             drawCardsInitial();
             playersTurn = players.get(0);
-            System.out.println("New round begins! \n");
             while (!isRoundOver()) {
                 if (playersTurn.existsValidMove(board)) {
                     int indexOfCard = playersTurn.determineMove(board);

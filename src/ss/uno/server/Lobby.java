@@ -2,16 +2,19 @@ package ss.uno.server;
 
 import ss.uno.Protocol;
 import ss.uno.UnoGame;
+import ss.uno.cards.AbstractCard;
 import ss.uno.player.AbstractPlayer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class Lobby implements Runnable{
     private String gameName;
     private int maxPlayers;
     private String gamemode;
     private int numberOfPlayers;
+    private UnoGame unoGame;
     private ArrayList<AbstractPlayer> players;
 
     public Lobby(String gameName, int maxPlayers, String gamemode){
@@ -31,9 +34,12 @@ public class Lobby implements Runnable{
         while(waiting) {
             for(ClientHandler handler : Server.get_handlers()){
                 try {
-                    handler.sendProtocol(Protocol.WAIT+"\\"+Protocol.DELIMITER+gameName+"\\"+Protocol.DELIMITER+maxPlayers+"\\"+Protocol.DELIMITER+players.size());
+                    handler.sendProtocol(Protocol.WAIT+Protocol.DELIMITER+gameName+Protocol.DELIMITER+maxPlayers+Protocol.DELIMITER+players.size());
+                    TimeUnit.SECONDS.sleep(10);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    System.out.println("Couldn't send wait command");
+                } catch (InterruptedException e) {
+                    System.out.println("Interrupted wait");
                 }
             }
         }
@@ -44,8 +50,30 @@ public class Lobby implements Runnable{
                 throw new RuntimeException(e);
             }
         }
-        UnoGame unoGame = new UnoGame(players);
+        unoGame = new UnoGame(players);
         unoGame.run();
+        while(!unoGame.isGameOver()) {
+            for (ClientHandler handler : Server.get_handlers()) {
+                try {
+                    handler.sendProtocol(Protocol.NEWROUND);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            while (!unoGame.isRoundOver()) {
+                for (ClientHandler handler : Server.get_handlers()) {
+                    try {
+                        handler.sendProtocol(Protocol.CURRENTPLAYER+Protocol.DELIMITER+unoGame.getPlayersTurn().getName());
+                        handler.sendProtocol(Protocol.UPDATEFIELD+Protocol.DELIMITER+unoGame.getBoard().getLastCard().getColour()+Protocol.DELIMITER+unoGame.getBoard().getLastCard().getSymbol());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                for(AbstractCard card : players.get(players.indexOf(unoGame.getPlayersTurn())).getHand()){
+
+                }
+            }
+        }
     }
 
     public boolean waiting(){
@@ -90,8 +118,11 @@ public class Lobby implements Runnable{
         return players;
     }
 
+    public UnoGame getUnoGame() {
+        return unoGame;
+    }
+
     public void addPlayer(AbstractPlayer player){
         players.add(player);
     }
-
 }
