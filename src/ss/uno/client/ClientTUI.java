@@ -3,6 +3,8 @@ package ss.uno.client;
 import ss.uno.Protocol;
 import ss.uno.cards.AbstractCard;
 import ss.uno.cards.Card;
+import ss.uno.player.AI;
+import ss.uno.player.HumanPlayer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,10 +40,11 @@ public class ClientTUI {
     /**
      * This method prints into the terminal the text representation of requesting a move from the user and returns it.
      * @return the index of the card/ move the user wishes to do
+     * @param hand the hand with the cards the player has
      */
-    public static int getMoveFromUserText(){
+    public static int getMoveFromUserText(List<Card> hand){
         _scanner = new Scanner(System.in);
-        System.out.println("Please input the index of the card you wish to play:");
+        System.out.println("Please input the index of the card you wish to play. If you wish to draw a card, input " + (hand.size()+1));
         String strMove = _scanner.nextLine();
         int move = Integer.parseInt(strMove);
         return move;
@@ -187,6 +190,29 @@ public class ClientTUI {
     }
 
     /**
+     * This method prints into the terminal the text for asking the user of what they wish to do with the drawn card, if they want to play it or not.
+     * @return an empty string if the user doesn't wish to play the card, 'Y' if the player wishes to play it
+     */
+    public static String askForChoiceToPlayDrawnCardText(){
+        System.out.println("Do you wish to play this card? If yes press 'Y', if no, press 'N'.");
+        String result = "";
+        String response = _scanner.nextLine();
+        if(response.equalsIgnoreCase("Y")){
+            result = response;
+        }
+        return result;
+    }
+
+    public static boolean askUserIfChallangeText(){
+        System.out.println("Do you wish to challange the player that placed this card? Press 'Y' if yes and 'N' if no.");
+        String response = _scanner.nextLine();
+        if(response.equalsIgnoreCase("y")){
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * The method contains the initialization of the client with a name, and list of functionalities, and then manages if the user wishes to continue playing, exit or join a gameserver
      *
      */
@@ -211,7 +237,13 @@ public class ClientTUI {
                 }
                 System.out.println("To join please input your name");
                 name = _scanner.nextLine();
-
+                System.out.println("Please write 'AI' if you wish to play as an AI, or 'H' if you wish to play as a regular player.");
+                String userTypeChoice = _scanner.nextLine();
+                if(userTypeChoice.equalsIgnoreCase("AI")){
+                    client.set_playerClient(new AI(name));
+                } else {
+                    client.set_playerClient(new HumanPlayer(name));
+                }
                 if ( client.sendName(name) ) {
                     System.out.println("Successful! Loading...");
                     while (addingFunctionality) {

@@ -25,7 +25,7 @@ public class Client implements Runnable {
     private boolean _handshakeComplete;
     private boolean _inGame = false;
     private int _maxPlayers;
-    private HumanPlayer _humanPlayerClient = new HumanPlayer(_name);
+    private AbstractPlayer _playerClient;
 
 
     public Client() throws IOException {
@@ -112,7 +112,7 @@ public class Client implements Runnable {
                             printStartText();
                             _inGame = true;
                             List<AbstractPlayer> playerList = new ArrayList<>();
-                            playerList.add(_humanPlayerClient);
+                            playerList.add(_playerClient);
                             for (int i = 0; i < _maxPlayers - 1; i++) {
                                 playerList.add(new HumanPlayer("Player " + i));
                             }
@@ -142,43 +142,76 @@ public class Client implements Runnable {
                             break;
                         }
                         case Protocol.MOVE:{
-                            if(words[1] == Protocol.CHOOSECOLOR){
-                                AbstractCard.Colour pickedColor = choseColorFromUserText();
-                                sendProtocol(Protocol.CHOOSECOLOR+Protocol.DELIMITER+Protocol.COLOR+Protocol.DELIMITER+pickedColor.toString());
-                                _game.getBoard().getLastCard().setColour(pickedColor);
+                            if(_playerClient.existsValidMove(_game.getBoard())==false){
+                                sendProtocol(Protocol.DRAW);
                                 break;
                             }
-                            AbstractPlayer player = _humanPlayerClient;
-                            List<Card> hand = new ArrayList<>();
-                            for (int i = 1; i < words.length; i++) {
-                                hand.add(parseCard(words[i].split(Protocol.DELIMITERINITEMS)));
+                            if ( words[1].equals(Protocol.CHOOSECOLOR) ) {
+                                AbstractCard.Colour pickedColor = null;
+                                if(_playerClient instanceof HumanPlayer) {
+                                     pickedColor = choseColorFromUserText();
+
+                                }else {
+                                    for (AbstractCard abstractCard : _playerClient.getHand()) {
+                                        if ( abstractCard.getColour() != AbstractCard.Colour.WILD ) {
+                                            pickedColor= abstractCard.getColour();
+                                        }
+                                    }
+                                }
+                                _game.getBoard().getLastCard().setColour(pickedColor);
+                                sendProtocol(Protocol.MOVE+Protocol.CHOOSECOLOR + Protocol.DELIMITER + Protocol.COLOR + Protocol.DELIMITER + pickedColor.toString());
+                                break;
+                            }
+                            if( words[1].equals(Protocol.CHALLANGE) ){
+                                if(_playerClient instanceof HumanPlayer) {
+                                    boolean response = askUserIfChallangeText();
+                                    if ( response ) {
+                                        sendProtocol(Protocol.MOVE + Protocol.DELIMITER + Protocol.CHALLANGE + Protocol.DELIMITER + Protocol.TRUE);
+                                        break;
+                                    }
+                                }
+                                sendProtocol(Protocol.MOVE + Protocol.DELIMITER + Protocol.CHALLANGE + Protocol.DELIMITER + Protocol.FALSE);
+                                break;
+                            }
+                            if(_playerClient instanceof HumanPlayer) {
+                                List<Card> hand = new ArrayList<>();
+                                for (int i = 1; i < words.length; i++) {
+                                    hand.add(parseCard(words[i].split(Protocol.DELIMITERINITEMS)));
+                                }
+                                printShowPlayerHandText(hand);
+                                int move = getMoveFromUserText(hand);
+                                if ( _game.isCardValid((Card) hand.get(move)) ) {
+                                    _game.getBoard().setLastCard(hand.get(move));
+                                    sendMove(move);
+                                }
+                                if ( move == hand.size() + 1 ) {
+                                    sendProtocol(Protocol.DRAW);
+                                }
+                                break;
+                            } else {
+                                sendMove(_playerClient.determineMove(_game.getBoard()));
                             }
 
-                            printShowPlayerHandText(hand);
-
-                            int move = getMoveFromUserText();
-                            if(_game.isCardValid((Card) hand.get(move))){
-                                _game.getBoard().setLastCard(hand.get(move));
-                                sendMove(move);
-                            }
-                            if(move == hand.size()+1){
-                                sendProtocol(Protocol.DRAW);
-                            }
-                            break;
                         }
                         case Protocol.DRAW:{
                             Card card = parseCard(words[1].split(Protocol.DELIMITERINITEMS));
                             printDrawnCardText(card);
                             Card lastCard = _game.getBoard().getLastCard();
-                            if(card.getSymbol().toString().equalsIgnoreCase(lastCard.getSymbol().toString()) || card.getColour().toString().equalsIgnoreCase(lastCard.getColour().toString())){
-                                sendProtocol(Protocol.INSTANTDISCARD + Protocol.DELIMITER + card.getColour().toString() + Protocol.DELIMITER + card.getSymbol().toString());
-                            }
                             break;
                         }
                         case Protocol.INSTANTDISCARD:{
                             String[] cardArguments = words[1].split(Protocol.DELIMITERINITEMS);
                             Card card = parseCard(cardArguments);
-                            _game.getBoard().setLastCard(card);
+                            String response = askForChoiceToPlayDrawnCardText();
+                            if ( response.equalsIgnoreCase("y")) {
+                                Card lastCard = _game.getBoard().getLastCard();
+                                if ( card.getSymbol().toString().equalsIgnoreCase(lastCard.getSymbol().toString()) || card.getColour().toString().equalsIgnoreCase(lastCard.getColour().toString()) ) {
+                                    sendProtocol(Protocol.INSTANTDISCARD + Protocol.DELIMITER + card.getColour().toString() + Protocol.DELIMITER + card.getSymbol().toString());
+                                    _game.getBoard().setLastCard(card);
+                                }
+                            } else {
+                                sendProtocol(Protocol.INSTANTDISCARD);
+                            }
                             break;
                         }
                         case Protocol.DISPLAYRESULTS:{
@@ -323,5 +356,9 @@ public class Client implements Runnable {
 
     public void set_inGame(boolean _inGame) {
         this._inGame = _inGame;
+    }
+
+    public void set_playerClient(AbstractPlayer playerType) {
+        this._playerClient = playerType;
     }
 }
