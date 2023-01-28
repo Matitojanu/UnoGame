@@ -34,22 +34,33 @@ public class Board {
 
     /**
      * Returns whether the deck it's finished or not
+     * @requires deckCards is not null
      * @return true if the deck is finished, and false otherwhise
      */
     public boolean deckFinished(){
         return deckCards.isEmpty();
     }
 
+    /**
+     * Returns the Deck
+     * @return the Deck
+     */
     public Deck getDeck() {
         return deckCards;
     }
 
+    /**
+     * Sets the deck
+     * @param deckCards - the cards that will be in the deck
+     */
     public void setDeck(Deck deckCards) {
         this.deckCards = deckCards;
     }
 
     /**
      * This function recievs the colour from the user, and changes the last card to the one given as input from the user
+     * @requires the player to input a string pointing to a colour
+     * @ensures the input provided by the player will point to a matching colour
      * @return the colour the player chose
      */
     public AbstractCard.Colour pickColor(){
