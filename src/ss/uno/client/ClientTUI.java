@@ -203,6 +203,10 @@ public class ClientTUI {
         return result;
     }
 
+    /**
+     * This method prints into the terminal the text for requesting if the user wishes to challange the player who placed a +4 card
+     * @return true if the user wants to challange the other player, false otherwhise
+     */
     public static boolean askUserIfChallangeText(){
         System.out.println("Do you wish to challange the player that placed this card? Press 'Y' if yes and 'N' if no.");
         String response = _scanner.nextLine();
