@@ -84,17 +84,19 @@ public class Client implements Runnable {
                 if(_handshakeComplete){
                     switch (words[0]){
                         case Protocol.PLAYERNAME:{
-                            this.notify();
+                            synchronized (this) {
+                                this.notify();
+                            }
                             break;
                         }
                         case Protocol.SERVERLIST:{
                             servers = words[1].split("\\" + Protocol.DELIMITER);
-                            serverListTUI(servers);
+                            printServerListText(servers);
                             break;
                         }
                         case Protocol.ERROR:{
                             if(words[1] == Protocol.JOINERROR) {
-                                joinErrorTUI();
+                                printJoinErrorText();
                                 _inGame = false;
                             }
                             break;
@@ -103,12 +105,12 @@ public class Client implements Runnable {
                             String gameName = words[1];
                             _maxPlayers = Integer.parseInt(words[2]);
                             int ammountPlayers = Integer.parseInt(words[3]);
-                            waitTUI(gameName, _maxPlayers, ammountPlayers);
+                            printWaitText(gameName, _maxPlayers, ammountPlayers);
                             _inGame = true;
                             break;
                         }
                         case Protocol.START:{
-                            startTUI();
+                            printStartText();
                             _inGame = true;
                             List<AbstractPlayer> playerList = new ArrayList<>();
                             playerList.add(_humanPlayerClient);
@@ -121,11 +123,12 @@ public class Client implements Runnable {
 
                         case Protocol.NEWROUND:{
                             _game.drawCardsInitial();
-
+                            printNewRoundText();
+                            break;
 
                         }
                         case Protocol.CURRENTPLAYER: {
-                            currentPlayerTUI(words[1]);
+                            printCurrentPlayerText(words[1]);
                             break;
                         }
                         case Protocol.UPDATEFIELD :{
@@ -135,13 +138,13 @@ public class Client implements Runnable {
                                 if(card.getColour()!= AbstractCard.Colour.WILD){
                                     _game.abilityFunction();
                                 }
-                                updatedFieldTUI(card);
                             }
+                            printUpdatedFieldText(card);
                             break;
                         }
                         case Protocol.MOVE:{
                             if(words[1] == Protocol.CHOOSECOLOR){
-                                AbstractCard.Colour pickedColor = choseColorFromUser();
+                                AbstractCard.Colour pickedColor = choseColorFromUserText();
                                 sendProtocol(Protocol.CHOOSECOLOR+Protocol.DELIMITER+Protocol.COLOR+Protocol.DELIMITER+pickedColor.toString());
                                 _game.getBoard().getLastCard().setColour(pickedColor);
                                 break;
@@ -152,9 +155,9 @@ public class Client implements Runnable {
                                 hand.add(parseCard(words[i].split(Protocol.DELIMITERINITEMS)));
                             }
 
-                            showPlayerHandTUI(hand);
+                            printShowPlayerHandText(hand);
 
-                            int move = getMoveFromUserTUI();
+                            int move = getMoveFromUserText();
                             if(_game.isCardValid((Card) hand.get(move))){
                                 _game.getBoard().setLastCard(hand.get(move));
                                 sendMove(move);
@@ -166,17 +169,30 @@ public class Client implements Runnable {
                         }
                         case Protocol.DRAW:{
                             Card card = parseCard(words[1].split(Protocol.DELIMITERINITEMS));
-                            drawnCardPrint(card);
-
+                            printDrawnCardText(card);
+                            Card lastCard = _game.getBoard().getLastCard();
+                            if(card.getSymbol().toString().equalsIgnoreCase(lastCard.getSymbol().toString()) || card.getColour().toString().equalsIgnoreCase(lastCard.getColour().toString())){
+                                sendProtocol(Protocol.INSTANTDISCARD + Protocol.DELIMITER + card.getColour().toString() + Protocol.DELIMITER + card.getSymbol().toString());
+                            }
+                            break;
                         }
-                        case Protocol.INSTANTDISCARD:{}
+                        case Protocol.INSTANTDISCARD:{
+                            String[] cardArguments = words[1].split(Protocol.DELIMITERINITEMS);
+                            Card card = parseCard(cardArguments);
+                            _game.getBoard().setLastCard(card);
+                            break;
+                        }
                         case Protocol.DISPLAYRESULTS:{
-
+                            String[] listResultsString = words[1].split( "\\" + Protocol.DELIMITER);
+                            printResultsText(listResultsString);
+                            break;
                         }
                         case Protocol.GAMEOVER:{
                             synchronized (this){
                                 notify();
                             }
+                            _inGame=false;
+                            break;
                         }
                     }
                 }
