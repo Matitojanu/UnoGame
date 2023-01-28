@@ -121,7 +121,8 @@ public class Client implements Runnable {
 
                         case Protocol.NEWROUND:{
                             _game.drawCardsInitial();
-
+                            ptintNewRoundText();
+                            break;
 
                         }
                         case Protocol.CURRENTPLAYER: {
@@ -135,8 +136,8 @@ public class Client implements Runnable {
                                 if(card.getColour()!= AbstractCard.Colour.WILD){
                                     _game.abilityFunction();
                                 }
-                                updatedFieldTUI(card);
                             }
+                            updatedFieldTUI(card);
                             break;
                         }
                         case Protocol.MOVE:{
@@ -167,16 +168,29 @@ public class Client implements Runnable {
                         case Protocol.DRAW:{
                             Card card = parseCard(words[1].split(Protocol.DELIMITERINITEMS));
                             drawnCardPrint(card);
-
+                            Card lastCard = _game.getBoard().getLastCard();
+                            if(card.getSymbol().toString().equalsIgnoreCase(lastCard.getSymbol().toString()) || card.getColour().toString().equalsIgnoreCase(lastCard.getColour().toString())){
+                                sendProtocol(Protocol.INSTANTDISCARD + Protocol.DELIMITER + card.getColour().toString() + Protocol.DELIMITER + card.getSymbol().toString());
+                            }
+                            break;
                         }
-                        case Protocol.INSTANTDISCARD:{}
+                        case Protocol.INSTANTDISCARD:{
+                            String[] cardArguments = words[1].split(Protocol.DELIMITERINITEMS);
+                            Card card = parseCard(cardArguments);
+                            _game.getBoard().setLastCard(card);
+                            break;
+                        }
                         case Protocol.DISPLAYRESULTS:{
-
+                            String[] listResultsString = words[1].split( "\\" + Protocol.DELIMITER);
+                            printResultsText(listResultsString);
+                            break;
                         }
                         case Protocol.GAMEOVER:{
                             synchronized (this){
                                 notify();
                             }
+                            _inGame=false;
+                            break;
                         }
                     }
                 }

@@ -130,6 +130,19 @@ public class ClientTUI {
         System.out.println("The card you have drawn is: " +card.toString());
     }
 
+    public static void ptintNewRoundText(){
+        System.out.println("A new round has started!");
+    }
+
+    public static void printResultsText(String[] playersPointsList){
+        for (int i = 0; i < playersPointsList.length; i++) {
+            String[] playersArguments = playersPointsList[i].split(Protocol.DELIMITERINITEMS);
+            String playerName = playersArguments[0];
+            String points = playersArguments[1];
+            System.out.println(playerName + " : " + points + " points");
+        }
+    }
+
     /**
      * The function will run the entire game
      */
