@@ -150,10 +150,11 @@ public class ClientHandler implements Runnable {
                 }
             }
             case Protocol.DRAW -> {
-
+                lobby.getUnoGame().drawCard();
+                sendProtocol(Protocol.DRAW+Protocol.DELIMITER+lobby.getUnoGame().getPlayersTurn().getHand().get(lobby.getUnoGame().getPlayersTurn().getHand().size()-1).getColour().toString()+Protocol.DELIMITER+lobby.getUnoGame().getPlayersTurn().getHand().get(lobby.getUnoGame().getPlayersTurn().getHand().size()-1).getSymbol().toString());
             }
             case Protocol.INSTANTDISCARD -> {
-
+                lobby.getUnoGame().playCard((Card) lobby.getUnoGame().getPlayersTurn().getHand().get(lobby.getUnoGame().getPlayersTurn().getHand().size()-1));
             }
         }
     }
@@ -193,5 +194,13 @@ public class ClientHandler implements Runnable {
 
     public ArrayList<AbstractPlayer> get_players() {
         return _players;
+    }
+
+    public BufferedReader get_in() {
+        return _in;
+    }
+
+    public PrintWriter get_out() {
+        return _out;
     }
 }
