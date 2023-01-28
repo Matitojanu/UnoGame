@@ -39,7 +39,6 @@ public class UnoGame implements AbstractCard.Ability {
             }
             drawCardsInitial();
             playersTurn = players.get(0);
-            System.out.println("New round begins! \n");
             while (!isRoundOver()) {
                 if (playersTurn.existsValidMove(board)) {
                     int indexOfCard = playersTurn.determineMove(board);
@@ -304,7 +303,18 @@ public class UnoGame implements AbstractCard.Ability {
                 if(playersTurn instanceof HumanPlayer) {
                     board.pickColor();
                 }else{
-                    board.getLastCard().setColour(board.getLastCard().getColour());
+                    for(AbstractCard card1 : playersTurn.getHand()) {
+                        if (card1.getColour() != AbstractCard.Colour.WILD) {
+                            System.out.println("Player " + playersTurn.getName() + " changed the colour to " + card1.getColour().toString() + "\n");
+                            board.getLastCard().setColour(card1.getColour());
+                            break;
+                        }
+                        if(playersTurn.getHand().indexOf(card1) == playersTurn.getHand().size()-1){
+                            System.out.println("Player " + playersTurn.getName() + " changed the colour to " + AbstractCard.Colour.RED + "\n");
+                            board.getLastCard().setColour(AbstractCard.Colour.RED);
+                            break;
+                        }
+                    }
                 }
             }
             case REVERSE -> {
@@ -326,6 +336,11 @@ public class UnoGame implements AbstractCard.Ability {
                         if (card1.getColour() != AbstractCard.Colour.WILD) {
                             System.out.println("Player " + playersTurn.getName() + " changed the colour to " + card1.getColour().toString() + "\n");
                             board.getLastCard().setColour(card1.getColour());
+                            break;
+                        }
+                        if(playersTurn.getHand().indexOf(card1) == playersTurn.getHand().size()-1){
+                            System.out.println("Player " + playersTurn.getName() + " changed the colour to " + AbstractCard.Colour.RED + "\n");
+                            board.getLastCard().setColour(AbstractCard.Colour.RED);
                             break;
                         }
                     }
