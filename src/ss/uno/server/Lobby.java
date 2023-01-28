@@ -7,6 +7,7 @@ import ss.uno.player.AbstractPlayer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Lobby implements Runnable{
@@ -69,8 +70,18 @@ public class Lobby implements Runnable{
                         throw new RuntimeException(e);
                     }
                 }
-                for(AbstractCard card : players.get(players.indexOf(unoGame.getPlayersTurn())).getHand()){
-
+                ArrayList<AbstractCard> playerHand = new ArrayList<>();
+                for(AbstractCard card : unoGame.getPlayersTurn().getHand()){
+                    playerHand.add(card);
+                }
+                for (ClientHandler handler : Server.get_handlers()) {
+                    if(handler.get_players().get(0) == unoGame.getPlayersTurn()){
+                        try {
+                            handler.sendProtocol(Protocol.MOVE+formatMoveList(playerHand));
+                        } catch (IOException e) {
+                            System.out.println("Couldn't send move list");
+                        }
+                    }
                 }
             }
         }
@@ -124,5 +135,14 @@ public class Lobby implements Runnable{
 
     public void addPlayer(AbstractPlayer player){
         players.add(player);
+    }
+
+    public String formatMoveList(List<AbstractCard> cards) {
+        String protocolMsg = "";
+        protocolMsg += cards.get(0).getColour().toString()+Protocol.DELIMITERINITEMS+cards.get(0).getSymbol().toString();
+        for (int i = 1; i < cards.size(); i++) {
+            protocolMsg += Protocol.DELIMITERINITEMS+cards.get(i).getColour().toString()+Protocol.DELIMITERINITEMS+cards.get(i).getSymbol().toString();
+        }
+        return protocolMsg;
     }
 }

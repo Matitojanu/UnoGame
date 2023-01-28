@@ -190,4 +190,8 @@ public class ClientHandler implements Runnable {
         }
         return protocolMsg;
     }
+
+    public ArrayList<AbstractPlayer> get_players() {
+        return _players;
+    }
 }
