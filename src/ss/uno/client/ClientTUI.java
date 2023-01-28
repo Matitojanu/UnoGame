@@ -137,7 +137,7 @@ public class ClientTUI {
                     try {
                         client.wait(180000);
                     } catch (InterruptedException e) {
-                        System.out.println("Tread interrupted");
+                        System.out.println("Thread interrupted");
                     }
                 }
 
