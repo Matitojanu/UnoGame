@@ -37,12 +37,7 @@ public class UnoGame implements AbstractCard.Ability {
                     break;
                 }
             }
-            for (int i = 0; i < 7; i++) {
-                for (int j = 0; j < players.size(); j++) {
-                    playersTurn = players.get(j);
-                    drawCard();
-                }
-            }
+            drawCardsInitial();
             playersTurn = players.get(0);
             System.out.println("New round begins! \n");
             while (!isRoundOver()) {
@@ -78,6 +73,19 @@ public class UnoGame implements AbstractCard.Ability {
         }
         System.out.println("Player " + getGameWinner().getName() + " won the game!");
     }
+
+    /**
+     * This method draws the first 7 cards into each players' hand
+     */
+    public void drawCardsInitial() {
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < players.size(); j++) {
+                playersTurn = players.get(j);
+                drawCard();
+            }
+        }
+    }
+
     /**
      * Checks whose player's turn is it and changes it to the next one
      * @return the player who's turn is it
@@ -204,10 +212,8 @@ public class UnoGame implements AbstractCard.Ability {
                         totalPoints += 50;
                     }
                 }
+                player.getHand().remove(card);
             }
-        }
-        for(AbstractPlayer player : players){
-            player.getHand().clear();
         }
         playersPoints.replace(getRoundWinner(), totalPoints);
     }
@@ -298,11 +304,7 @@ public class UnoGame implements AbstractCard.Ability {
                 if(playersTurn instanceof HumanPlayer) {
                     board.pickColor();
                 }else{
-                    if(board.getLastCard().getColour() == AbstractCard.Colour.WILD){
-                        board.getLastCard().setColour(AbstractCard.Colour.RED);
-                    }else {
-                        board.getLastCard().setColour(board.getLastCard().getColour());
-                    }
+                    board.getLastCard().setColour(board.getLastCard().getColour());
                 }
             }
             case REVERSE -> {
