@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class Server implements Runnable {
     public final int port = Protocol.PORT;
-    private List<ClientHandler> _handlers; //_ is best practice to diferentiate members of the class from local parameters
+    private static List<ClientHandler> _handlers; //_ is best practice to diferentiate members of the class from local parameters
     private ServerSocket _serverSocket;
     private Socket _socket;
 
@@ -58,7 +58,7 @@ public class Server implements Runnable {
         start();
     }
 
-    public List<ClientHandler> get_handlers() {
+    public static List<ClientHandler> get_handlers() {
         return _handlers;
     }
 }

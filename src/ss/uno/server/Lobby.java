@@ -1,5 +1,7 @@
 package ss.uno.server;
 
+import ss.uno.Protocol;
+import ss.uno.UnoGame;
 import ss.uno.player.AbstractPlayer;
 
 import java.io.IOException;
@@ -26,9 +28,24 @@ public class Lobby implements Runnable{
     @Override
     public void run() {
         boolean waiting = true;
-        if(players.size() == maxPlayers){
-
+        while(waiting) {
+            for(ClientHandler handler : Server.get_handlers()){
+                try {
+                    handler.sendProtocol(Protocol.WAIT+"\\"+Protocol.DELIMITER+gameName+"\\"+Protocol.DELIMITER+maxPlayers+"\\"+Protocol.DELIMITER+players.size());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
+        for(ClientHandler handler : Server.get_handlers()){
+            try {
+                handler.sendProtocol(Protocol.START);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        UnoGame unoGame = new UnoGame(players);
+        unoGame.run();
     }
 
     public boolean waiting(){
