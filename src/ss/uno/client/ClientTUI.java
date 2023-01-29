@@ -116,9 +116,11 @@ public class ClientTUI {
             for (int i = 0; i < Protocol.FUNCTIONALITYUSER.length; i++) {
                 System.out.println((i+1)+" - " + Protocol.FUNCTIONALITYUSER[i]);
             }
-            System.out.println("Please input the index of the additional functionality you wish to add to the newly created game. If you do not wish any, press 0.");
+            System.out.println("Please input the index of the additional functionality you wish to add to the newly created game. " +
+                    "\nIf you do not wish any, press 0.");
             index = Integer.parseInt(_scanner.nextLine());
             if(index==0){
+                functionalities=Protocol.ORIGINAL;
                 break;
             }
             if(!functionalities.contains(Protocol.FUNCTIONALITYARR[index-1])) {
@@ -293,10 +295,17 @@ public class ClientTUI {
                     String[] newGameString = createNewGameText().split(" ");
                     String serverName = newGameString[0];
                     int maxPlayers = Integer.parseInt(newGameString[1]);
-                    String[] functionalitiesString = newGameString[2].split("-");
-                    List<String> features =new ArrayList<>();
-                    for (int i = 0; i < functionalitiesString.length; i++) {
-                        features.add(functionalitiesString[i]);
+
+                    List<String> features = new ArrayList<>();
+                    if(newGameString[2].contains("-")) {
+                        String[] functionalitiesString;
+                         functionalitiesString = newGameString[2].split("-");
+
+                        for (int i = 0; i < functionalitiesString.length; i++) {
+                            features.add(functionalitiesString[i]);
+                        }
+                    } else {
+                        features.add(newGameString[2]);
                     }
                     client.sendProtocol(Protocol.NEWGAME + Protocol.DELIMITER + serverName + Protocol.DELIMITER + maxPlayers + Protocol.DELIMITER + client.formatFunctionalities(features));
                 } else {

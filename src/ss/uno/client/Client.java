@@ -286,9 +286,7 @@ public class Client implements Runnable {
     public boolean sendName(String name){
         _out.println(Protocol.PLAYERNAME + Protocol.DELIMITER + name);
         try {
-            System.out.println("before line");
             String msgFromServer = _in.readLine();
-            System.out.println("after line");
             if ( msgFromServer.equals(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.ACCEPTED) ) {
                 this._name = name;
                 return true;
@@ -299,11 +297,7 @@ public class Client implements Runnable {
             System.out.println("The server has not responded when sending name");
         } catch (IOException e) {
             System.out.println("IO exception when sending name");
-        } /*catch (InterruptedException e) {
-            System.out.println("Interrupted exception in sending name");
         }
-       */
-
         return false;
     }
 
