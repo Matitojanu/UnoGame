@@ -1,5 +1,6 @@
 package ss.uno.server;
 
+import ss.uno.Board;
 import ss.uno.Protocol;
 import ss.uno.UnoGame;
 import ss.uno.cards.AbstractCard;
@@ -7,6 +8,7 @@ import ss.uno.player.AbstractPlayer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Lobby implements Runnable{
@@ -69,9 +71,35 @@ public class Lobby implements Runnable{
                         throw new RuntimeException(e);
                     }
                 }
-                for(AbstractCard card : players.get(players.indexOf(unoGame.getPlayersTurn())).getHand()){
-
+                ArrayList<AbstractCard> playerHand = new ArrayList<>();
+                for(AbstractCard card : unoGame.getPlayersTurn().getHand()){
+                    playerHand.add(card);
                 }
+                for (ClientHandler handler : Server.get_handlers()) {
+                    if(handler.get_players().get(0) == unoGame.getPlayersTurn()){
+                        try {
+                            if(handler.get_players().get(0).existsValidMove(unoGame.getBoard())){
+                                handler.sendProtocol(Protocol.MOVE + formatMoveList(playerHand));
+                                unoGame.getPlayersTurn().determineMove(unoGame.getBoard());
+                            }
+                        } catch (IOException e) {
+                            System.out.println("Couldn't send move list");
+                        }
+                    }
+                }
+            }
+            ArrayList<Integer> playerPoints = new ArrayList<>();
+            ArrayList<AbstractPlayer> pointOwners = new ArrayList<>();
+            for(AbstractPlayer player : unoGame.getPlayersPoints().keySet()){
+                playerPoints.add(unoGame.getPlayersPoints().get(player));
+                pointOwners.add(player);
+            }
+            ArrayList<String> Protocols = new ArrayList<>();
+            for(int i = 0; i < players.size(); i++){
+
+            }
+            for(ClientHandler handler : Server.get_handlers()){
+
             }
         }
     }
@@ -124,5 +152,14 @@ public class Lobby implements Runnable{
 
     public void addPlayer(AbstractPlayer player){
         players.add(player);
+    }
+
+    public String formatMoveList(List<AbstractCard> cards) {
+        String protocolMsg = "";
+        protocolMsg += cards.get(0).getColour().toString()+Protocol.DELIMITERINITEMS+cards.get(0).getSymbol().toString();
+        for (int i = 1; i < cards.size(); i++) {
+            protocolMsg += Protocol.DELIMITERINITEMS+cards.get(i).getColour().toString()+Protocol.DELIMITERINITEMS+cards.get(i).getSymbol().toString();
+        }
+        return protocolMsg;
     }
 }
