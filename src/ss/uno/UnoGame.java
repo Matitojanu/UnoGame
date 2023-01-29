@@ -364,4 +364,8 @@ public class UnoGame implements AbstractCard.Ability {
     public void setPlayersTurn(AbstractPlayer playersTurn) {
         this.playersTurn = playersTurn;
     }
+
+    public HashMap<AbstractPlayer, Integer> getPlayersPoints() {
+        return playersPoints;
+    }
 }

@@ -228,13 +228,13 @@ public class ClientTUI {
         System.out.println("Hello!");
         if( client.connect() ){
             while (userInitialization) {
-                synchronized (client) {
+                /*synchronized (client) {
                     try {
                         client.wait(180000);
                     } catch (InterruptedException e) {
                         System.out.println("Thread interrupted");
                     }
-                }
+                }*/
                 System.out.println("To join please input your name");
                 name = _scanner.nextLine();
                 System.out.println("Please write 'AI' if you wish to play as an AI, or 'H' if you wish to play as a regular player.");

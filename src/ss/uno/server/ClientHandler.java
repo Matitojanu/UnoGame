@@ -54,7 +54,7 @@ public class ClientHandler implements Runnable {
         }
 
         try {
-            sendProtocol(Protocol.PLAYERNAME);
+            //sendProtocol(Protocol.PLAYERNAME);
             String msgFromClient = _in.readLine();
             String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
             if (msgArray[0].equals(Protocol.PLAYERNAME)) {
@@ -146,7 +146,7 @@ public class ClientHandler implements Runnable {
                 if(messageArr[1].equals(Protocol.COLOR)){
                     lobby.getUnoGame().getBoard().getLastCard().setColour(AbstractCard.Colour.valueOf(messageArr[2]));
                 }else{
-                    lobby.getUnoGame().playCard((Card) lobby.getUnoGame().getPlayersTurn().getHand().get(Integer.parseInt((messageArr[1]))));
+                    lobby.getUnoGame().getPlayersTurn().determineMove(lobby.getUnoGame().getBoard());
                 }
             }
             case Protocol.DRAW -> {

@@ -1,5 +1,6 @@
 package ss.uno.server;
 
+import ss.uno.Board;
 import ss.uno.Protocol;
 import ss.uno.UnoGame;
 import ss.uno.cards.AbstractCard;
@@ -77,12 +78,28 @@ public class Lobby implements Runnable{
                 for (ClientHandler handler : Server.get_handlers()) {
                     if(handler.get_players().get(0) == unoGame.getPlayersTurn()){
                         try {
-                            handler.sendProtocol(Protocol.MOVE+formatMoveList(playerHand));
+                            if(handler.get_players().get(0).existsValidMove(unoGame.getBoard())){
+                                handler.sendProtocol(Protocol.MOVE + formatMoveList(playerHand));
+                                unoGame.getPlayersTurn().determineMove(unoGame.getBoard());
+                            }
                         } catch (IOException e) {
                             System.out.println("Couldn't send move list");
                         }
                     }
                 }
+            }
+            ArrayList<Integer> playerPoints = new ArrayList<>();
+            ArrayList<AbstractPlayer> pointOwners = new ArrayList<>();
+            for(AbstractPlayer player : unoGame.getPlayersPoints().keySet()){
+                playerPoints.add(unoGame.getPlayersPoints().get(player));
+                pointOwners.add(player);
+            }
+            ArrayList<String> Protocols = new ArrayList<>();
+            for(int i = 0; i < players.size(); i++){
+
+            }
+            for(ClientHandler handler : Server.get_handlers()){
+
             }
         }
     }
