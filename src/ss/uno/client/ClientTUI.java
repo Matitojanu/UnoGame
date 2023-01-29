@@ -259,13 +259,13 @@ public class ClientTUI {
                         int functionalityIndex = Integer.parseInt(_scanner.nextLine());
                         if(functionalityIndex==0){
                             addingFunctionality = false;
-                            break;
-                        }
-                        functionalitiesChosen.add(Protocol.FUNCTIONALITYARR[functionalityIndex-1]);
-                        System.out.println("If you wish add more functionalities, press 'y'. Otherwise press 'n'.");
-                        String response = _scanner.nextLine();
-                        if ( response.toLowerCase().equals("n") ) {
-                            addingFunctionality = false;
+                        }else {
+                            functionalitiesChosen.add(Protocol.FUNCTIONALITYARR[functionalityIndex - 1]);
+                            System.out.println("If you wish add more functionalities, press 'y'. Otherwise press 'n'.");
+                            String response = _scanner.nextLine();
+                            if ( response.toLowerCase().equals("n") ) {
+                                addingFunctionality = false;
+                            }
                         }
                     }
                     client.sendFunctionalities(functionalitiesChosen);
