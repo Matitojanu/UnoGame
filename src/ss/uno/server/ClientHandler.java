@@ -4,6 +4,7 @@ import ss.uno.Protocol;
 import ss.uno.UnoGame;
 import ss.uno.cards.AbstractCard;
 import ss.uno.cards.Card;
+import ss.uno.client.Client;
 import ss.uno.player.AbstractPlayer;
 import ss.uno.player.HumanPlayer;
 import ss.uno.player.OnlinePlayer;
@@ -69,7 +70,8 @@ public class ClientHandler implements Runnable {
         }
 
         System.out.println("Starting thread for user: " + _name);
-        /*try {
+
+        try {
             sendProtocol(Protocol.FUNCTIONALITIES);
             String msgFromClient = _in.readLine();
             String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
@@ -78,7 +80,7 @@ public class ClientHandler implements Runnable {
             }
         } catch (IOException e) {
             System.out.println("Client disconnected");
-        }*/
+        }
 
         try {
             for (Lobby lobby : _lobbyList) {
@@ -120,11 +122,13 @@ public class ClientHandler implements Runnable {
         switch (messageArr[0]) {
             case Protocol.HANDSHAKE -> {
                 sendProtocol(Protocol.HANDSHAKE + Protocol.DELIMITER + Protocol.HELLO);
+                break;
             }
             case Protocol.PLAYERNAME -> {
                 if (messageArr.length == 2) {
                     checkName(messageArr[1]);
                 }
+                break;
             }
             case Protocol.FUNCTIONALITIES -> {
 
@@ -135,9 +139,11 @@ public class ClientHandler implements Runnable {
                 lobby.start();
                 lobby.addPlayer(_players.get(_players.indexOf(_name)));
                 _lobbyList.add(lobby);
+                break;
             }
             case Protocol.JOINGAME -> {
                 _lobbyList.get(_lobbyList.indexOf(lobby)).getPlayers().add(_players.get(_players.indexOf(_name)));
+                break;
             }
 
             //Gameplay loop
@@ -148,13 +154,16 @@ public class ClientHandler implements Runnable {
                 }else{
                     lobby.getUnoGame().getPlayersTurn().determineMove(lobby.getUnoGame().getBoard());
                 }
+                break;
             }
             case Protocol.DRAW -> {
                 lobby.getUnoGame().drawCard();
                 sendProtocol(Protocol.DRAW+Protocol.DELIMITER+lobby.getUnoGame().getPlayersTurn().getHand().get(lobby.getUnoGame().getPlayersTurn().getHand().size()-1).getColour().toString()+Protocol.DELIMITER+lobby.getUnoGame().getPlayersTurn().getHand().get(lobby.getUnoGame().getPlayersTurn().getHand().size()-1).getSymbol().toString());
+                break;
             }
             case Protocol.INSTANTDISCARD -> {
                 lobby.getUnoGame().playCard((Card) lobby.getUnoGame().getPlayersTurn().getHand().get(lobby.getUnoGame().getPlayersTurn().getHand().size()-1));
+                break;
             }
         }
     }

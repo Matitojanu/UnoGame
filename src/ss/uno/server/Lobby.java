@@ -94,12 +94,16 @@ public class Lobby implements Runnable{
                 playerPoints.add(unoGame.getPlayersPoints().get(player));
                 pointOwners.add(player);
             }
-            ArrayList<String> Protocols = new ArrayList<>();
+            String results = "";
             for(int i = 0; i < players.size(); i++){
-
+                results += Protocol.DELIMITER+pointOwners.get(i).toString()+Protocol.DELIMITERINITEMS+playerPoints.get(i).toString();
             }
             for(ClientHandler handler : Server.get_handlers()){
-
+                try {
+                    handler.sendProtocol(Protocol.DISPLAYRESULTS+results);
+                } catch (IOException e) {
+                    System.out.println("Couldn't display results");
+                }
             }
         }
     }
