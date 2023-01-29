@@ -40,6 +40,10 @@ public class ClientHandler implements Runnable {
         this._lobbyList = new ArrayList<>();
     }
 
+    /**
+     * Sends a Hadnshake command, gets the playerName from
+     * the Client and sends the Client the list of games allowing them to join
+     */
     public void setUp() {
         try {
             String msgFromClient = _in.readLine();
@@ -87,12 +91,14 @@ public class ClientHandler implements Runnable {
         try {
             sendServerList();
             String msgFromClient = _in.readLine();
-            String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
-            if (msgArray[0].equals(Protocol.NEWGAME)||msgArray[0].equals(Protocol.JOINGAME)) {
-                try {
-                    handleMessage(msgFromClient);
-                } catch (IOException e) {
-                    System.out.println("Couldn't get client choice");
+            if(msgFromClient != null) {
+                String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
+                if (msgArray[0].equals(Protocol.NEWGAME) || msgArray[0].equals(Protocol.JOINGAME)) {
+                    try {
+                        handleMessage(msgFromClient);
+                    } catch (IOException e) {
+                        System.out.println("Couldn't get client choice");
+                    }
                 }
             }
         } catch (IOException e) {
@@ -100,6 +106,9 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Runs this section when a new Thread gets created, calls the setUp() function
+     */
     @Override
     public void run() {
         setUp();
@@ -117,6 +126,11 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Contains a switch case statement that chooses how to respond to different messages sent by the Client
+     * @param message sent by the client
+     * @throws IOException
+     */
     public void handleMessage(String message) throws IOException {
         String[] messageArr = message.split("\\" + Protocol.DELIMITER);
         switch (messageArr[0]) {
@@ -169,15 +183,29 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Sends a chat message to the Client (currently not used)
+     * @param message
+     */
     public void sendMessage(String message) {
         this._out.println(message);
         System.out.println("[" + this._name + "]" + message);
     }
 
+    /**
+     * Sends a protocol command to the client
+     * @param message sent to the client
+     * @throws IOException
+     */
     public void sendProtocol(String message) throws IOException {
         _out.println(message);
     }
 
+    /**
+     * Checks whether the name is valid and sends the appropriate protocol response
+     * @param name to be checked by the method
+     * @throws IOException
+     */
     public void checkName(String name) throws IOException {
         if (_playerNames.contains(name) || name.contains(" ")) {
             sendProtocol(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.DENIED);
@@ -191,6 +219,9 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Sends the list of currently existing lobbies to the Client
+     */
     public void sendServerList(){
         if(_lobbyList.size() != 0) {
             String msgForClient = "";
@@ -208,6 +239,11 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Formats the features sent by the Client (currently not used)
+     * @param features sent by the Client
+     * @return formatted functionalities
+     */
     public String formatFunctionalities(List<String> features) {
         String protocolMsg = "";
         protocolMsg = features.get(0);
@@ -219,14 +255,26 @@ public class ClientHandler implements Runnable {
         return protocolMsg;
     }
 
+    /**
+     * Returns currently connected players
+     * @return currently connected players
+     */
     public ArrayList<AbstractPlayer> get_players() {
         return _players;
     }
 
+    /**
+     * Returns the input stream
+     * @return the input stream
+     */
     public BufferedReader get_in() {
         return _in;
     }
 
+    /**
+     * Returns the output stream
+     * @return the output stream
+     */
     public PrintWriter get_out() {
         return _out;
     }
