@@ -19,6 +19,7 @@ public class Protocol {
     public static final String[] FUNCTIONALITYUSER = new String[]{"Chat" , "Team-play" , "Multi-game server" , "Lobby" , "Progressive UNO" , "Jump-IN UNO" , "Seven-O UNO" , "Graphical User Interface"};
     public static final String[] FUNCTIONALITYARR = new String[]{"CHAT" , "TEAMPLAY" , "MULTIGAMESERVER" , "LOBBY" , "PROGRESSIVEUNO" , "JUMPINUNO" , "SEVENOUNO" , "GUI"};
     public static final String SERVERLIST = "SERVERLIST";
+    public static final String ORIGINAL = "ORIGINAL";
 
     public static final String NEWGAME = "NEWGAME";
     public static final String JOINGAME = "JOINGAME";
