@@ -308,8 +308,10 @@ public class ClientTUI {
                         features.add(newGameString[2]);
                     }
                     client.sendProtocol(Protocol.NEWGAME + Protocol.DELIMITER + serverName + Protocol.DELIMITER + maxPlayers + Protocol.DELIMITER + client.formatFunctionalities(features));
+                    client.set_inGame(true);
                 } else {
                     client.sendProtocol(Protocol.JOINGAME + Protocol.DELIMITER + index);
+                    client.set_inGame(true);
                 }
 
             }
