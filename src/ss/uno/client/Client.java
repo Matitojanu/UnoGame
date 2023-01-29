@@ -287,18 +287,13 @@ public class Client implements Runnable {
         _out.println(Protocol.PLAYERNAME + Protocol.DELIMITER + name);
         try {
             System.out.println("before line");
-            String msgFromServer = "";
-            while(true) {
-                if ( _in.ready() && (msgFromServer = _in.readLine()) != null) {
-
-                    System.out.println("after line");
-                    if ( msgFromServer.equals(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.ACCEPTED) ) {
-                        this._name = name;
-                        return true;
-                    } else if ( msgFromServer.equals(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.DENIED) ) {
-                        return false;
-                    }
-                }
+            String msgFromServer = _in.readLine();
+            System.out.println("after line");
+            if ( msgFromServer.equals(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.ACCEPTED) ) {
+                this._name = name;
+                return true;
+            } else if ( msgFromServer.equals(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.DENIED) ) {
+                return false;
             }
         } catch (SocketTimeoutException e){
             System.out.println("The server has not responded when sending name");
