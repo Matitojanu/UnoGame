@@ -17,7 +17,10 @@ public class UnoGame implements AbstractCard.Ability {
     private List<AbstractPlayer> players;
     private HashMap<AbstractPlayer, Integer> playersPoints = new HashMap<>();
 
-
+    /**
+     * This method is a constructor, so it creates an object of the class UnoGame, with a board, and a list of players
+     * @param abstractPlayers the players that are in this particular game
+     */
     public UnoGame(List<AbstractPlayer> abstractPlayers) {
         this.players = abstractPlayers;
         board = new Board(new Deck());
@@ -26,6 +29,9 @@ public class UnoGame implements AbstractCard.Ability {
         }
     }
 
+    /**
+     * This method runs the whole game, and manages the gameplay untill one player has 500 points or more
+     */
     public void run() {
         while (!isGameOver()){
             board = new Board(new Deck());
@@ -75,6 +81,7 @@ public class UnoGame implements AbstractCard.Ability {
 
     /**
      * This method draws the first 7 cards into each players' hand
+     * @ensures that all the players have 7 cards in their hands
      */
     public void drawCardsInitial() {
         for (int i = 0; i < 7; i++) {
@@ -88,6 +95,7 @@ public class UnoGame implements AbstractCard.Ability {
     /**
      * Checks whose player's turn is it and changes it to the next one
      * @return the player who's turn is it
+     * @ensures that the player that is returned, it is indeed the player whose turn it is
      */
     public AbstractPlayer changeTurn(){
         for (int i = 0; i < players.size(); i++) {
@@ -108,6 +116,7 @@ public class UnoGame implements AbstractCard.Ability {
     /**
      * Returns the player that has won the round
      * @return the player that has no more cards in their hand
+     * @ensures that the player that is returned, has indeed won the round
      */
     public AbstractPlayer getRoundWinner(){
         for (int i = 0; i < players.size(); i++) {
@@ -121,6 +130,7 @@ public class UnoGame implements AbstractCard.Ability {
     /**
      * Returns the player that has won the game
      * @return the player that has
+     * @ensures that the player who is returned is the one that won the game and has 500 points or more
      */
     public AbstractPlayer getGameWinner(){
         for(AbstractPlayer player : playersPoints.keySet()){
@@ -134,6 +144,7 @@ public class UnoGame implements AbstractCard.Ability {
     /**
      * Returns whether the round is finished or not
      * @return true if the round has finished, false otherwhise
+     * @ensures that it returns true if the round is indeed over, and false if it's not
      */
     public boolean isRoundOver(){
         for (int i = 0; i < players.size(); i++) {
@@ -147,6 +158,7 @@ public class UnoGame implements AbstractCard.Ability {
     /**
      * Returns whether the game is finished or not
      * @return true if the game has finished, false otherwhise
+     * @ensures that true is returned if the game is over, false if not
      */
     public boolean isGameOver(){
         for(AbstractPlayer player : playersPoints.keySet()){
@@ -159,6 +171,7 @@ public class UnoGame implements AbstractCard.Ability {
 
     /**
      * Calculates the points from a round and assigns them to the winner
+     * @ensures the points are added correctly to each player
      */
     public void distributePoints(){
         int totalPoints = playersPoints.get(getRoundWinner());
@@ -217,6 +230,13 @@ public class UnoGame implements AbstractCard.Ability {
         playersPoints.replace(getRoundWinner(), totalPoints);
     }
 
+    /**
+     * This method returns true if the card given as parameters can be played on the last card
+     * @param card the card that is to be validated
+     * @return true if it can be played on the last card, false otehrwhise
+     * @ensures true is returned if the card is valid and it can be played on the last card, false if not
+     * @requires the card to be a valid card
+     */
     public boolean isCardValid(Card card){
         Card lastCard = getBoard().getLastCard();
         if(card.getSymbol()== lastCard.getSymbol() || card.getColour()==lastCard.getColour()){
@@ -228,6 +248,7 @@ public class UnoGame implements AbstractCard.Ability {
     /**
      * This function plays the card that is given as parameters
      * @param card that will be played
+     * @ensures the card given as parameters is set as the last card and removed from the players' hand
      */
     public void playCard(Card card){
         Deck deck = board.getDeck();
@@ -237,6 +258,7 @@ public class UnoGame implements AbstractCard.Ability {
 
     /**
      *  This function draws a card from the deck
+     * @ensures that a card is drawn for the player whose turn it is, and that it is removed from the deck
      */
     public void drawCard() {
         for (int i = 0; i < players.size(); i++) {
@@ -257,6 +279,8 @@ public class UnoGame implements AbstractCard.Ability {
     /**
      * Asks the player whether he wants to play the drawn card. AI always plays the card
      * @param drawnCard card drawn by the player that can be played
+     * @requires that the drawnCard given in the parameters is a valid card
+     * @ensures that if the player wishes to play the card, it gets played and set as the last card
      */
     public void playDrawnCard(Card drawnCard){
         if(playersTurn instanceof HumanPlayer) {
@@ -284,6 +308,7 @@ public class UnoGame implements AbstractCard.Ability {
 
     /**
      * Does the ability function based on the last card, and changes the turn before applying it
+     * @ensures that the ability is correct and that its effects are given to the correct player
      */
     public void abilityFunction(){
         Deck deck = board.getDeck();
@@ -349,22 +374,29 @@ public class UnoGame implements AbstractCard.Ability {
         }
     }
 
+    /**
+     * This method returns the board of the game
+     * @return the board of the game
+     * @requires a valid board
+     */
     public Board getBoard() {
         return board;
     }
 
-    public void setBoard(Board board) {
-        this.board = board;
-    }
-
+    /**
+     * This method returns whose players' turn it is
+     * @return the player who has to make a move
+     * @ensures the correct player is sent
+     */
     public AbstractPlayer getPlayersTurn() {
         return playersTurn;
     }
 
-    public void setPlayersTurn(AbstractPlayer playersTurn) {
-        this.playersTurn = playersTurn;
-    }
-
+    /**
+     * This method returns a map with the players as keys and the points each one has as values
+     * @return the map with the players and points
+     * @ensures the valid and correct map is sent
+     */
     public HashMap<AbstractPlayer, Integer> getPlayersPoints() {
         return playersPoints;
     }

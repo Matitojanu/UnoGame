@@ -12,19 +12,40 @@ import java.util.Scanner;
 public class HumanPlayer extends AbstractPlayer{
     private String name;
 
+    /**
+     * This method is a constructor so it creates the HumanPlayer object and sets the name o the player as the one given in parameters.
+     * @param name the name the user has inputed
+     */
     public HumanPlayer(String name){
         this.name = name;
     }
 
+    /**
+     * This method gets the name of the player
+     * @return the name the player has
+     * @ensures the name of the player is returned
+     */
     @Override
     public String getName() {
         return name;
     }
 
+    /**
+     * This method sets the players' name as the one given as parameters
+     * @param name the name of the user
+     * @ensures the name given as parameters is set as the players' name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * This method checks whether there is avalid move in the players' hand
+     * @param board the board of the game, on which the last played card is
+     * @return true if there exists at least one valid one, false if there is no valid move
+     * @requires a valid board with a valid last card
+     * @ensures that true is sent if there is a valid move, and false if there are none
+     */
     @Override
     public boolean existsValidMove(Board board){
         for (int index = 0; index < getHand().size(); index++) {
@@ -41,6 +62,8 @@ public class HumanPlayer extends AbstractPlayer{
     /**
      * Returns a valid move from the player
      * @return card that is wither played or drawn from the deck
+     * @requires a valid board with a valid last card
+     * @ensures the move that is sent is valid
      */
     @Override
     public int determineMove(Board board) {
