@@ -74,18 +74,18 @@ public class ClientHandler implements Runnable {
         try {
             sendProtocol(Protocol.FUNCTIONALITIES);
             String msgFromClient = _in.readLine();
-            String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
-            if (msgArray[0].equals(Protocol.FUNCTIONALITYARR)) {
-                formatFunctionalities(Collections.singletonList(msgArray[1]));
+            if(msgFromClient != null) {
+                String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
+                if (msgArray[0].equals(Protocol.FUNCTIONALITYARR)) {
+                    formatFunctionalities(Collections.singletonList(msgArray[1]));
+                }
             }
         } catch (IOException e) {
             System.out.println("Client disconnected");
         }
 
         try {
-            for (Lobby lobby : _lobbyList) {
-                sendProtocol(Protocol.SERVERLIST + "\\" + Protocol.DELIMITER + lobby.getGameName() + Protocol.DELIMITERINITEMS + lobby.getMaxPlayers() + Protocol.DELIMITERINITEMS + lobby.getNumberOfPlayers() + Protocol.DELIMITERINITEMS + lobby.getGamemode());
-            }
+            sendServerList();
             String msgFromClient = _in.readLine();
             String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
             if (msgArray[0].equals(Protocol.NEWGAME)||msgArray[0].equals(Protocol.JOINGAME)) {
@@ -139,10 +139,11 @@ public class ClientHandler implements Runnable {
                 lobby.start();
                 lobby.addPlayer(_players.get(_players.indexOf(_name)));
                 _lobbyList.add(lobby);
+                sendServerList();
                 break;
             }
             case Protocol.JOINGAME -> {
-                _lobbyList.get(_lobbyList.indexOf(lobby)).getPlayers().add(_players.get(_players.indexOf(_name)));
+                _lobbyList.get(Integer.parseInt(messageArr[1])-1).getPlayers().add(_players.get(_players.indexOf(_name)));
                 break;
             }
 
@@ -187,6 +188,21 @@ public class ClientHandler implements Runnable {
             AbstractPlayer player = new HumanPlayer(name);
             _players.add(player);
             sendProtocol(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.ACCEPTED);
+        }
+    }
+
+    public void sendServerList(){
+        String msgForClient = "";
+        ArrayList<String> serverList = new ArrayList<>();
+        for (Lobby lobby : _lobbyList) {
+            msgForClient = lobby.getGameName().toString() + Protocol.DELIMITERINITEMS + lobby.getMaxPlayers() + Protocol.DELIMITERINITEMS + lobby.getNumberOfPlayers() + Protocol.DELIMITERINITEMS + lobby.getGamemode().toString();
+            serverList.add(msgForClient);
+        }
+        String[] serverListArr = (String[]) serverList.toArray();
+        try {
+            sendProtocol(Protocol.SERVERLIST+Protocol.DELIMITER+serverListArr);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
