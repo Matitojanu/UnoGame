@@ -84,29 +84,29 @@ public class ClientHandler implements Runnable {
             System.out.println("Client disconnected");
         }
 
-        try {
-            sendServerList();
-            String msgFromClient = _in.readLine();
-            String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
-            if (msgArray[0].equals(Protocol.NEWGAME)||msgArray[0].equals(Protocol.JOINGAME)) {
-                try {
-                    handleMessage(msgFromClient);
-                } catch (IOException e) {
-                    System.out.println("Couldn't get client choice");
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Client disconnected");
-        }
+//        try {
+//            sendServerList();
+//            String msgFromClient = _in.readLine();
+//            String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
+//            if (msgArray[0].equals(Protocol.NEWGAME)||msgArray[0].equals(Protocol.JOINGAME)) {
+//                try {
+//                    handleMessage(msgFromClient);
+//                } catch (IOException e) {
+//                    System.out.println("Couldn't get client choice");
+//                }
+//            }
+//        } catch (IOException e) {
+//            System.out.println("Client disconnected");
+//        }
     }
 
     @Override
     public void run() {
         setUp();
-        try (_in) {
+        try {
             String line;
             while ((line = _in.readLine()) != null) {
-                try (_in) {
+                try {
                     handleMessage(line);
                 } catch (IOException e) {
                     System.out.println("Error");
@@ -139,7 +139,7 @@ public class ClientHandler implements Runnable {
                 lobby.start();
                 lobby.addPlayer(_players.get(_players.indexOf(_name)));
                 _lobbyList.add(lobby);
-                sendServerList();
+//                sendServerList();
                 break;
             }
             case Protocol.JOINGAME -> {
