@@ -307,7 +307,6 @@ public class Client implements Runnable {
      */
     public void sendProtocol(String message){
         _out.println(message);
-        _out.flush();
     }
 
     /**
@@ -317,10 +316,10 @@ public class Client implements Runnable {
     public void sendFunctionalities(List<String> features) {
 
         try {
-            if ( _in.readLine() == Protocol.FUNCTIONALITIES ) {
+//            if ( _in.readLine() == Protocol.FUNCTIONALITIES ) {
                 _out.println(formatFunctionalities(features));
-                _out.flush();
-            }
+
+//            }
         } catch (Exception e) {
             System.out.println("An exception while sending functionalities");
         }
