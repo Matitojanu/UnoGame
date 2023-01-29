@@ -27,9 +27,16 @@ public class Lobby implements Runnable{
         this.players = new ArrayList<>();
     }
 
+    /**
+     * Starts a new Thread
+     */
     public void start(){
         new Thread(this).start();
     }
+
+    /**
+     * Runs this section when a new Thread gets created, creates and runs a new unoGame
+     */
     @Override
     public void run() {
         boolean waiting = true;
@@ -108,56 +115,78 @@ public class Lobby implements Runnable{
         }
     }
 
+    /**
+     * Returns true when lobby isn't full and false when it gets filled
+     * @return true when lobby isn't full and false when it gets filled
+     */
     public boolean waiting(){
         if(players.size() == maxPlayers){
             return false;
         }
         return true;
     }
+
+    /**
+     * Returns the name of the lobby
+     * @return the name of the lobby
+     */
     public String getGameName() {
         return gameName;
     }
 
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
-    }
-
+    /**
+     * Returns the maximum number of players
+     * @return the maximum number of players
+     */
     public int getMaxPlayers() {
         return maxPlayers;
     }
 
-    public void setMaxPlayers(int maxPlayers) {
-        this.maxPlayers = maxPlayers;
-    }
-
+    /**
+     * Returns the gamemode
+     * @return the gamemode
+     */
     public String getGamemode() {
         return gamemode;
     }
 
-    public void setGamemode(String gamemode) {
-        this.gamemode = gamemode;
-    }
-
+    /**
+     * Returns the current number of players
+     * @return the current number of players
+     */
     public int getNumberOfPlayers() {
         return numberOfPlayers;
     }
 
-    public void setNumberOfPlayers(int numberOfPlayers) {
-        this.numberOfPlayers = numberOfPlayers;
-    }
-
+    /**
+     * Returns a list of players in the lobby
+     * @return a list of players in the lobby
+     */
     public ArrayList<AbstractPlayer> getPlayers() {
         return players;
     }
 
+    /**
+     * Returns the unoGame
+     * @return the unoGame
+     */
     public UnoGame getUnoGame() {
         return unoGame;
     }
 
+    /**
+     * Adds a player to the list of players
+     * @param player that joined the lobby
+     */
     public void addPlayer(AbstractPlayer player){
         players.add(player);
     }
 
+    /**
+     * Formats the move list into a list
+     * @param cards in the current player's hand
+     * @return a formatted move list
+     */
     public String formatMoveList(List<AbstractCard> cards) {
         String protocolMsg = "";
         protocolMsg += cards.get(0).getColour().toString()+Protocol.DELIMITERINITEMS+cards.get(0).getSymbol().toString();
