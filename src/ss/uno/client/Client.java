@@ -13,6 +13,10 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static ss.uno.client.ClientTUI.*;
 
@@ -45,7 +49,6 @@ public class Client implements Runnable {
         try {
             String msgFromServer = _in.readLine();
             if(msgFromServer.equals(Protocol.HANDSHAKE+Protocol.DELIMITER+Protocol.HELLO)){ //this can wait for the server infinetly so we need to find solution about it
-                new Thread(this).start();
                 _handshakeComplete=true;
                 return true;
             }
@@ -82,12 +85,6 @@ public class Client implements Runnable {
                 String[] words  = line.split("\\" + Protocol.DELIMITER );
                 if(_handshakeComplete){
                     switch (words[0]){
-                        case Protocol.PLAYERNAME:{
-                            synchronized (this) {
-                                this.notify();
-                            }
-                            break;
-                        }
                         case Protocol.SERVERLIST:{
                             servers = words[1].split("\\" + Protocol.DELIMITER);
                             printServerListText(servers);
@@ -288,20 +285,30 @@ public class Client implements Runnable {
      */
     public boolean sendName(String name){
         _out.println(Protocol.PLAYERNAME + Protocol.DELIMITER + name);
-        _out.flush();
         try {
-            String msgFromServer = _in.readLine();
-            if(msgFromServer.equals(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.ACCEPTED )){
-                this._name = name;
-                return true;
-            } else if ( msgFromServer.equals(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.DENIED )){
-                return false;
+            System.out.println("before line");
+            String msgFromServer = "";
+            while(true) {
+                if ( _in.ready() && (msgFromServer = _in.readLine()) != null) {
+
+                    System.out.println("after line");
+                    if ( msgFromServer.equals(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.ACCEPTED) ) {
+                        this._name = name;
+                        return true;
+                    } else if ( msgFromServer.equals(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.DENIED) ) {
+                        return false;
+                    }
+                }
             }
         } catch (SocketTimeoutException e){
-            System.out.println("The server has not responded");
+            System.out.println("The server has not responded when sending name");
         } catch (IOException e) {
             System.out.println("IO exception when sending name");
+        } /*catch (InterruptedException e) {
+            System.out.println("Interrupted exception in sending name");
         }
+       */
+
         return false;
     }
 
