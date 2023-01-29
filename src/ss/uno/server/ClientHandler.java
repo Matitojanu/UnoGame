@@ -134,8 +134,8 @@ public class ClientHandler implements Runnable {
 
             }
             case Protocol.NEWGAME -> {
-                String[] itemSplit = messageArr[1].split("-");
-                lobby = new Lobby(itemSplit[1], valueOf(itemSplit[2]), itemSplit[3]);
+                String[] itemSplit = messageArr[1].split(Protocol.DELIMITERINITEMS);
+                this.lobby = new Lobby(itemSplit[1], Integer.parseInt(itemSplit[2]), itemSplit[3]);
                 lobby.start();
                 lobby.addPlayer(_players.get(_players.indexOf(_name)));
                 _lobbyList.add(lobby);
@@ -192,17 +192,19 @@ public class ClientHandler implements Runnable {
     }
 
     public void sendServerList(){
-        String msgForClient = "";
-        ArrayList<String> serverList = new ArrayList<>();
-        for (Lobby lobby : _lobbyList) {
-            msgForClient = lobby.getGameName().toString() + Protocol.DELIMITERINITEMS + lobby.getMaxPlayers() + Protocol.DELIMITERINITEMS + lobby.getNumberOfPlayers() + Protocol.DELIMITERINITEMS + lobby.getGamemode().toString();
-            serverList.add(msgForClient);
-        }
-        String[] serverListArr = (String[]) serverList.toArray();
-        try {
-            sendProtocol(Protocol.SERVERLIST+Protocol.DELIMITER+serverListArr);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if(_lobbyList.size() != 0) {
+            String msgForClient = "";
+            ArrayList<String> serverList = new ArrayList<>();
+            for (int i = 0; i < _lobbyList.size(); i++) {
+                msgForClient = _lobbyList.get(i).getGameName() + Protocol.DELIMITERINITEMS + Integer.toString(_lobbyList.get(i).getMaxPlayers()) + Protocol.DELIMITERINITEMS + Integer.toString(_lobbyList.get(i).getNumberOfPlayers()) + Protocol.DELIMITERINITEMS + lobby.getGamemode().toString();
+                serverList.add(msgForClient);
+            }
+            String[] serverListArr = serverList.toArray(new String[0]);
+            try {
+                sendProtocol(Protocol.SERVERLIST + Protocol.DELIMITER + serverListArr);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
