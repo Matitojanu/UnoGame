@@ -42,13 +42,17 @@ public class Lobby implements Runnable{
         boolean waiting = true;
         while(waiting) {
             for(ClientHandler handler : Server.get_handlers()){
-                try {
-                    handler.sendProtocol(Protocol.WAIT+Protocol.DELIMITER+gameName+Protocol.DELIMITER+maxPlayers+Protocol.DELIMITER+players.size());
-                    TimeUnit.SECONDS.sleep(10);
-                } catch (IOException e) {
-                    System.out.println("Couldn't send wait command");
-                } catch (InterruptedException e) {
-                    System.out.println("Interrupted wait");
+                for(int i = 0; i < players.size(); i++){
+                    if(handler.get_players().get(0).getName().equals(players.get(i).getName())){
+                        try {
+                            handler.sendProtocol(Protocol.WAIT + Protocol.DELIMITER + gameName + Protocol.DELIMITER + maxPlayers + Protocol.DELIMITER + players.size());
+                            TimeUnit.SECONDS.sleep(10);
+                        } catch (IOException e) {
+                            System.out.println("Couldn't send wait command");
+                        } catch (InterruptedException e) {
+                            System.out.println("Interrupted wait");
+                        }
+                    }
                 }
             }
         }

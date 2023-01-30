@@ -80,8 +80,8 @@ public class ClientHandler implements Runnable {
             String msgFromClient = _in.readLine();
             if(msgFromClient != null) {
                 String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
-                if (msgArray[0].equals(Protocol.FUNCTIONALITYARR)) {
-                    formatFunctionalities(Collections.singletonList(msgArray[1]));
+                if (msgArray[0].equals(Protocol.FUNCTIONALITIES)) {
+                    handleMessage(msgFromClient);
                 }
             }
         } catch (IOException e) {
@@ -143,13 +143,15 @@ public class ClientHandler implements Runnable {
                 break;
             }
             case Protocol.FUNCTIONALITIES -> {
-
+                ArrayList<String> functionalities = new ArrayList<>();
+                for(int i = 0; i < messageArr[1].length(); i++){
+                    functionalities.add(messageArr[1]);
+                }
             }
             case Protocol.NEWGAME -> {
-                String[] itemSplit = messageArr[1].split(Protocol.DELIMITERINITEMS);
-                this.lobby = new Lobby(itemSplit[1], Integer.parseInt(itemSplit[2]), itemSplit[3]);
+                this.lobby = new Lobby(messageArr[1], Integer.parseInt(messageArr[2]), messageArr[3]);
                 lobby.start();
-                lobby.addPlayer(_players.get(_players.indexOf(_name)));
+                lobby.addPlayer(_players.get(0));
                 _lobbyList.add(lobby);
 //                sendServerList();
                 break;
@@ -237,21 +239,6 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    /**
-     * Formats the features sent by the Client (currently not used)
-     * @param features sent by the Client
-     * @return formatted functionalities
-     */
-    public String formatFunctionalities(List<String> features) {
-        String protocolMsg = "";
-        protocolMsg = features.get(0);
-        for (int i = 1; i < features.size(); i++) {
-            if (!protocolMsg.contains(features.get(i))) {
-                protocolMsg = Protocol.DELIMITER + features.get(i).toUpperCase();
-            }
-        }
-        return protocolMsg;
-    }
 
     /**
      * Returns currently connected players
