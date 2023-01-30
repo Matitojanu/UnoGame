@@ -4,6 +4,8 @@ import ss.uno.Board;
 import ss.uno.Protocol;
 import ss.uno.UnoGame;
 import ss.uno.cards.AbstractCard;
+import ss.uno.cards.Card;
+import ss.uno.cards.Deck;
 import ss.uno.player.AbstractPlayer;
 
 import java.io.IOException;
@@ -55,7 +57,7 @@ public class Lobby implements Runnable{
                 }
             }
                 try {
-                    TimeUnit.SECONDS.sleep(10);
+                    TimeUnit.SECONDS.sleep(3);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -68,37 +70,72 @@ public class Lobby implements Runnable{
             }
         }
         unoGame = new UnoGame(players);
-        unoGame.run();
+        runUnoGame(unoGame);
+    }
+
+    public void runUnoGame(UnoGame unoGame){
         while(!unoGame.isGameOver()) {
-            for (ClientHandler handler : Server.get_handlers()) {
-                try {
-                    handler.sendProtocol(Protocol.NEWROUND);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+            unoGame.boardSetUp();
+            unoGame.drawCardsInitial();
+            unoGame.setPlayersTurn(players.get(0));
+            for(int j = 0; j < Server.get_handlers().size(); j++) {
+                for (int i = 0; i < players.size(); i++) {
+                    if (Server.get_handlers().get(j).get_player() != null) {
+                        if (Server.get_handlers().get(j).get_player().getName().equals(players.get(i).getName())) {
+                            try {
+                                Server.get_handlers().get(j).sendProtocol(Protocol.NEWROUND);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
                 }
             }
             while (!unoGame.isRoundOver()) {
-                for (ClientHandler handler : Server.get_handlers()) {
-                    try {
-                        handler.sendProtocol(Protocol.CURRENTPLAYER+Protocol.DELIMITER+unoGame.getPlayersTurn().getName());
-                        handler.sendProtocol(Protocol.UPDATEFIELD+Protocol.DELIMITER+unoGame.getBoard().getLastCard().getColour()+Protocol.DELIMITER+unoGame.getBoard().getLastCard().getSymbol());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                for(int j = 0; j < Server.get_handlers().size(); j++){
+                    for(int i = 0; i < players.size(); i++) {
+                        if (Server.get_handlers().get(j).get_player() != null) {
+                            if (Server.get_handlers().get(j).get_player().getName().equals(players.get(i).getName())) {
+                                try {
+                                    Server.get_handlers().get(j).sendProtocol(Protocol.CURRENTPLAYER + Protocol.DELIMITER + unoGame.getPlayersTurn().getName());
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        }
                     }
                 }
-                ArrayList<AbstractCard> playerHand = new ArrayList<>();
-                for(AbstractCard card : unoGame.getPlayersTurn().getHand()){
-                    playerHand.add(card);
-                }
-                for (ClientHandler handler : Server.get_handlers()) {
-                    if(handler.get_player() == unoGame.getPlayersTurn()){
-                        try {
-                            if(handler.get_player().existsValidMove(unoGame.getBoard())){
-                                handler.sendProtocol(Protocol.MOVE + formatMoveList(playerHand));
-                                unoGame.getPlayersTurn().determineMove(unoGame.getBoard());
+                //ArrayList<AbstractCard> playerHand = new ArrayList<>();
+                //for(AbstractCard card : unoGame.getPlayersTurn().getHand()){
+                //    playerHand.add(card);
+                //}
+                for(int j = 0; j < Server.get_handlers().size(); j++){
+                    for(int i = 0; i < players.size(); i++) {
+                        if (Server.get_handlers().get(j).get_player() != null) {
+                            if (Server.get_handlers().get(j).get_player().getName().equals(players.get(i).getName())) {
+                                try {
+                                    if(Server.get_handlers().get(j).get_player() == unoGame.getPlayersTurn()) {
+                                        if (Server.get_handlers().get(j).get_player().existsValidMove(unoGame.getBoard())) {
+                                            String moveList = formatMoveList(unoGame.getPlayersTurn().getHand());
+                                            Server.get_handlers().get(j).sendProtocol(Protocol.MOVE + moveList);
+                                            String msgFromClient = Server.get_handlers().get(j).listenToMessage();;
+                                            String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
+                                            if (msgArray[0].equals(Protocol.MOVE)) {
+                                                try {
+                                                    Server.get_handlers().get(j).handleMessage(msgFromClient);
+                                                } catch (IOException e) {
+                                                    System.out.println("Couldn't get client choice");
+                                                }
+                                            }
+                                            Server.get_handlers().get(j).sendProtocol(Protocol.UPDATEFIELD + Protocol.DELIMITER + unoGame.getBoard().getLastCard().getColour() + Protocol.DELIMITER + unoGame.getBoard().getLastCard().getSymbol());
+                                        } else {
+                                            System.out.println("why are we here");
+                                        }
+                                    }
+                                } catch (IOException e) {
+                                    System.out.println("Couldn't send move list");
+                                }
                             }
-                        } catch (IOException e) {
-                            System.out.println("Couldn't send move list");
                         }
                     }
                 }
@@ -195,11 +232,11 @@ public class Lobby implements Runnable{
      * @param cards in the current player's hand
      * @return a formatted move list
      */
-    public String formatMoveList(List<AbstractCard> cards) {
+    public String formatMoveList(List<AbstractCard> playerHand) {
         String protocolMsg = "";
-        protocolMsg += cards.get(0).getColour().toString()+Protocol.DELIMITERINITEMS+cards.get(0).getSymbol().toString();
-        for (int i = 1; i < cards.size(); i++) {
-            protocolMsg += Protocol.DELIMITERINITEMS+cards.get(i).getColour().toString()+Protocol.DELIMITERINITEMS+cards.get(i).getSymbol().toString();
+        protocolMsg += playerHand.get(0).getColour().toString()+Protocol.DELIMITERINITEMS+playerHand.get(0).getSymbol().toString();
+        for (int i = 1; i < playerHand.size(); i++) {
+            protocolMsg += Protocol.DELIMITER+playerHand.get(i).getColour().toString()+Protocol.DELIMITERINITEMS+playerHand.get(i).getSymbol().toString();
         }
         return protocolMsg;
     }

@@ -167,7 +167,7 @@ public class ClientHandler implements Runnable {
                 if(messageArr[1].equals(Protocol.COLOR)){
                     lobby.getUnoGame().getBoard().getLastCard().setColour(AbstractCard.Colour.valueOf(messageArr[2]));
                 }else{
-                    lobby.getUnoGame().getPlayersTurn().determineMove(lobby.getUnoGame().getBoard());
+                    lobby.getUnoGame().playCard((Card) lobby.getUnoGame().getPlayersTurn().getHand().get(Integer.parseInt(messageArr[1])));
                 }
                 break;
             }
@@ -241,6 +241,14 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    public String listenToMessage(){
+        try {
+            String message = _in.readLine();
+            return message;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * Returns currently connected players

@@ -11,8 +11,6 @@ import java.util.*;
 
 public class UnoGame implements AbstractCard.Ability {
     private Board board;
-    private AbstractPlayer player1;
-    private AbstractPlayer player2;
     private AbstractPlayer playersTurn;
     private List<AbstractPlayer> players;
     private HashMap<AbstractPlayer, Integer> playersPoints = new HashMap<>();
@@ -34,15 +32,7 @@ public class UnoGame implements AbstractCard.Ability {
      */
     public void run() {
         while (!isGameOver()){
-            board = new Board(new Deck());
-            board.setLastCard((Card) board.getDeck().getCard());
-            while (true) {
-                if (board.getLastCard().getColour() == AbstractCard.Colour.WILD) {
-                    board = new Board(new Deck());
-                } else {
-                    break;
-                }
-            }
+            boardSetUp();
             drawCardsInitial();
             playersTurn = players.get(0);
             while (!isRoundOver()) {
@@ -88,6 +78,18 @@ public class UnoGame implements AbstractCard.Ability {
             for (int j = 0; j < players.size(); j++) {
                 playersTurn = players.get(j);
                 drawCard();
+            }
+        }
+    }
+
+    public void boardSetUp(){
+        board = new Board(new Deck());
+        board.setLastCard((Card) board.getDeck().getCard());
+        while (true) {
+            if (board.getLastCard().getColour() == AbstractCard.Colour.WILD) {
+                board = new Board(new Deck());
+            } else {
+                break;
             }
         }
     }
@@ -383,6 +385,10 @@ public class UnoGame implements AbstractCard.Ability {
         return board;
     }
 
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
     /**
      * This method returns whose players' turn it is
      * @return the player who has to make a move
@@ -390,6 +396,10 @@ public class UnoGame implements AbstractCard.Ability {
      */
     public AbstractPlayer getPlayersTurn() {
         return playersTurn;
+    }
+
+    public void setPlayersTurn(AbstractPlayer playersTurn) {
+        this.playersTurn = playersTurn;
     }
 
     /**
