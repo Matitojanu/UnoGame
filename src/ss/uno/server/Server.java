@@ -15,9 +15,13 @@ public class Server implements Runnable {
     private static List<ClientHandler> _handlers; //_ is best practice to diferentiate members of the class from local parameters
     private ServerSocket _serverSocket;
     private Socket _socket;
+    private static ArrayList<Lobby> _lobbyList;
+    private static ArrayList<String> _playerNames;
 
     public Server() throws IOException {
         this._handlers = new ArrayList<>();
+        this._lobbyList = new ArrayList<>();
+        this._playerNames = new ArrayList<>();
     }
 
     public void start(){
@@ -60,5 +64,21 @@ public class Server implements Runnable {
 
     public static List<ClientHandler> get_handlers() {
         return _handlers;
+    }
+
+    public static ArrayList<Lobby> get_lobbyList() {
+        return _lobbyList;
+    }
+
+    public static void addLobby(Lobby lobby){
+        _lobbyList.add(lobby);
+    }
+
+    public static ArrayList<String> get_playerNames() {
+        return _playerNames;
+    }
+
+    public static void add_playerName(String name) {
+        _playerNames.add(name);
     }
 }
