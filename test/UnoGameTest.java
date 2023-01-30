@@ -28,6 +28,14 @@ public class UnoGameTest {
         players.add(player3 =  new AI("-AliceBot"));
         players.add(player4 =  new AI("-SandyBot"));
         game =  new UnoGame(players);
+        game.drawCardsInitial();
+        while (true){
+            if(game.getPlayersTurn()!=player1){
+                game.changeTurn();
+            }else{
+                break;
+            }
+        }
     }
 
     @Test
