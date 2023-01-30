@@ -255,12 +255,12 @@ public class Client implements ClientInterface {
         AbstractCard.Colour cardColour = null;
         AbstractCard.Symbol cardSymbol = null;
         for(AbstractCard.Colour colour : AbstractCard.Colour.values()){
-            if(colour.toString().toUpperCase() == words[1].split(Protocol.DELIMITERINITEMS)[0].toUpperCase()){
+            if(colour.toString().equalsIgnoreCase(words[0])){
                 cardColour = colour;
             }
         }
         for(AbstractCard.Symbol symbol : AbstractCard.Symbol.values()){
-            if(symbol.toString().toUpperCase() == words[1].split(Protocol.DELIMITERINITEMS)[1].toUpperCase()){
+            if(symbol.toString().equalsIgnoreCase(words[1])){
                 cardSymbol = symbol;
             }
         }
