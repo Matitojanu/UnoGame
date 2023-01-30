@@ -13,10 +13,6 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import static ss.uno.client.ClientTUI.*;
 
@@ -316,10 +312,7 @@ public class Client implements Runnable {
     public void sendFunctionalities(List<String> features) {
 
         try {
-//            if ( _in.readLine() == Protocol.FUNCTIONALITIES ) {
-                _out.println(formatFunctionalities(features));
-
-//            }
+            _out.println(formatFunctionalities(features));
         } catch (Exception e) {
             System.out.println("An exception while sending functionalities");
         }
