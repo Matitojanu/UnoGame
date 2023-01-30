@@ -17,6 +17,7 @@ import java.util.Scanner;
  */
 public class ClientTUI {
     private static Scanner _scanner = new Scanner(System.in);
+    public static final String WRONGINPUT = "Wrong input! Please try again.";
 
     /**
      * This method prints into the terminal the text representation of the player who has to make a move.
@@ -47,10 +48,9 @@ public class ClientTUI {
      * @param hand the hand with the cards the player has
      */
     public static int getMoveFromUserText(List<Card> hand){
+        System.out.println("Please input the index of the card you wish to play. If you wish to draw a card, input " + (hand.size() + 1));
         _scanner = new Scanner(System.in);
-        System.out.println("Please input the index of the card you wish to play. If you wish to draw a card, input " + (hand.size()+1));
-        String strMove = _scanner.nextLine();
-        int move = Integer.parseInt(strMove);
+        int move = Integer.parseInt(_scanner.nextLine());
         return move;
     }
 
@@ -59,10 +59,15 @@ public class ClientTUI {
      * @return the index of the server the user wishes to join.
      */
     public static int getIndexOfServerFromUserText(){
-        System.out.println("Please input the index of the server you wish to join. If you wish to create a game, press 0. If you do not wish to continue, input -1:");
-        String strIndex = _scanner.nextLine();
-        int i = Integer.parseInt(strIndex);
-        return i;
+        while(true) {
+            System.out.println("Please input the index of the server you wish to join. If you wish to create a game, press 0. If you do not wish to continue, input -1:");
+            int i = Integer.parseInt(_scanner.nextLine());
+            if( (Integer) i instanceof Integer) {
+                return i;
+            }else {
+                System.out.println(WRONGINPUT);
+            }
+        }
     }
 
     /**
@@ -86,11 +91,13 @@ public class ClientTUI {
             int maxPlayers = Integer.parseInt(arguments[1]);
             int playerAmmount = Integer.parseInt(arguments[2]);
             String gamemodes = "";
-            if( arguments[3] !=null){
+            if( arguments[3].contains("-")){
                 gamemodes = arguments[3];
                 for (int j = 4; j < arguments.length; j++) {
                     gamemodes+= "-" + arguments[i];
                 }
+            }else {
+                gamemodes+=arguments[3];
             }
             System.out.println((i+1) + ": " + serverName + " (" + maxPlayers + " max players, " + playerAmmount + " players already in game, "+ "gamemodes: " + gamemodes + ")");
         }
@@ -111,7 +118,7 @@ public class ClientTUI {
         while(true) {
             System.out.println("Please input the maximum amount of players allowed in this game:");
             maxPlayers = Integer.parseInt(_scanner.nextLine());
-            if(maxPlayers>1){
+            if(maxPlayers>1 && ((Integer) maxPlayers instanceof Integer) ){
                 break;
             }
             System.out.println("Wrong input. The minimum amount of players is 2. Please try again.");
@@ -123,12 +130,16 @@ public class ClientTUI {
             System.out.println("Please input the index of the additional functionality you wish to add to the newly created game. " +
                     "\nIf you do not wish any, press 0.");
             index = Integer.parseInt(_scanner.nextLine());
-            if(index==0){
-                functionalities=Protocol.ORIGINAL;
-                break;
-            }
-            if(!functionalities.contains(Protocol.FUNCTIONALITYARR[index-1])) {
-                functionalities =functionalities + Protocol.FUNCTIONALITYARR[index - 1] + "-";
+            if( (Integer) index instanceof Integer) {
+                if ( index == 0 ) {
+                    functionalities = Protocol.ORIGINAL;
+                    break;
+                }
+                if ( !functionalities.contains(Protocol.FUNCTIONALITYARR[index - 1]) ) {
+                    functionalities = functionalities + Protocol.FUNCTIONALITYARR[index - 1] + "-";
+                }
+            } else {
+                System.out.println("Wrong input. Please input the number of the functionality you wish to add.");
             }
         }
         return  serverName + " " + maxPlayers + " " + functionalities;
@@ -141,7 +152,7 @@ public class ClientTUI {
      * @param nrPlayers how many players have currently joined the game and are waiting for it to start
      */
     public static void printWaitText(String gameName, int maxPlayers, int nrPlayers){
-        System.out.println("The game: " + gameName + " is now waiting for more players. There are currently " + nrPlayers + "/" + maxPlayers + "players waiting.");
+        System.out.println("The game: '" + gameName + "' is now waiting for more players. There are currently " + nrPlayers + "/" + maxPlayers + " players waiting.");
     }
 
     /**
@@ -156,15 +167,19 @@ public class ClientTUI {
      * @return the color the user chose as an instance of <code>AbstractCard.Colour</code>
      */
     public static AbstractCard.Colour choseColorFromUserText(){
-
-        System.out.println("Please input the color you wish to change the last card to, from: Yellow, Red, Blue, Green");
-        String userColor = _scanner.nextLine();
-        for (AbstractCard.Colour colour: AbstractCard.Colour.values()){
-            if(userColor.toUpperCase().equals(colour.toString().toUpperCase())){
-                return colour;
+        while (true) {
+            System.out.println("Please input the color you wish to change the last card to, from: Yellow, Red, Blue, Green");
+            String userColor = _scanner.nextLine();
+            if ( Protocol.COLORSPOSSIBLE.contains(userColor.toUpperCase()) ) {
+                for (AbstractCard.Colour colour : AbstractCard.Colour.values()) {
+                    if ( userColor.toUpperCase().equals(colour.toString().toUpperCase()) ) {
+                        return colour;
+                    }
+                }
+            } else {
+                System.out.println(WRONGINPUT);
             }
         }
-        return null;
     }
 
     /**
@@ -200,11 +215,19 @@ public class ClientTUI {
      * @return an empty string if the user doesn't wish to play the card, 'Y' if the player wishes to play it
      */
     public static String askForChoiceToPlayDrawnCardText(){
-        System.out.println("Do you wish to play this card? If yes press 'Y', if no, press 'N'.");
         String result = "";
-        String response = _scanner.nextLine();
-        if(response.equalsIgnoreCase("Y")){
-            result = response;
+        while (true) {
+            System.out.println("Do you wish to play this card? If yes press 'Y', if no, press 'N'.");
+            String response = _scanner.nextLine();
+            if ( response.equalsIgnoreCase("Y") ) {
+                result = "Y";
+                break;
+            } else if (response.equalsIgnoreCase("N")){
+                result = "N";
+                break;
+            } else {
+                System.out.println(WRONGINPUT);
+            }
         }
         return result;
     }
@@ -214,12 +237,17 @@ public class ClientTUI {
      * @return true if the user wants to challange the other player, false otherwhise
      */
     public static boolean askUserIfChallangeText(){
-        System.out.println("Do you wish to challange the player that placed this card? Press 'Y' if yes and 'N' if no.");
-        String response = _scanner.nextLine();
-        if(response.equalsIgnoreCase("y")){
-            return true;
+        while (true) {
+            System.out.println("Do you wish to challange the player that placed this card? Press 'Y' if yes and 'N' if no.");
+            String response = _scanner.nextLine();
+            if ( response.equalsIgnoreCase("y") ) {
+                return true;
+            } else if ( response.equalsIgnoreCase("N") ){
+                return false;
+            } else {
+                System.out.println(WRONGINPUT);
+            }
         }
-        return false;
     }
 
     /**
@@ -238,21 +266,21 @@ public class ClientTUI {
         System.out.println("Hello!");
         if( client.connect() ){
             while (userInitialization) {
-                /*synchronized (client) {
-                    try {
-                        client.wait(180000);
-                    } catch (InterruptedException e) {
-                        System.out.println("Thread interrupted");
-                    }
-                }*/
                 System.out.println("To join please input your name");
                 name = _scanner.nextLine();
-                System.out.println("Please write 'AI' if you wish to play as an AI, or 'H' if you wish to play as a regular player.");
-                String userTypeChoice = _scanner.nextLine();
-                if(userTypeChoice.equalsIgnoreCase("AI")){
-                    client.set_playerClient(new AI(name));
-                } else {
-                    client.set_playerClient(new HumanPlayer(name));
+
+                while (true) {
+                    System.out.println("Please write 'AI' if you wish to play as an AI, or 'H' if you wish to play as a regular player.");
+                    String userTypeChoice = _scanner.nextLine();
+                    if ( userTypeChoice.equalsIgnoreCase("AI") ) {
+                        client.set_playerClient(new AI(name));
+                        break;
+                    } else if ( userTypeChoice.equalsIgnoreCase("h") ){
+                        client.set_playerClient(new HumanPlayer(name));
+                        break;
+                    } else {
+                        System.out.println("Wrong input! Please try again!");
+                    }
                 }
                 if ( client.sendName(name) ) {
                     System.out.println("Successful! Loading...");
@@ -263,16 +291,20 @@ public class ClientTUI {
                         }
                         System.out.println("If you don't want any additional functionalities, press 0.");
                         int functionalityIndex = Integer.parseInt(_scanner.nextLine());
-                        if(functionalityIndex==0){
-                            addingFunctionality = false;
-                            functionalitiesChosen.add(Protocol.ORIGINAL);
-                        }else {
-                            functionalitiesChosen.add(Protocol.FUNCTIONALITYARR[functionalityIndex - 1]);
-                            System.out.println("If you wish add more functionalities, press 'y'. Otherwise press 'n'.");
-                            String response = _scanner.nextLine();
-                            if ( response.toLowerCase().equals("n") ) {
+                        if( (Integer) functionalityIndex instanceof Integer ) {
+                            if ( functionalityIndex == 0 ) {
                                 addingFunctionality = false;
+                                functionalitiesChosen.add(Protocol.ORIGINAL);
+                            } else {
+                                functionalitiesChosen.add(Protocol.FUNCTIONALITYARR[functionalityIndex - 1]);
+                                System.out.println("If you wish add more functionalities, press 'y'. Otherwise press 'n'.");
+                                String response = _scanner.nextLine();
+                                if ( response.toLowerCase().equals("n") ) {
+                                    addingFunctionality = false;
+                                }
                             }
+                        } else {
+                            System.out.println("Wrong input! Please input a valid index.");
                         }
                     }
                     client.sendFunctionalities(functionalitiesChosen);
