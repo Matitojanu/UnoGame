@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
+/**
+ * This method is responsible for running a Uno game in the terminal with a maximum ammount of 10 players, and AIs
+ */
 public class UnoTUI {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);

@@ -9,6 +9,11 @@ import ss.uno.player.HumanPlayer;
 import java.sql.SQLOutput;
 import java.util.*;
 
+/**
+ * This class is responsible for all the actions a play can do in UnoGame,
+ * such as drawing cards, playing cards, changing turns and
+ * getting the points distributed.
+ */
 public class UnoGame implements AbstractCard.Ability {
     private Board board;
     private AbstractPlayer player1;
@@ -20,6 +25,8 @@ public class UnoGame implements AbstractCard.Ability {
     /**
      * This method is a constructor, so it creates an object of the class UnoGame, with a board, and a list of players
      * @param abstractPlayers the players that are in this particular game
+     * @ensures that the players of the game will be set as the ones given in parameters
+     * @requires a non empty list of players
      */
     public UnoGame(List<AbstractPlayer> abstractPlayers) {
         this.players = abstractPlayers;

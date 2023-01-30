@@ -8,13 +8,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * This class is responsible for setting the last color to the picked color,
+ * updating and returning the last card played, as well as updating,
+ * returning and checking whether the deck it has is finished
+ */
 public class Board {
     private Deck deckCards;
-    private static Card lastCard;
+    private Card lastCard;
 
+    /**
+     * This method is a constructor and sets the deck of cards of the board as the one given as parameters
+     * @param deckCards the deck of cards that the board will have
+     * @ensures that the deck of the board is set as the one given as parameter
+     * @requires a valid deck, not null
+     */
     public Board(Deck deckCards){
         this.deckCards = deckCards;
     }
+
     /**
      * Returns the last played card
      * @requires the last card to be not null

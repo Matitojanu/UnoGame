@@ -2,6 +2,11 @@ package ss.uno;
 
 import java.net.InetAddress;
 
+/**
+ * This class consists of all the protocol messages possible between
+ * the client and the server. The protocol also stores the IP and
+ * the port on which the client and server run
+ */
 public class Protocol {
     public static final int PORT = 24042;
     public static final String IPADDRESS = "localhost";
