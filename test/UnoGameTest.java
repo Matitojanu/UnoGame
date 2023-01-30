@@ -10,6 +10,7 @@ import ss.uno.player.AbstractPlayer;
 import ss.uno.player.HumanPlayer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -22,7 +23,7 @@ public class UnoGameTest {
 
     @BeforeEach
     public void setUp(){
-        ArrayList<AbstractPlayer> players =  new ArrayList<>();
+        List<AbstractPlayer> players =  new ArrayList<>();
         players.add(player1 =  new HumanPlayer("Ami"));
         players.add(player2 =  new HumanPlayer("Matuesz"));
         players.add(player3 =  new AI("-AliceBot"));
