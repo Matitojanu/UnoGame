@@ -78,7 +78,7 @@ public class ClientTUI {
      */
     public static void printShowPlayerHandText(List<Card> hand){
         for (int i = 1; i <=hand.size(); i++) {
-            System.out.println(i + hand.get(i-1).toString());
+            System.out.println(i + " - " + hand.get(i-1).toString());
         }
     }
 
