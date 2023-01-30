@@ -328,6 +328,7 @@ public class Client implements ClientInterface {
     public void sendFunctionalities(List<String> features) {
 
         try {
+            //TODO: to fix the waiting for functionalities from server
             _out.println(formatFunctionalities(features));
         } catch (Exception e) {
             System.out.println("An exception while sending functionalities");
