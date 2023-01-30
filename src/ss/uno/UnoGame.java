@@ -248,7 +248,7 @@ public class UnoGame implements AbstractCard.Ability {
      */
     public boolean isCardValid(Card card){
         Card lastCard = getBoard().getLastCard();
-        if(card.getSymbol()== lastCard.getSymbol() || card.getColour()==lastCard.getColour()){
+        if(card.getSymbol().equals( lastCard.getSymbol() ) || card.getColour().equals(lastCard.getColour()) ){
             return true;
         }
         return false;
