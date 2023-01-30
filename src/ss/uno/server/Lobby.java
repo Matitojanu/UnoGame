@@ -39,23 +39,27 @@ public class Lobby implements Runnable{
      */
     @Override
     public void run() {
-        boolean waiting = true;
-        while(waiting) {
-            for(ClientHandler handler : Server.get_handlers()){
+        while(isWaiting()) {
+            for(int j = 0; j < Server.get_handlers().size(); j++){
                 for(int i = 0; i < players.size(); i++){
-                    if(handler.get_players().get(0).getName().equals(players.get(i).getName())){
-                        try {
-                            handler.sendProtocol(Protocol.WAIT + Protocol.DELIMITER + gameName + Protocol.DELIMITER + maxPlayers + Protocol.DELIMITER + players.size());
-                            TimeUnit.SECONDS.sleep(10);
-                        } catch (IOException e) {
-                            System.out.println("Couldn't send wait command");
-                        } catch (InterruptedException e) {
-                            System.out.println("Interrupted wait");
+                    if(Server.get_handlers().get(j).get_player() != null) {
+                        if (Server.get_handlers().get(j).get_player().getName().equals(players.get(i).getName())) {
+                            try {
+                                Server.get_handlers().get(j).sendProtocol(Protocol.WAIT + Protocol.DELIMITER + gameName + Protocol.DELIMITER + maxPlayers + Protocol.DELIMITER + players.size());
+
+                            } catch (IOException e) {
+                                System.out.println("Couldn't send wait command");
+                            }
                         }
                     }
                 }
             }
-        }
+                try {
+                    TimeUnit.SECONDS.sleep(10);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         for(ClientHandler handler : Server.get_handlers()){
             try {
                 handler.sendProtocol(Protocol.START);
@@ -87,9 +91,9 @@ public class Lobby implements Runnable{
                     playerHand.add(card);
                 }
                 for (ClientHandler handler : Server.get_handlers()) {
-                    if(handler.get_players().get(0) == unoGame.getPlayersTurn()){
+                    if(handler.get_player() == unoGame.getPlayersTurn()){
                         try {
-                            if(handler.get_players().get(0).existsValidMove(unoGame.getBoard())){
+                            if(handler.get_player().existsValidMove(unoGame.getBoard())){
                                 handler.sendProtocol(Protocol.MOVE + formatMoveList(playerHand));
                                 unoGame.getPlayersTurn().determineMove(unoGame.getBoard());
                             }
@@ -123,7 +127,7 @@ public class Lobby implements Runnable{
      * Returns true when lobby isn't full and false when it gets filled
      * @return true when lobby isn't full and false when it gets filled
      */
-    public boolean waiting(){
+    public boolean isWaiting(){
         if(players.size() == maxPlayers){
             return false;
         }
