@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * This class is responsible for all the textual user ineterface the user sees, taking input from said user and
+ * controls the flow of the actions happening between user and client through a main() method
+ */
 public class ClientTUI {
     private static Scanner _scanner = new Scanner(System.in);
 
@@ -224,7 +228,7 @@ public class ClientTUI {
      */
     public static void main(String[] args) throws IOException {
 
-        Client client = new Client();
+        ClientInterface client = new Client();
         String name;
         List<String> functionalitiesChosen =  new ArrayList<>();
         boolean addingFunctionality = true;
