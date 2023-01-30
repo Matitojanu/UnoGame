@@ -61,10 +61,12 @@ public class ClientTUI {
     public static int getIndexOfServerFromUserText(){
         while(true) {
             System.out.println("Please input the index of the server you wish to join. If you wish to create a game, press 0. If you do not wish to continue, input -1:");
-            int i = Integer.parseInt(_scanner.nextLine());
-            if( (Integer) i instanceof Integer) {
-                return i;
-            }else {
+            try {
+                int i = Integer.parseInt(_scanner.nextLine());
+                if ( (Integer) i instanceof Integer ) {
+                    return i;
+                }
+            }catch (NumberFormatException e){
                 System.out.println(WRONGINPUT);
             }
         }
@@ -116,12 +118,15 @@ public class ClientTUI {
         int index;
         String functionalities = "";
         while(true) {
-            System.out.println("Please input the maximum amount of players allowed in this game:");
-            maxPlayers = Integer.parseInt(_scanner.nextLine());
-            if(maxPlayers>1 && ((Integer) maxPlayers instanceof Integer) ){
-                break;
+            try {
+                System.out.println("Please input the maximum amount of players allowed in this game:");
+                maxPlayers = Integer.parseInt(_scanner.nextLine());
+                if ( maxPlayers > 1 ) {
+                    break;
+                }
+            } catch (NumberFormatException e ) {
+                System.out.println("Wrong input. The minimum amount of players is 2. Please try again.");
             }
-            System.out.println("Wrong input. The minimum amount of players is 2. Please try again.");
         }
         while (true) {
             for (int i = 0; i < Protocol.FUNCTIONALITYUSER.length; i++) {
@@ -129,8 +134,8 @@ public class ClientTUI {
             }
             System.out.println("Please input the index of the additional functionality you wish to add to the newly created game. " +
                     "\nIf you do not wish any, press 0.");
-            index = Integer.parseInt(_scanner.nextLine());
-            if( (Integer) index instanceof Integer) {
+            try {
+                index = Integer.parseInt(_scanner.nextLine());
                 if ( index == 0 ) {
                     functionalities = Protocol.ORIGINAL;
                     break;
@@ -138,7 +143,8 @@ public class ClientTUI {
                 if ( !functionalities.contains(Protocol.FUNCTIONALITYARR[index - 1]) ) {
                     functionalities = functionalities + Protocol.FUNCTIONALITYARR[index - 1] + "-";
                 }
-            } else {
+                break;
+            } catch (NumberFormatException e){
                 System.out.println("Wrong input. Please input the number of the functionality you wish to add.");
             }
         }
@@ -284,27 +290,30 @@ public class ClientTUI {
                 }
                 if ( client.sendName(name) ) {
                     System.out.println("Successful! Loading...");
-                    while (addingFunctionality) {
-                        System.out.println("Please input the index of the functionality you wish to add:");
-                        for (int i = 0; i < Protocol.FUNCTIONALITYUSER.length; i++) {
-                            System.out.println((i + 1) + " - " + Protocol.FUNCTIONALITYUSER[i]);
-                        }
-                        System.out.println("If you don't want any additional functionalities, press 0.");
-                        int functionalityIndex = Integer.parseInt(_scanner.nextLine());
-                        if( (Integer) functionalityIndex instanceof Integer ) {
-                            if ( functionalityIndex == 0 ) {
-                                addingFunctionality = false;
-                                functionalitiesChosen.add(Protocol.ORIGINAL);
-                            } else {
-                                functionalitiesChosen.add(Protocol.FUNCTIONALITYARR[functionalityIndex - 1]);
-                                System.out.println("If you wish add more functionalities, press 'y'. Otherwise press 'n'.");
-                                String response = _scanner.nextLine();
-                                if ( response.toLowerCase().equals("n") ) {
-                                    addingFunctionality = false;
-                                }
+                    while (addingFunctionality) { //TODO: to check for valid move
+                        while (true) {
+                            System.out.println("Please input the index of the functionality you wish to add:");
+                            for (int i = 0; i < Protocol.FUNCTIONALITYUSER.length; i++) {
+                                System.out.println((i + 1) + " - " + Protocol.FUNCTIONALITYUSER[i]);
                             }
-                        } else {
-                            System.out.println("Wrong input! Please input a valid index.");
+                            System.out.println("If you don't want any additional functionalities, press 0.");
+                            try {
+                                int functionalityIndexStr = Integer.parseInt(_scanner.nextLine());
+                                if ( functionalityIndexStr == 0 ) {
+                                    addingFunctionality = false;
+                                    functionalitiesChosen.add(Protocol.ORIGINAL);
+                                } else {
+                                    functionalitiesChosen.add(Protocol.FUNCTIONALITYARR[functionalityIndexStr - 1]);
+                                    System.out.println("If you wish add more functionalities, press 'y'. Otherwise press 'n'.");
+                                    String response = _scanner.nextLine();
+                                    if ( response.toLowerCase().equals("n") ) {
+                                        addingFunctionality = false;
+                                    }
+                                }
+                                break;
+                            } catch (NumberFormatException e){
+                                System.out.println(WRONGINPUT);
+                            }
                         }
                     }
                     client.sendFunctionalities(functionalitiesChosen);
@@ -323,6 +332,7 @@ public class ClientTUI {
         while(wishToPlay) {
             while(!client.is_inGame()){
                 int index = getIndexOfServerFromUserText();
+
                 if(index==-1){
                     System.out.println("You have been disconected. Goodbye!");
                     client.close();
@@ -331,7 +341,6 @@ public class ClientTUI {
                     String[] newGameString = createNewGameText().split(" ");
                     String serverName = newGameString[0];
                     int maxPlayers = Integer.parseInt(newGameString[1]);
-
                     List<String> features = new ArrayList<>();
                     if(newGameString[2].contains("-")) {
                         String[] functionalitiesString;
