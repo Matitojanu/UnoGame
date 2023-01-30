@@ -43,7 +43,6 @@ public class Board {
      */
     public void setLastCard(Card lastCard) {
         this.lastCard = lastCard;
-
     }
 
     /**

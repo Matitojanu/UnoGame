@@ -98,6 +98,7 @@ public class Lobby implements Runnable{
                             if (Server.get_handlers().get(j).get_player().getName().equals(players.get(i).getName())) {
                                 try {
                                     Server.get_handlers().get(j).sendProtocol(Protocol.CURRENTPLAYER + Protocol.DELIMITER + unoGame.getPlayersTurn().getName());
+                                    Server.get_handlers().get(j).sendProtocol(Protocol.UPDATEFIELD + Protocol.DELIMITER + unoGame.getBoard().getLastCard().getColour() + Protocol.DELIMITER + unoGame.getBoard().getLastCard().getSymbol());
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
@@ -234,7 +235,7 @@ public class Lobby implements Runnable{
      */
     public String formatMoveList(List<AbstractCard> playerHand) {
         String protocolMsg = "";
-        protocolMsg += playerHand.get(0).getColour().toString()+Protocol.DELIMITERINITEMS+playerHand.get(0).getSymbol().toString();
+        protocolMsg += Protocol.DELIMITER+playerHand.get(0).getColour().toString()+Protocol.DELIMITERINITEMS+playerHand.get(0).getSymbol().toString();
         for (int i = 1; i < playerHand.size(); i++) {
             protocolMsg += Protocol.DELIMITER+playerHand.get(i).getColour().toString()+Protocol.DELIMITERINITEMS+playerHand.get(i).getSymbol().toString();
         }
