@@ -135,7 +135,7 @@ public class Client implements ClientInterface {
                             break;
                         }
                         case Protocol.UPDATEFIELD :{
-                            Card card = parseCard(words);
+                            Card card = parseCard(words[1].split(Protocol.DELIMITERINITEMS));
                             if( _game.isCardValid(card) ) {
                                 _game.getBoard().setLastCard(card);
                                 if(card.getColour()!= AbstractCard.Colour.WILD){
