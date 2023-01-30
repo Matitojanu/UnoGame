@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This class is responsible for creating a shuffled deck with all 108 cards, creating a deck with the rest of
+ * the cards that are not in the players hands, drawing a card and checking whether the deck is empty
+ */
 public class Deck {
     private ArrayList<AbstractCard> deckCards =  new ArrayList<>();
 
@@ -68,6 +72,8 @@ public class Deck {
     /**
      * Creates a deck without the cards that are in any of the player's hands and that have been played last
      * @param cards the cards in the player's hands and the last played card
+     * @required a non empty list of cards as parameters
+     * @ensures the deck is shuffled after it has been created withoutr the players' hands and last card
      */
     public Deck(ArrayList<AbstractCard> cards){
         this();
@@ -82,11 +88,17 @@ public class Deck {
     /**
      * Returns the array of all the cars in the deck
      * @return the array of cards that are in the deck;
+     * @ensures the deck of cards will be returned
      */
     public ArrayList<AbstractCard> getDeckCards() {
         return deckCards;
     }
 
+    /**
+     * This method returns the first card from the deck and removes it from it
+     * @return the first card at the top of the deck
+     * @ensures a card from the deck will be drawn and retured, while removed from the deck
+     */
     public AbstractCard getCard(){
         Card card = (Card) deckCards.get(0);
         deckCards.remove(0);
@@ -95,13 +107,10 @@ public class Deck {
     }
 
     /**
-     * Removes a card from the deck
-     * @param card the card that should be removed
+     * This method checks whether the deck is empty and returns the apropriate answer
+     * @return true if the deck is finished and there are no more cards to draw, and false other whise (if there is at least one card left)
+     * @ensures that it returns false if the deck is not empty, and true if it is
      */
-    public void removeCard(Card card){
-        deckCards.remove(card);
-    }
-
     public boolean isEmpty(){
         return deckCards.size()==0;
     }
