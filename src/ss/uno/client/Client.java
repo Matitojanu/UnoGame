@@ -184,12 +184,12 @@ public class Client implements ClientInterface {
                                 int move;
                                 while (true) {
                                     printShowPlayerHandText(hand);
-                                    move = getMoveFromUserText(hand);
+                                    move = getMoveFromUserText(hand)-1;
                                     if ( _game.isCardValid((Card) hand.get(move)) ) {
                                         _game.getBoard().setLastCard(hand.get(move));
                                         sendMove(move);
                                         break;
-                                    } else if ( move == hand.size() + 1 ) {
+                                    } else if ( move == hand.size() ) {
                                         sendProtocol(Protocol.DRAW);
                                         break;
                                     } else {
