@@ -9,6 +9,10 @@ import ss.uno.UnoGame;
 
 import java.util.Scanner;
 
+/**
+ * This class is a subclass of teh abstract class <code>AbstractPlayer</code>.
+ * This class is responsible for creating the human player, with a name, and asks for input for moves, until they are valid
+ */
 public class HumanPlayer extends AbstractPlayer{
     private String name;
 
