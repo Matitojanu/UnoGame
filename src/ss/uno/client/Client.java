@@ -145,10 +145,6 @@ public class Client implements ClientInterface {
                             break;
                         }
                         case Protocol.MOVE:{
-                            if(_playerClient.existsValidMove(_game.getBoard())==false){
-                                sendProtocol(Protocol.DRAW);
-                                break;
-                            }
                             if ( words[1].equals(Protocol.CHOOSECOLOR) ) {
                                 AbstractCard.Colour pickedColor = null;
                                 if(_playerClient instanceof HumanPlayer) {
@@ -176,11 +172,20 @@ public class Client implements ClientInterface {
                                 sendProtocol(Protocol.MOVE + Protocol.DELIMITER + Protocol.CHALLANGE + Protocol.DELIMITER + Protocol.FALSE);
                                 break;
                             }
+
+                            List<AbstractCard> hand = new ArrayList<>();
+                            for (int i = 1; i < words.length; i++) {
+                                hand.add(parseCard(words[i].split(Protocol.DELIMITERINITEMS)));
+                            }
+                            _playerClient.setHand(hand);
+                            if(_playerClient.existsValidMove(_game.getBoard())==false){
+                                printShowPlayerHandText(hand);
+                                printNoAvailableMovesText();
+                                sendProtocol(Protocol.DRAW);
+                                break;
+                            }
                             if(_playerClient instanceof HumanPlayer) {
-                                List<Card> hand = new ArrayList<>();
-                                for (int i = 1; i < words.length; i++) {
-                                    hand.add(parseCard(words[i].split(Protocol.DELIMITERINITEMS)));
-                                }
+
                                 int move;
                                 while (true) {
                                     printShowPlayerHandText(hand);
@@ -189,7 +194,7 @@ public class Client implements ClientInterface {
                                         sendProtocol(Protocol.DRAW);
                                         break;
                                     }else if( _game.isCardValid((Card) hand.get(move)) ) {
-                                        _game.getBoard().setLastCard(hand.get(move));
+                                        _game.getBoard().setLastCard((Card) hand.get(move));
                                         sendMove(move);
                                         break;
                                     } else {

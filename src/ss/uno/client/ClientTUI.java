@@ -47,7 +47,7 @@ public class ClientTUI {
      * @return the index of the card/ move the user wishes to do
      * @param hand the hand with the cards the player has
      */
-    public static int getMoveFromUserText(List<Card> hand){
+    public static int getMoveFromUserText(List<AbstractCard> hand){
         System.out.println("Please input the index of the card you wish to play. If you wish to draw a card, input " + (hand.size() + 1));
         _scanner = new Scanner(System.in);
         int move = Integer.parseInt(_scanner.nextLine());
@@ -76,10 +76,17 @@ public class ClientTUI {
      * This method prints into the terminal the text representation of the players' hand.
      * @param hand the hand of the player, containing the cards.
      */
-    public static void printShowPlayerHandText(List<Card> hand){
+    public static void printShowPlayerHandText(List<AbstractCard> hand){
         for (int i = 1; i <=hand.size(); i++) {
             System.out.println(i + " - " + hand.get(i-1).toString());
         }
+    }
+
+    /**
+     * This method prints into the terminal the text for when there are no moves left for the player to do
+     */
+    public static void printNoAvailableMovesText(){
+        System.out.println("No moves left. Drawing a card...");
     }
 
     /**
