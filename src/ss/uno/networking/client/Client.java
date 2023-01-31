@@ -87,13 +87,16 @@ public class Client implements ClientInterface {
     public void run() {
         try  {
             String line;
-            String[] servers;
+            List<String> servers = new ArrayList<>();
             while ((line = _in.readLine()) != null){
+                System.out.println(line);
                 String[] words  = line.split("\\" + Protocol.DELIMITER );
                 if(_handshakeComplete){
                     switch (words[0]){
                         case Protocol.SERVERLIST:{
-                            servers = words[1].split("\\" + Protocol.DELIMITER);
+                            for (int i = 1; i < words.length; i++) {
+                                    servers.add(words[i]);
+                            }
                             printServerListText(servers);
                             break;
                         }
@@ -205,7 +208,7 @@ public class Client implements ClientInterface {
                             } else {
                                 sendMove(_playerClient.determineMove(_game.getBoard()));
                             }
-
+                            break;
                         }
                         case Protocol.DRAW:{
                             String[] arguments = new String[]{words[1], words[2]};
@@ -226,11 +229,13 @@ public class Client implements ClientInterface {
                                 } else {
                                     sendProtocol(Protocol.INSTANTDISCARD);
                                 }
-                                break;
+
                             }else{
                                 //if AI, always play the drawn card
                                 sendProtocol(Protocol.INSTANTDISCARD + Protocol.DELIMITER + card.getColour().toString() + Protocol.DELIMITER + card.getSymbol().toString());
+
                             }
+                            break;
                         }
                         case Protocol.DISPLAYRESULTS:{
                             List<String> listResultsString = new ArrayList<>();

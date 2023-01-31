@@ -93,10 +93,10 @@ public class ClientTUI {
      * This method prints into the terminal the text representation of the server list.
      * @param servers the servers the user can join
      */
-    public static void printServerListText(String[] servers){
+    public static void printServerListText(List<String> servers){
         System.out.println("\nThe list of open servers:");
-        for (int i = 0; i < servers.length; i++) {
-            String[] arguments = servers[i].split(Protocol.DELIMITERINITEMS);
+        for (int i = 0; i < servers.size(); i++) {
+            String[] arguments = servers.get(i).split(Protocol.DELIMITERINITEMS);
             String serverName = arguments[0];
             int maxPlayers = Integer.parseInt(arguments[1]);
             int playerAmmount = Integer.parseInt(arguments[2]);
@@ -218,8 +218,8 @@ public class ClientTUI {
     public static void printResultsText(List<String> playersPointsList){
         for (int i = 0; i < playersPointsList.size(); i++) {
             String[] playersArguments = playersPointsList.get(i).split(Protocol.DELIMITERINITEMS);
-            String playerName = playersArguments[0].toString();
-            String points = playersArguments[1].toString();
+            String playerName = playersArguments[0];
+            String points = playersArguments[1];
             System.out.println(playerName + " : " + points + " points");
         }
         System.out.println("\n");
