@@ -12,6 +12,10 @@ import java.util.ArrayList;
 
 import static java.lang.Integer.valueOf;
 
+/**
+ * This class implements Runnable and is responsible for interpreting commands from the Client
+ * and sending appropriate respones from the Server according to the Protocol.
+ */
 public class ClientHandler implements Runnable {
     private Socket _socket;
     private final BufferedReader _in;
