@@ -185,12 +185,12 @@ public class Client implements ClientInterface {
                                 while (true) {
                                     printShowPlayerHandText(hand);
                                     move = getMoveFromUserText(hand)-1;
-                                    if ( _game.isCardValid((Card) hand.get(move)) ) {
+                                    if ( move == hand.size() ) {
+                                        sendProtocol(Protocol.DRAW);
+                                        break;
+                                    }else if( _game.isCardValid((Card) hand.get(move)) ) {
                                         _game.getBoard().setLastCard(hand.get(move));
                                         sendMove(move);
-                                        break;
-                                    } else if ( move == hand.size() ) {
-                                        sendProtocol(Protocol.DRAW);
                                         break;
                                     } else {
                                         System.out.println(WRONGINPUT);
@@ -281,15 +281,7 @@ public class Client implements ClientInterface {
      */
     @Override
     public void sendMove(int move){
-        try {
-            String msgServer;
-            if ( (msgServer = _in.readLine()) != null ){
-                _out.println(Protocol.MOVE + Protocol.DELIMITER + move);
-            }
-        } catch (IOException e) {
-            System.out.println("IO exception while sending move");
-        }
-
+        _out.println(Protocol.MOVE + Protocol.DELIMITER + move);
     }
 
     /**

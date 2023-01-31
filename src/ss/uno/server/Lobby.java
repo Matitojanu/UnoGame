@@ -116,21 +116,24 @@ public class Lobby implements Runnable{
                             if (Server.get_handlers().get(j).get_player().getName().equals(players.get(i).getName())) {
                                 try {
                                     if(Server.get_handlers().get(j).get_player() == unoGame.getPlayersTurn()) {
-                                        if (Server.get_handlers().get(j).get_player().existsValidMove(unoGame.getBoard())) {
-                                            String moveList = formatMoveList(unoGame.getPlayersTurn().getHand());
-                                            Server.get_handlers().get(j).sendProtocol(Protocol.MOVE + moveList);
-                                            String msgFromClient = Server.get_handlers().get(j).listenToMessage();;
-                                            String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
-                                            if (msgArray[0].equals(Protocol.MOVE)) {
-                                                try {
-                                                    Server.get_handlers().get(j).handleMessage(msgFromClient);
-                                                } catch (IOException e) {
-                                                    System.out.println("Couldn't get client choice");
-                                                }
+                                       // if (Server.get_handlers().get(j).get_player().existsValidMove(unoGame.getBoard())) {
+                                        String moveList = formatMoveList(unoGame.getPlayersTurn().getHand());
+                                        System.out.println("Before listen");
+                                        Server.get_handlers().get(j).sendProtocol(Protocol.MOVE + moveList);
+                                        String msgFromClient = Server.get_handlers().get(j).listenToMessage();
+                                        System.out.println(msgFromClient);
+                                        System.out.println("After listen");
+                                        String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
+                                        if (msgArray[0].equals(Protocol.MOVE)) {
+                                            try {
+                                                Server.get_handlers().get(j).handleMessage(msgFromClient);
+                                            } catch (IOException e) {
+                                                System.out.println("Couldn't get client choice");
                                             }
+                                            break;
+                                        }else if(msgArray[0].equals(Protocol.DRAW)) {
                                             Server.get_handlers().get(j).sendProtocol(Protocol.UPDATEFIELD + Protocol.DELIMITER + unoGame.getBoard().getLastCard().getColour() + Protocol.DELIMITER + unoGame.getBoard().getLastCard().getSymbol());
-                                        } else {
-                                            System.out.println("why are we here");
+                                            break;
                                         }
                                     }
                                 } catch (IOException e) {

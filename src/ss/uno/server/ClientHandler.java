@@ -103,18 +103,6 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         setUp();
-        try {
-            String line;
-            while ((line = _in.readLine()) != null) {
-                try {
-                    handleMessage(line);
-                } catch (IOException e) {
-                    System.out.println("Error");
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Error");
-        }
     }
 
     /**
@@ -235,16 +223,19 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public String listenToMessage(){
-        try {
-            String message = _in.readLine();
-            return message;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public String listenToMessage() {
+        String line;
+        while (true) {
+            try {
+                if ((line = _in.readLine()) != null){
+                    return line;
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
-
-    /**
+        /**
      * Returns currently connected players
      * @return currently connected players
      */
