@@ -149,13 +149,22 @@ public class ClientHandler implements Runnable {
             case Protocol.MOVE -> {
                 if(messageArr[1].equals(Protocol.COLOR)){
                     Server.get_lobbyList().get(Server.get_lobbyList().indexOf(lobby)).getUnoGame().getBoard().getLastCard().setColour(AbstractCard.Colour.valueOf(messageArr[2]));
+                }else if(messageArr[1].equals(Protocol.CHALLANGE)){
+
                 }else{
-                    Server.get_lobbyList().get(Server.get_lobbyList().indexOf(lobby)).getUnoGame().playCard((Card) lobby.getUnoGame().getPlayersTurn().getHand().get(Integer.parseInt(messageArr[1])));
+                    Card playedCard = (Card) lobby.getUnoGame().getPlayersTurn().getHand().get(Integer.parseInt(messageArr[1]));
+                    Server.get_lobbyList().get(Server.get_lobbyList().indexOf(lobby)).getUnoGame().playCard((playedCard));
+                    Server.get_lobbyList().get(Server.get_lobbyList().indexOf(lobby)).getUnoGame().abilityFunction();
+                    if(playedCard.getSymbol().equals(AbstractCard.Symbol.CHANGECOLOR)){
+                        String msgFromClient = listenToMessage();
+                        sendProtocol(Protocol.MOVE+Protocol.DELIMITER+Protocol.CHOOSECOLOR);
+                        handleMessage(msgFromClient);
+                    }
                 }
                 break;
             }
             case Protocol.DRAW -> {
-                lobby.getUnoGame().drawCard();
+                Server.get_lobbyList().get(Server.get_lobbyList().indexOf(lobby)).getUnoGame().drawCard();
                 sendProtocol(Protocol.DRAW+Protocol.DELIMITER+lobby.getUnoGame().getPlayersTurn().getHand().get(lobby.getUnoGame().getPlayersTurn().getHand().size()-1).getColour().toString()+Protocol.DELIMITER+lobby.getUnoGame().getPlayersTurn().getHand().get(lobby.getUnoGame().getPlayersTurn().getHand().size()-1).getSymbol().toString());
                 break;
             }
@@ -233,6 +242,7 @@ public class ClientHandler implements Runnable {
                 }
             } catch (IOException e) {
                 System.out.println("Couldn't get move");
+                return null;
             }
         }
     }
