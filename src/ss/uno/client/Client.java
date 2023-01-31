@@ -208,13 +208,13 @@ public class Client implements ClientInterface {
 
                         }
                         case Protocol.DRAW:{
-                            Card card = parseCard(words[1].split(Protocol.DELIMITERINITEMS));
+                            Card card = parseCard(words[1].split("\\" + Protocol.DELIMITER));
                             printDrawnCardText(card);
                             Card lastCard = _game.getBoard().getLastCard();
                             break;
                         }
                         case Protocol.INSTANTDISCARD:{
-                            String[] cardArguments = words[1].split(Protocol.DELIMITERINITEMS);
+                            String[] cardArguments = words[1].split("\\" + Protocol.DELIMITER);
                             Card card = parseCard(cardArguments);
                             String response = askForChoiceToPlayDrawnCardText();
                             if ( response.equalsIgnoreCase("y")) {
@@ -229,7 +229,10 @@ public class Client implements ClientInterface {
                             break;
                         }
                         case Protocol.DISPLAYRESULTS:{
-                            String[] listResultsString = words[1].split( "\\" + Protocol.DELIMITER);
+                            List<String> listResultsString = new ArrayList<>();
+                            for (int i = 1; i < words.length; i++) {
+                                listResultsString.add(words[i]);
+                            }
                             printResultsText(listResultsString);
                             break;
                         }

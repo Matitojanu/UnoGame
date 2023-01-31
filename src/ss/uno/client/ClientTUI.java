@@ -214,9 +214,9 @@ public class ClientTUI {
      * This method prints into the terminat the text for the list of players and the ammount of points they have.
      * @param playersPointsList a string array that contains teh name of the player and how many points they have
      */
-    public static void printResultsText(String[] playersPointsList){
-        for (int i = 0; i < playersPointsList.length; i++) {
-            String[] playersArguments = playersPointsList[i].split(Protocol.DELIMITERINITEMS);
+    public static void printResultsText(List<String> playersPointsList){
+        for (int i = 0; i < playersPointsList.size(); i++) {
+            String[] playersArguments = playersPointsList.get(i).split(Protocol.DELIMITERINITEMS);
             String playerName = playersArguments[0];
             String points = playersArguments[1];
             System.out.println(playerName + " : " + points + " points");
