@@ -78,7 +78,7 @@ public class ClientTUI {
      */
     public static void printShowPlayerHandText(List<AbstractCard> hand){
         for (int i = 1; i <=hand.size(); i++) {
-            System.out.println(i + " - " + hand.get(i-1).toString());
+            System.out.println(i + " - " + hand.get(i-1).getColour().toString() + " " + hand.get(i-1).getSymbol().toString());
         }
     }
 
@@ -86,7 +86,7 @@ public class ClientTUI {
      * This method prints into the terminal the text for when there are no moves left for the player to do
      */
     public static void printNoAvailableMovesText(){
-        System.out.println("No moves left. Drawing a card...");
+        System.out.println("No moves left. Drawing a card...\n");
     }
 
     /**
@@ -172,7 +172,7 @@ public class ClientTUI {
      * This method prints into the terminal the text representation of the start of the game.
      */
     public static void printStartText(){
-        System.out.println("Everyone is connected. The game will now start!");
+        System.out.println("Everyone is connected. The game will now start!\n");
     }
 
     /**
@@ -207,7 +207,7 @@ public class ClientTUI {
      * This method prints into the terminal the text for a new round.
      */
     public static void printNewRoundText(){
-        System.out.println("A new round has started!");
+        System.out.println("A new round has started!\n");
     }
 
     /**
