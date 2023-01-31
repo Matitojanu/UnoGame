@@ -89,7 +89,7 @@ public class Client implements ClientInterface {
             String line;
             List<String> servers = new ArrayList<>();
             while ((line = _in.readLine()) != null){
-                System.out.println(line);
+                //System.out.println(line);
                 String[] words  = line.split("\\" + Protocol.DELIMITER );
                 if(_handshakeComplete){
                     switch (words[0]){
@@ -156,8 +156,11 @@ public class Client implements ClientInterface {
                                 }else {
                                     for (AbstractCard abstractCard : _playerClient.getHand()) {
                                         if ( abstractCard.getColour() != AbstractCard.Colour.WILD ) {
-                                            pickedColor= abstractCard.getColour();
+                                            pickedColor = abstractCard.getColour();
                                         }
+                                    }
+                                    if(pickedColor == null){
+                                        pickedColor = AbstractCard.Colour.RED;
                                     }
                                 }
                                 _game.getBoard().getLastCard().setColour(pickedColor);

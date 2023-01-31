@@ -167,6 +167,17 @@ public class Lobby implements Runnable{
                 }
             }
         }
+        for(ClientHandler handler : Server.get_handlers()) {
+            for (AbstractPlayer player : players) {
+                if (isPlayerInLobby(handler, player)){
+                    try {
+                        handler.sendProtocol(Protocol.GAMEOVER);
+                    } catch (IOException e) {
+                        System.out.println("Couldn't send game over message");
+                    }
+                }
+            }
+        }
     }
 
     /**
