@@ -75,6 +75,9 @@ public class Lobby implements Runnable{
     }
 
     public void runUnoGame(UnoGame unoGame){
+        for (AbstractPlayer player : players) {
+            unoGame.getPlayersPoints().put(player, 0);
+        }
         while(!unoGame.isGameOver()) {
             unoGame.boardSetUp();
             unoGame.drawCardsInitial();

@@ -158,7 +158,7 @@ public class Client implements ClientInterface {
                                     }
                                 }
                                 _game.getBoard().getLastCard().setColour(pickedColor);
-                                sendProtocol(Protocol.MOVE+Protocol.DELIMITER+Protocol.CHOOSECOLOR + Protocol.DELIMITER + Protocol.COLOR + Protocol.DELIMITER + pickedColor.toString());
+                                sendProtocol(Protocol.MOVE+Protocol.DELIMITER+ Protocol.COLOR + Protocol.DELIMITER + pickedColor.toString());
                                 break;
                             }
                             if( words[1].equals(Protocol.CHALLANGE) ){

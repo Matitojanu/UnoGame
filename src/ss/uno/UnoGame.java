@@ -185,55 +185,57 @@ public class UnoGame implements AbstractCard.Ability {
     public void distributePoints(){
         int totalPoints = playersPoints.get(getRoundWinner());
         for(AbstractPlayer player : playersPoints.keySet()){
-            for(AbstractCard card : player.getHand()){
-                switch(card.getSymbol()){
-                    case ZERO -> {
+            if(player.getHand().size() > 0) {
+                for (AbstractCard card : player.getHand()) {
+                    switch (card.getSymbol()) {
+                        case ZERO -> {
 
+                        }
+                        case ONE -> {
+                            totalPoints += 1;
+                        }
+                        case TWO -> {
+                            totalPoints += 2;
+                        }
+                        case THREE -> {
+                            totalPoints += 3;
+                        }
+                        case FOUR -> {
+                            totalPoints += 4;
+                        }
+                        case FIVE -> {
+                            totalPoints += 5;
+                        }
+                        case SIX -> {
+                            totalPoints += 6;
+                        }
+                        case SEVEN -> {
+                            totalPoints += 7;
+                        }
+                        case EIGHT -> {
+                            totalPoints += 8;
+                        }
+                        case NINE -> {
+                            totalPoints += 9;
+                        }
+                        case PLUSTWO -> {
+                            totalPoints += 20;
+                        }
+                        case REVERSE -> {
+                            totalPoints += 20;
+                        }
+                        case SKIPTURN -> {
+                            totalPoints += 20;
+                        }
+                        case PLUSFOUR -> {
+                            totalPoints += 50;
+                        }
+                        case CHANGECOLOR -> {
+                            totalPoints += 50;
+                        }
                     }
-                    case ONE -> {
-                        totalPoints += 1;
-                    }
-                    case TWO -> {
-                        totalPoints += 2;
-                    }
-                    case THREE -> {
-                        totalPoints += 3;
-                    }
-                    case FOUR -> {
-                        totalPoints += 4;
-                    }
-                    case FIVE -> {
-                        totalPoints += 5;
-                    }
-                    case SIX -> {
-                        totalPoints += 6;
-                    }
-                    case SEVEN -> {
-                        totalPoints += 7;
-                    }
-                    case EIGHT -> {
-                        totalPoints += 8;
-                    }
-                    case NINE -> {
-                        totalPoints += 9;
-                    }
-                    case PLUSTWO -> {
-                        totalPoints += 20;
-                    }
-                    case REVERSE -> {
-                        totalPoints += 20;
-                    }
-                    case SKIPTURN -> {
-                        totalPoints += 20;
-                    }
-                    case PLUSFOUR -> {
-                        totalPoints += 50;
-                    }
-                    case CHANGECOLOR -> {
-                        totalPoints += 50;
-                    }
+                    player.getHand().remove(card);
                 }
-                player.getHand().remove(card);
             }
         }
         playersPoints.replace(getRoundWinner(), totalPoints);
