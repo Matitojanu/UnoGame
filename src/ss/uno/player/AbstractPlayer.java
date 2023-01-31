@@ -2,8 +2,10 @@ package ss.uno.player;
 
 import ss.uno.Board;
 import ss.uno.cards.AbstractCard;
+import ss.uno.cards.Card;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class implements the interface <code>Player</code> and has additional
@@ -12,7 +14,7 @@ import java.util.ArrayList;
  */
 public abstract class AbstractPlayer implements Player {
 
-    private ArrayList<AbstractCard> hand = new ArrayList<AbstractCard>();
+    private List<AbstractCard> hand = new ArrayList<>();
 
     /**
      * This checks for any valid moves in the players' hand
@@ -39,9 +41,10 @@ public abstract class AbstractPlayer implements Player {
 
     /**
      * This method returns the hand of the player
+     *
      * @return the hand of the player
      */
-    public ArrayList<AbstractCard> getHand(){
+    public List<AbstractCard> getHand(){
         return hand;
     }
 
@@ -49,7 +52,7 @@ public abstract class AbstractPlayer implements Player {
      * This method will set the players' hand to the argument given as parameter
      * @param hand the hand to which the players' hand will be set to
      */
-    public void setHand(ArrayList<AbstractCard> hand) {
+    public void setHand(List<AbstractCard> hand) {
         this.hand = hand;
     }
 
