@@ -208,13 +208,14 @@ public class Client implements ClientInterface {
 
                         }
                         case Protocol.DRAW:{
-                            Card card = parseCard(words[1].split("\\" + Protocol.DELIMITER));
+                            String[] arguments = new String[]{words[1], words[2]};
+                            Card card = parseCard(arguments);
                             printDrawnCardText(card);
                             Card lastCard = _game.getBoard().getLastCard();
                             break;
                         }
                         case Protocol.INSTANTDISCARD:{
-                            String[] cardArguments = words[1].split("\\" + Protocol.DELIMITER);
+                            String[] cardArguments = new String[]{words[1], words[2]};
                             Card card = parseCard(cardArguments);
                             String response = askForChoiceToPlayDrawnCardText();
                             if ( response.equalsIgnoreCase("y")) {
