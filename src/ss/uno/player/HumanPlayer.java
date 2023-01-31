@@ -53,7 +53,7 @@ public class HumanPlayer extends AbstractPlayer{
     @Override
     public boolean existsValidMove(Board board){
         for (int index = 0; index < getHand().size(); index++) {
-            if ( getHand().get(index).getColour() == board.getLastCard().getColour() ){
+            if ( getHand().get(index).getColour() == board.getLastCard().getColour() || getHand().get(index).getColour() == AbstractCard.Colour.WILD ){
                 return true;
             } else if ( ((Card) getHand().get(index)).getSymbol() == board.getLastCard().getSymbol() ) {
                 return true;
