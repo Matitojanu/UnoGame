@@ -1,16 +1,12 @@
-package ss.uno.server;
+package ss.uno.networking.server;
 
-import ss.uno.Board;
-import ss.uno.Protocol;
-import ss.uno.UnoGame;
-import ss.uno.cards.AbstractCard;
-import ss.uno.cards.Card;
-import ss.uno.cards.Deck;
-import ss.uno.player.AbstractPlayer;
+import ss.uno.networking.Protocol;
+import ss.uno.gamelogic.UnoGame;
+import ss.uno.gamelogic.cards.AbstractCard;
+import ss.uno.gamelogic.player.AbstractPlayer;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 

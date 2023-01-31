@@ -1,4 +1,4 @@
-package ss.uno.server;
+package ss.uno.networking.server;
 
 import java.io.IOException;
 

@@ -1,11 +1,11 @@
-package ss.uno.client;
+package ss.uno.networking.client;
 
-import ss.uno.Protocol;
-import ss.uno.UnoGame;
-import ss.uno.cards.AbstractCard;
-import ss.uno.cards.Card;
-import ss.uno.player.AbstractPlayer;
-import ss.uno.player.HumanPlayer;
+import ss.uno.networking.Protocol;
+import ss.uno.gamelogic.UnoGame;
+import ss.uno.gamelogic.cards.AbstractCard;
+import ss.uno.gamelogic.cards.Card;
+import ss.uno.gamelogic.player.AbstractPlayer;
+import ss.uno.gamelogic.player.HumanPlayer;
 
 import java.io.*;
 import java.net.Socket;
@@ -14,7 +14,7 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ss.uno.client.ClientTUI.*;
+import static ss.uno.networking.client.ClientTUI.*;
 
 
 /**

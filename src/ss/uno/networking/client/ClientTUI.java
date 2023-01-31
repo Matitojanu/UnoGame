@@ -1,10 +1,10 @@
-package ss.uno.client;
+package ss.uno.networking.client;
 
-import ss.uno.Protocol;
-import ss.uno.cards.AbstractCard;
-import ss.uno.cards.Card;
-import ss.uno.player.AI;
-import ss.uno.player.HumanPlayer;
+import ss.uno.networking.Protocol;
+import ss.uno.gamelogic.cards.AbstractCard;
+import ss.uno.gamelogic.cards.Card;
+import ss.uno.gamelogic.player.AI;
+import ss.uno.gamelogic.player.HumanPlayer;
 
 import java.io.IOException;
 import java.util.ArrayList;

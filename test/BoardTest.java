@@ -2,9 +2,9 @@ package ss.uno.test;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ss.uno.Board;
-import ss.uno.cards.Card;
-import ss.uno.cards.Deck;
+import ss.uno.gamelogic.Board;
+import ss.uno.gamelogic.cards.Card;
+import ss.uno.gamelogic.cards.Deck;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

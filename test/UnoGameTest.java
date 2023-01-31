@@ -2,12 +2,12 @@ package ss.uno.test;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ss.uno.UnoGame;
-import ss.uno.cards.AbstractCard;
-import ss.uno.cards.Card;
-import ss.uno.player.AI;
-import ss.uno.player.AbstractPlayer;
-import ss.uno.player.HumanPlayer;
+import ss.uno.gamelogic.UnoGame;
+import ss.uno.gamelogic.cards.AbstractCard;
+import ss.uno.gamelogic.cards.Card;
+import ss.uno.gamelogic.player.AI;
+import ss.uno.gamelogic.player.AbstractPlayer;
+import ss.uno.gamelogic.player.HumanPlayer;
 
 import java.util.ArrayList;
 import java.util.List;

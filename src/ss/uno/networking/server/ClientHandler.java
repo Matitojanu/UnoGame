@@ -1,10 +1,10 @@
-package ss.uno.server;
+package ss.uno.networking.server;
 
-import ss.uno.Protocol;
-import ss.uno.cards.AbstractCard;
-import ss.uno.cards.Card;
-import ss.uno.player.AbstractPlayer;
-import ss.uno.player.HumanPlayer;
+import ss.uno.networking.Protocol;
+import ss.uno.gamelogic.cards.AbstractCard;
+import ss.uno.gamelogic.cards.Card;
+import ss.uno.gamelogic.player.AbstractPlayer;
+import ss.uno.gamelogic.player.HumanPlayer;
 
 import java.io.*;
 import java.net.Socket;

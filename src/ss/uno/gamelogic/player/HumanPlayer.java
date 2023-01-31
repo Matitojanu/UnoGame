@@ -1,11 +1,8 @@
-package ss.uno.player;
+package ss.uno.gamelogic.player;
 
-import ss.uno.Board;
-import ss.uno.cards.AbstractCard;
-import ss.uno.cards.Card;
-import ss.uno.cards.Deck;
-import ss.uno.Board;
-import ss.uno.UnoGame;
+import ss.uno.gamelogic.Board;
+import ss.uno.gamelogic.cards.AbstractCard;
+import ss.uno.gamelogic.cards.Card;
 
 import java.util.Scanner;
 

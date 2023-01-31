@@ -1,7 +1,4 @@
-package ss.uno.cards;
-
-import ss.uno.cards.AbstractCard;
-import ss.uno.cards.Card;
+package ss.uno.gamelogic.cards;
 
 import java.util.ArrayList;
 import java.util.Collections;

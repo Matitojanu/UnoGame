@@ -1,4 +1,4 @@
-package ss.uno.cards;
+package ss.uno.gamelogic.cards;
 
 /**
  * This class holds the base of a card , with enums for all the symbols and colors, getters, setters, and the ability function

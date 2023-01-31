@@ -1,4 +1,4 @@
-package ss.uno.cards;
+package ss.uno.gamelogic.cards;
 
 /**
  * This class extends <card>AbstractCard</card> and is responsible for creating and initialising the card

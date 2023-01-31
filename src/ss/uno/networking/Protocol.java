@@ -1,4 +1,4 @@
-package ss.uno;
+package ss.uno.networking;
 
 import java.net.InetAddress;
 

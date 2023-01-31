@@ -1,7 +1,6 @@
-package ss.uno.player;
+package ss.uno.gamelogic.player;
 
-import ss.uno.Board;
-import ss.uno.cards.AbstractCard;
+import ss.uno.gamelogic.Board;
 
 /**
  * This interface is the base of the player, which holds a method for

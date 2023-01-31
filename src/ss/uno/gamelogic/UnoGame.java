@@ -1,12 +1,11 @@
-package ss.uno;
+package ss.uno.gamelogic;
 
-import ss.uno.cards.AbstractCard;
-import ss.uno.cards.Card;
-import ss.uno.cards.Deck;
-import ss.uno.player.AbstractPlayer;
-import ss.uno.player.HumanPlayer;
+import ss.uno.gamelogic.cards.AbstractCard;
+import ss.uno.gamelogic.cards.Card;
+import ss.uno.gamelogic.cards.Deck;
+import ss.uno.gamelogic.player.AbstractPlayer;
+import ss.uno.gamelogic.player.HumanPlayer;
 
-import java.sql.SQLOutput;
 import java.util.*;
 
 /**

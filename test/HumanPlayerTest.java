@@ -2,13 +2,12 @@ package ss.uno.test;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ss.uno.Board;
-import ss.uno.UnoGame;
-import ss.uno.cards.AbstractCard;
-import ss.uno.cards.Card;
-import ss.uno.cards.Deck;
-import ss.uno.player.AbstractPlayer;
-import ss.uno.player.HumanPlayer;
+import ss.uno.gamelogic.Board;
+import ss.uno.gamelogic.cards.AbstractCard;
+import ss.uno.gamelogic.cards.Card;
+import ss.uno.gamelogic.cards.Deck;
+import ss.uno.gamelogic.player.AbstractPlayer;
+import ss.uno.gamelogic.player.HumanPlayer;
 
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertTrue;

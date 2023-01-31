@@ -1,12 +1,11 @@
-package ss.uno;
+package ss.uno.gamelogic;
 
 
-import ss.uno.player.AI;
-import ss.uno.player.AbstractPlayer;
-import ss.uno.player.HumanPlayer;
+import ss.uno.gamelogic.player.AI;
+import ss.uno.gamelogic.player.AbstractPlayer;
+import ss.uno.gamelogic.player.HumanPlayer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 
 /**

@@ -1,7 +1,7 @@
-package ss.uno.client;
+package ss.uno.networking.client;
 
-import ss.uno.UnoGame;
-import ss.uno.player.AbstractPlayer;
+import ss.uno.gamelogic.UnoGame;
+import ss.uno.gamelogic.player.AbstractPlayer;
 
 import java.util.List;
 
