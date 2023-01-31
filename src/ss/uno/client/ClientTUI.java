@@ -217,8 +217,8 @@ public class ClientTUI {
     public static void printResultsText(List<String> playersPointsList){
         for (int i = 0; i < playersPointsList.size(); i++) {
             String[] playersArguments = playersPointsList.get(i).split(Protocol.DELIMITERINITEMS);
-            String playerName = playersArguments[0];
-            String points = playersArguments[1];
+            String playerName = playersArguments[0].toString();
+            String points = playersArguments[1].toString();
             System.out.println(playerName + " : " + points + " points");
         }
     }

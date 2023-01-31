@@ -10,6 +10,7 @@ import ss.uno.player.AbstractPlayer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -110,6 +111,7 @@ public class Lobby implements Runnable{
                 //for(AbstractCard card : unoGame.getPlayersTurn().getHand()){
                 //    playerHand.add(card);
                 //}
+                label1:
                 for(int j = 0; j < Server.get_handlers().size(); j++){
                     for(int i = 0; i < players.size(); i++) {
                         if (Server.get_handlers().get(j).get_player() != null) {
@@ -127,10 +129,10 @@ public class Lobby implements Runnable{
                                             } catch (IOException e) {
                                                 System.out.println("Couldn't get client choice");
                                             }
-                                            break;
+                                            break label1;
                                         }else if(msgArray[0].equals(Protocol.DRAW)) {
                                             Server.get_handlers().get(j).handleMessage(msgFromClient);
-                                            break;
+                                            break label1;
                                         }
                                     }
                                 } catch (IOException e) {
@@ -142,15 +144,10 @@ public class Lobby implements Runnable{
                 }
                 unoGame.changeTurn();
             }
-            ArrayList<Integer> playerPoints = new ArrayList<>();
-            ArrayList<AbstractPlayer> pointOwners = new ArrayList<>();
-            for(AbstractPlayer player : unoGame.getPlayersPoints().keySet()){
-                playerPoints.add(unoGame.getPlayersPoints().get(player));
-                pointOwners.add(player);
-            }
+            unoGame.distributePoints();
             String results = "";
-            for(int i = 0; i < players.size(); i++){
-                results += Protocol.DELIMITER+pointOwners.get(i).toString()+Protocol.DELIMITERINITEMS+playerPoints.get(i).toString();
+            for(AbstractPlayer player : unoGame.getPlayersPoints().keySet()){
+                results += player.toString()+Protocol.DELIMITER+Protocol.DELIMITERINITEMS+unoGame.getPlayersPoints().get(player).toString();
             }
             for(ClientHandler handler : Server.get_handlers()){
                 try {

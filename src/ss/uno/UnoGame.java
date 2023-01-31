@@ -392,9 +392,6 @@ public class UnoGame implements AbstractCard.Ability {
         return board;
     }
 
-    public void setBoard(Board board) {
-        this.board = board;
-    }
 
     /**
      * This method returns whose players' turn it is
@@ -417,4 +414,6 @@ public class UnoGame implements AbstractCard.Ability {
     public HashMap<AbstractPlayer, Integer> getPlayersPoints() {
         return playersPoints;
     }
+
+
 }

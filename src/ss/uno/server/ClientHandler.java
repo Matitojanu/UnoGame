@@ -154,12 +154,19 @@ public class ClientHandler implements Runnable {
                 }else{
                     Card playedCard = (Card) lobby.getUnoGame().getPlayersTurn().getHand().get(Integer.parseInt(messageArr[1]));
                     Server.get_lobbyList().get(Server.get_lobbyList().indexOf(lobby)).getUnoGame().playCard((playedCard));
-                    Server.get_lobbyList().get(Server.get_lobbyList().indexOf(lobby)).getUnoGame().abilityFunction();
-                    if(playedCard.getSymbol().equals(AbstractCard.Symbol.CHANGECOLOR)){
-                        String msgFromClient = listenToMessage();
+                    if(playedCard.getSymbol().equals(AbstractCard.Symbol.CHANGECOLOR) || playedCard.getSymbol().equals(AbstractCard.Symbol.PLUSFOUR)){
+                        if(playedCard.getSymbol().equals(AbstractCard.Symbol.PLUSFOUR)){
+                           lobby.getUnoGame().changeTurn();
+                            for(int i = 0; i<4; i++){
+                                lobby.getUnoGame().drawCard();
+                            }
+                        }
                         sendProtocol(Protocol.MOVE+Protocol.DELIMITER+Protocol.CHOOSECOLOR);
+                        String msgFromClient = listenToMessage();
                         handleMessage(msgFromClient);
+                        break;
                     }
+                    Server.get_lobbyList().get(Server.get_lobbyList().indexOf(lobby)).getUnoGame().abilityFunction();
                 }
                 break;
             }
