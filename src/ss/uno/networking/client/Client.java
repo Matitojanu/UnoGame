@@ -217,14 +217,20 @@ public class Client implements ClientInterface {
                         case Protocol.INSTANTDISCARD:{
                             String[] cardArguments = new String[]{words[1], words[2]};
                             Card card = parseCard(cardArguments);
-                            String response = askForChoiceToPlayDrawnCardText();
-                            if ( response.equalsIgnoreCase("y")) {
+                            String response;
+                            if(_playerClient instanceof HumanPlayer) {
+                                response = askForChoiceToPlayDrawnCardText();
+                                if ( response.equalsIgnoreCase("y") ) {
+                                    sendProtocol(Protocol.INSTANTDISCARD + Protocol.DELIMITER + card.getColour().toString() + Protocol.DELIMITER + card.getSymbol().toString());
+                                    _game.getBoard().setLastCard(card);
+                                } else {
+                                    sendProtocol(Protocol.INSTANTDISCARD);
+                                }
+                                break;
+                            }else{
+                                //if AI, always play the drawn card
                                 sendProtocol(Protocol.INSTANTDISCARD + Protocol.DELIMITER + card.getColour().toString() + Protocol.DELIMITER + card.getSymbol().toString());
-                                _game.getBoard().setLastCard(card);
-                            } else {
-                                sendProtocol(Protocol.INSTANTDISCARD);
                             }
-                            break;
                         }
                         case Protocol.DISPLAYRESULTS:{
                             List<String> listResultsString = new ArrayList<>();
