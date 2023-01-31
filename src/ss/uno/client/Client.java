@@ -138,7 +138,7 @@ public class Client implements ClientInterface {
                             String[] arguments = new String[]{words[1], words[2]};
                             Card card = parseCard(arguments);
                             _game.getBoard().setLastCard(card);
-                            if(card.getColour()!= AbstractCard.Colour.WILD){
+                            if(!card.getSymbol().equals(AbstractCard.Symbol.CHANGECOLOR) && !card.getSymbol().equals(AbstractCard.Symbol.PLUSFOUR)){
                                 _game.abilityFunction();
                             }
                             printUpdatedFieldText(card);
