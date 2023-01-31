@@ -25,6 +25,7 @@ public class Board {
      */
     public Board(Deck deckCards){
         this.deckCards = deckCards;
+        this.lastCard = (Card) deckCards.getCard();
     }
 
     /**

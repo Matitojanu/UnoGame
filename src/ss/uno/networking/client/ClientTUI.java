@@ -200,7 +200,7 @@ public class ClientTUI {
      * @param card the card that has been drawn
      */
     public static void printDrawnCardText(Card card){
-        System.out.println("The card you have drawn is: " +card.toString());
+        System.out.println("The card you have drawn is: " + card.getColour().toString() + " - " + card.getSymbol().toString());
     }
 
     /**

@@ -219,11 +219,8 @@ public class Client implements ClientInterface {
                             Card card = parseCard(cardArguments);
                             String response = askForChoiceToPlayDrawnCardText();
                             if ( response.equalsIgnoreCase("y")) {
-                                Card lastCard = _game.getBoard().getLastCard();
-                                if ( card.getSymbol().toString().equalsIgnoreCase(lastCard.getSymbol().toString()) || card.getColour().toString().equalsIgnoreCase(lastCard.getColour().toString()) ) {
-                                    sendProtocol(Protocol.INSTANTDISCARD + Protocol.DELIMITER + card.getColour().toString() + Protocol.DELIMITER + card.getSymbol().toString());
-                                    _game.getBoard().setLastCard(card);
-                                }
+                                sendProtocol(Protocol.INSTANTDISCARD + Protocol.DELIMITER + card.getColour().toString() + Protocol.DELIMITER + card.getSymbol().toString());
+                                _game.getBoard().setLastCard(card);
                             } else {
                                 sendProtocol(Protocol.INSTANTDISCARD);
                             }

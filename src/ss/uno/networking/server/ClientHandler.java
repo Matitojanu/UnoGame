@@ -148,12 +148,12 @@ public class ClientHandler implements Runnable {
 
             case Protocol.MOVE -> {
                 if(messageArr[1].equals(Protocol.COLOR)){
-                    Server.get_lobbyList().get(Server.get_lobbyList().indexOf(lobby)).getUnoGame().getBoard().getLastCard().setColour(AbstractCard.Colour.valueOf(messageArr[2]));
+                    lobby.getUnoGame().getBoard().getLastCard().setColour(AbstractCard.Colour.valueOf(messageArr[2]));
                 }else if(messageArr[1].equals(Protocol.CHALLANGE)){
 
                 }else{
                     Card playedCard = (Card) lobby.getUnoGame().getPlayersTurn().getHand().get(Integer.parseInt(messageArr[1]));
-                    Server.get_lobbyList().get(Server.get_lobbyList().indexOf(lobby)).getUnoGame().playCard((playedCard));
+                    lobby.getUnoGame().playCard((playedCard));
                     if(playedCard.getSymbol().equals(AbstractCard.Symbol.CHANGECOLOR) || playedCard.getSymbol().equals(AbstractCard.Symbol.PLUSFOUR)){
                         if(playedCard.getSymbol().equals(AbstractCard.Symbol.PLUSFOUR)){
                            lobby.getUnoGame().changeTurn();
@@ -171,13 +171,37 @@ public class ClientHandler implements Runnable {
                 break;
             }
             case Protocol.DRAW -> {
-                Server.get_lobbyList().get(Server.get_lobbyList().indexOf(lobby)).getUnoGame().drawCard();
-                sendProtocol(Protocol.DRAW+Protocol.DELIMITER+lobby.getUnoGame().getPlayersTurn().getHand().get(lobby.getUnoGame().getPlayersTurn().getHand().size()-1).getColour().toString()+Protocol.DELIMITER+lobby.getUnoGame().getPlayersTurn().getHand().get(lobby.getUnoGame().getPlayersTurn().getHand().size()-1).getSymbol().toString());
+                lobby.getUnoGame().drawCard();
+                AbstractCard drawnCard = lobby.getUnoGame().getPlayersTurn().getHand().get(lobby.getUnoGame().getPlayersTurn().getHand().size()-1);
+                sendProtocol(Protocol.DRAW+Protocol.DELIMITER+drawnCard.getColour().toString()+Protocol.DELIMITER+drawnCard.getSymbol().toString());
+                if(canInstantDiscard()){
+                    sendProtocol(Protocol.INSTANTDISCARD+Protocol.DELIMITER+drawnCard.getColour().toString()+Protocol.DELIMITER+drawnCard.getSymbol().toString());
+                    String msgFromClient = listenToMessage();
+                    handleMessage(msgFromClient);
+                }
                 break;
             }
             case Protocol.INSTANTDISCARD -> {
-                lobby.getUnoGame().playCard((Card) lobby.getUnoGame().getPlayersTurn().getHand().get(lobby.getUnoGame().getPlayersTurn().getHand().size()-1));
-                break;
+                if(messageArr.length > 1) {
+                    Card discardedCard = (Card) lobby.getUnoGame().getPlayersTurn().getHand().get(lobby.getUnoGame().getPlayersTurn().getHand().size() - 1);
+                    lobby.getUnoGame().playCard((discardedCard));
+                    if (discardedCard.getSymbol().equals(AbstractCard.Symbol.CHANGECOLOR) || discardedCard.getSymbol().equals(AbstractCard.Symbol.PLUSFOUR)) {
+                        if (discardedCard.getSymbol().equals(AbstractCard.Symbol.PLUSFOUR)) {
+                            lobby.getUnoGame().changeTurn();
+                            for (int i = 0; i < 4; i++) {
+                                lobby.getUnoGame().drawCard();
+                            }
+                        }
+                        sendProtocol(Protocol.MOVE + Protocol.DELIMITER + Protocol.CHOOSECOLOR);
+                        String msgFromClient = listenToMessage();
+                        handleMessage(msgFromClient);
+                        break;
+                    }
+                    lobby.getUnoGame().abilityFunction();
+                    break;
+                }else{
+                    break;
+                }
             }
         }
     }
@@ -251,6 +275,13 @@ public class ClientHandler implements Runnable {
 
             }
         }
+    }
+
+    public boolean canInstantDiscard(){
+        if(_player.getHand().get(_player.getHand().size()-1).getColour().equals(lobby.getUnoGame().getBoard().getLastCard().getColour()) || _player.getHand().get(_player.getHand().size()-1).getSymbol().equals(lobby.getUnoGame().getBoard().getLastCard().getSymbol()) || _player.getHand().get(_player.getHand().size()-1).getColour().equals(AbstractCard.Colour.WILD)){
+            return true;
+        }
+        return false;
     }
         /**
      * Returns currently connected players

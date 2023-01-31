@@ -90,7 +90,7 @@ public class UnoGame implements AbstractCard.Ability {
 
     public void boardSetUp(){
         board = new Board(new Deck());
-        board.setLastCard((Card) board.getDeck().getCard());
+        //board.setLastCard((Card) board.getDeck().getCard());
         while (true) {
             if (board.getLastCard().getColour() == AbstractCard.Colour.WILD) {
                 board = new Board(new Deck());
