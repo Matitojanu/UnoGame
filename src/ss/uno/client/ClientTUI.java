@@ -303,7 +303,8 @@ public class ClientTUI {
                             for (int i = 0; i < Protocol.FUNCTIONALITYUSER.length; i++) {
                                 System.out.println((i + 1) + " - " + Protocol.FUNCTIONALITYUSER[i]);
                             }
-                            System.out.println("If you don't want any additional functionalities, press 0.");
+                            System.out.println("If you don't want any or you finished adding all the " +
+                                    "additional functionalities, press 0.");
                             try {
                                 int functionalityIndexStr = Integer.parseInt(_scanner.nextLine());
                                 if ( functionalityIndexStr == 0 ) {
