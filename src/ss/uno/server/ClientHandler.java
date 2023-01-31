@@ -241,8 +241,7 @@ public class ClientHandler implements Runnable {
                     return line;
                 }
             } catch (IOException e) {
-                System.out.println("Couldn't get move");
-                return null;
+
             }
         }
     }
