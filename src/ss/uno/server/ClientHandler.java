@@ -140,6 +140,7 @@ public class ClientHandler implements Runnable {
             }
             case Protocol.JOINGAME -> {
                 Server.get_lobbyList().get(Integer.parseInt(messageArr[1])-1).addPlayer(_player);
+                lobby = Server.get_lobbyList().get(Integer.parseInt(messageArr[1])-1);
                 break;
             }
 
@@ -147,9 +148,9 @@ public class ClientHandler implements Runnable {
 
             case Protocol.MOVE -> {
                 if(messageArr[1].equals(Protocol.COLOR)){
-                    lobby.getUnoGame().getBoard().getLastCard().setColour(AbstractCard.Colour.valueOf(messageArr[2]));
+                    Server.get_lobbyList().get(Server.get_lobbyList().indexOf(lobby)).getUnoGame().getBoard().getLastCard().setColour(AbstractCard.Colour.valueOf(messageArr[2]));
                 }else{
-                    lobby.getUnoGame().playCard((Card) lobby.getUnoGame().getPlayersTurn().getHand().get(Integer.parseInt(messageArr[1])));
+                    Server.get_lobbyList().get(Server.get_lobbyList().indexOf(lobby)).getUnoGame().playCard((Card) lobby.getUnoGame().getPlayersTurn().getHand().get(Integer.parseInt(messageArr[1])));
                 }
                 break;
             }
@@ -231,7 +232,7 @@ public class ClientHandler implements Runnable {
                     return line;
                 }
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                System.out.println("Couldn't get move");
             }
         }
     }

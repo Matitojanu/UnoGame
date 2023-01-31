@@ -143,6 +143,7 @@ public class Lobby implements Runnable{
                         }
                     }
                 }
+                unoGame.changeTurn();
             }
             ArrayList<Integer> playerPoints = new ArrayList<>();
             ArrayList<AbstractPlayer> pointOwners = new ArrayList<>();
