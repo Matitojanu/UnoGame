@@ -50,17 +50,15 @@ public class Lobby implements Runnable{
     @Override
     public void run() {
         while(isWaiting()) {
-            for(int j = 0; j < Server.get_handlers().size(); j++){
-                for(int i = 0; i < players.size(); i++){
-                    if(Server.get_handlers().get(j).get_player() != null) {
-                        if (Server.get_handlers().get(j).get_player().getName().equals(players.get(i).getName())) {
-                            try {
-                                Server.get_handlers().get(j).sendProtocol(Protocol.WAIT + Protocol.DELIMITER + gameName + Protocol.DELIMITER + maxPlayers + Protocol.DELIMITER + players.size());
-
-                            } catch (IOException e) {
-                                System.out.println("Couldn't send wait command");
-                            }
+            for(ClientHandler handler : Server.get_handlers()){
+                for(AbstractPlayer player : players){
+                    if(isPlayerInLobby(handler, player)){
+                        try {
+                            handler.sendProtocol(Protocol.WAIT + Protocol.DELIMITER + gameName + Protocol.DELIMITER + maxPlayers + Protocol.DELIMITER + players.size());
+                        } catch (IOException e) {
+                            System.out.println("Couldn't send wait command");
                         }
+
                     }
                 }
             }
@@ -71,10 +69,12 @@ public class Lobby implements Runnable{
                 }
             }
         for(ClientHandler handler : Server.get_handlers()){
-            try {
-                handler.sendProtocol(Protocol.START);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            for(AbstractPlayer player : players) {
+                try {
+                    handler.sendProtocol(Protocol.START);
+                } catch (IOException e) {
+                    System.out.println("Couldn't send start message");;
+                }
             }
         }
         unoGame = new UnoGame(players);
@@ -93,61 +93,57 @@ public class Lobby implements Runnable{
             unoGame.boardSetUp();
             unoGame.drawCardsInitial();
             unoGame.setPlayersTurn(players.get(0));
-            for(int j = 0; j < Server.get_handlers().size(); j++) {
-                for (int i = 0; i < players.size(); i++) {
-                    if (Server.get_handlers().get(j).get_player() != null) {
-                        if (Server.get_handlers().get(j).get_player().getName().equals(players.get(i).getName())) {
-                            try {
-                                Server.get_handlers().get(j).sendProtocol(Protocol.NEWROUND);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
+            for(ClientHandler handler : Server.get_handlers()){
+                for(AbstractPlayer player : players){
+                    if(isPlayerInLobby(handler, player)){
+                        try {
+                            handler.sendProtocol(Protocol.NEWROUND);
+                        } catch (IOException e) {
+                            System.out.println("Couldn't send new round message");;
                         }
                     }
                 }
             }
             while (!unoGame.isRoundOver()) {
-                for(int j = 0; j < Server.get_handlers().size(); j++){
-                    for(int i = 0; i < players.size(); i++) {
-                        if (Server.get_handlers().get(j).get_player() != null) {
-                            if (Server.get_handlers().get(j).get_player().getName().equals(players.get(i).getName())) {
-                                try {
-                                    Server.get_handlers().get(j).sendProtocol(Protocol.CURRENTPLAYER + Protocol.DELIMITER + unoGame.getPlayersTurn().getName());
-                                    Server.get_handlers().get(j).sendProtocol(Protocol.UPDATEFIELD + Protocol.DELIMITER + unoGame.getBoard().getLastCard().getColour() + Protocol.DELIMITER + unoGame.getBoard().getLastCard().getSymbol());
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
+                AbstractCard lastCard = unoGame.getBoard().getLastCard();
+                AbstractPlayer playersTurn = unoGame.getPlayersTurn();
+                for(ClientHandler handler : Server.get_handlers()){
+                    for(AbstractPlayer player : players){
+                        if(isPlayerInLobby(handler, player)){
+                            try {
+                                handler.sendProtocol(Protocol.CURRENTPLAYER + Protocol.DELIMITER + playersTurn.getName());
+                                handler.sendProtocol(Protocol.UPDATEFIELD + Protocol.DELIMITER + lastCard.getColour() + Protocol.DELIMITER + lastCard.getSymbol());
+                            } catch (IOException e) {
+                                System.out.println("Couldn't send update to Client");
                             }
                         }
                     }
                 }
 
                 label1:
-                for(int j = 0; j < Server.get_handlers().size(); j++){
-                    for(int i = 0; i < players.size(); i++) {
-                        if (Server.get_handlers().get(j).get_player() != null) {
-                            if (Server.get_handlers().get(j).get_player().getName().equals(players.get(i).getName())) {
-                                try {
-                                    if(Server.get_handlers().get(j).get_player() == unoGame.getPlayersTurn()) {
-                                        String moveList = formatMoveList(unoGame.getPlayersTurn().getHand());
-                                        Server.get_handlers().get(j).sendProtocol(Protocol.MOVE + moveList);
-                                        String msgFromClient = Server.get_handlers().get(j).listenToMessage();
-                                        String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
-                                        if (msgArray[0].equals(Protocol.MOVE)) {
-                                            try {
-                                                Server.get_handlers().get(j).handleMessage(msgFromClient);
-                                            } catch (IOException e) {
-                                                System.out.println("Couldn't get client choice");
-                                            }
-                                            break label1;
-                                        }else if(msgArray[0].equals(Protocol.DRAW)) {
-                                            Server.get_handlers().get(j).handleMessage(msgFromClient);
-                                            break label1;
+                for(ClientHandler handler : Server.get_handlers()){
+                    for(AbstractPlayer player : players){
+                        if(isPlayerInLobby(handler, player)){
+                            try {
+                                if(handler.get_player() == unoGame.getPlayersTurn()) {
+                                    String moveList = formatMoveList(unoGame.getPlayersTurn().getHand());
+                                    handler.sendProtocol(Protocol.MOVE + moveList);
+                                    String msgFromClient = handler.listenToMessage();
+                                    String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
+                                    if (msgArray[0].equals(Protocol.MOVE)) {
+                                        try {
+                                            handler.handleMessage(msgFromClient);
+                                        } catch (IOException e) {
+                                            System.out.println("Couldn't get client choice");
                                         }
+                                        break label1;
+                                    }else if(msgArray[0].equals(Protocol.DRAW)) {
+                                        handler.handleMessage(msgFromClient);
+                                        break label1;
                                     }
-                                } catch (IOException e) {
-                                    System.out.println("Couldn't send move list");
                                 }
+                            } catch (IOException e) {
+                                System.out.println("Couldn't send move list");
                             }
                         }
                     }
@@ -160,10 +156,14 @@ public class Lobby implements Runnable{
                 results += Protocol.DELIMITER + player.getName() + Protocol.DELIMITERINITEMS + unoGame.getPlayersPoints().get(player);
             }
             for(ClientHandler handler : Server.get_handlers()){
-                try {
-                    handler.sendProtocol(Protocol.DISPLAYRESULTS + results);
-                } catch (IOException e) {
-                    System.out.println("Couldn't display results");
+                for(AbstractPlayer player : players) {
+                    if(isPlayerInLobby(handler, player)) {
+                        try {
+                            handler.sendProtocol(Protocol.DISPLAYRESULTS + results);
+                        } catch (IOException e) {
+                            System.out.println("Couldn't display results");
+                        }
+                    }
                 }
             }
         }
@@ -178,6 +178,21 @@ public class Lobby implements Runnable{
             return false;
         }
         return true;
+    }
+
+    /**
+     * Checks whether the play is in lobby
+     * @param handler - ClientHandler to get player from
+     * @param player - Player from the lobby to compare the player from ClientHandler
+     * @return true if player from the ClientHandler is in the Lobby, false if he is not
+     */
+    public boolean isPlayerInLobby(ClientHandler handler, AbstractPlayer player){
+        if(handler.get_player() != null) {
+            if (handler.get_player().getName().equals(player.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
