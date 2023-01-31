@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This class implements Runnable and is responsible for creating and managing an UnoGame. It waits for it to fill up
+ * with players and then begins an online game with online players or with AI.
+ */
 public class Lobby implements Runnable{
     private String gameName;
     private int maxPlayers;
@@ -18,11 +22,17 @@ public class Lobby implements Runnable{
     private UnoGame unoGame;
     private ArrayList<AbstractPlayer> players;
 
+    /**
+     * Creates a new Lobby with set name, maximum number of players and chosen gamemode
+     * @param gameName - name of the game
+     * @param maxPlayers - maximum number of players
+     * @param gamemode - the gamemode
+     */
     public Lobby(String gameName, int maxPlayers, String gamemode){
         this.gameName = gameName;
         this.maxPlayers = maxPlayers;
         this.gamemode = gamemode;
-        this.numberOfPlayers = 0;
+        this.numberOfPlayers = 1;
         this.players = new ArrayList<>();
     }
 
@@ -34,7 +44,8 @@ public class Lobby implements Runnable{
     }
 
     /**
-     * Runs this section when a new Thread gets created, creates and runs a new unoGame
+     * Runs this section when a new Thread gets created, waits for the lobby to fill up with players
+     * and creates a new UnoGame
      */
     @Override
     public void run() {
@@ -70,6 +81,10 @@ public class Lobby implements Runnable{
         runUnoGame(unoGame);
     }
 
+    /**
+     * Sets up the UnoGame and runs it following all game logic
+     * @param unoGame - UnoGame created by the lobby
+     */
     public void runUnoGame(UnoGame unoGame){
         for (AbstractPlayer player : players) {
             unoGame.getPlayersPoints().put(player, 0);
@@ -106,10 +121,7 @@ public class Lobby implements Runnable{
                         }
                     }
                 }
-                //ArrayList<AbstractCard> playerHand = new ArrayList<>();
-                //for(AbstractCard card : unoGame.getPlayersTurn().getHand()){
-                //    playerHand.add(card);
-                //}
+
                 label1:
                 for(int j = 0; j < Server.get_handlers().size(); j++){
                     for(int i = 0; i < players.size(); i++) {
@@ -117,7 +129,6 @@ public class Lobby implements Runnable{
                             if (Server.get_handlers().get(j).get_player().getName().equals(players.get(i).getName())) {
                                 try {
                                     if(Server.get_handlers().get(j).get_player() == unoGame.getPlayersTurn()) {
-                                       // if (Server.get_handlers().get(j).get_player().existsValidMove(unoGame.getBoard())) {
                                         String moveList = formatMoveList(unoGame.getPlayersTurn().getHand());
                                         Server.get_handlers().get(j).sendProtocol(Protocol.MOVE + moveList);
                                         String msgFromClient = Server.get_handlers().get(j).listenToMessage();
@@ -146,7 +157,7 @@ public class Lobby implements Runnable{
             unoGame.distributePoints();
             String results = "";
             for(AbstractPlayer player : unoGame.getPlayersPoints().keySet()){
-                results += Protocol.DELIMITER + player.toString() + Protocol.DELIMITERINITEMS + unoGame.getPlayersPoints().get(player).toString();
+                results += Protocol.DELIMITER + player.getName() + Protocol.DELIMITERINITEMS + unoGame.getPlayersPoints().get(player);
             }
             for(ClientHandler handler : Server.get_handlers()){
                 try {
