@@ -179,7 +179,7 @@ public class UnoGame implements AbstractCard.Ability {
 
     /**
      * Calculates the points from a round and assigns them to the winner
-     * @ensures the points are added correctly to each player
+     * @ensures the points are added correctly to each player and the hands are empty after point distribution
      */
     public void distributePoints(){
         int totalPoints = playersPoints.get(getRoundWinner());
@@ -233,7 +233,9 @@ public class UnoGame implements AbstractCard.Ability {
                             totalPoints += 50;
                         }
                     }
-                    player.getHand().remove(card);
+                }
+                for (int i = player.getHand().size()-1; i > 0; i--) {
+                    player.getHand().remove(i);
                 }
             }
         }

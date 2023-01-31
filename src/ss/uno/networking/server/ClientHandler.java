@@ -139,16 +139,17 @@ public class ClientHandler implements Runnable {
                 break;
             }
             case Protocol.JOINGAME -> {
-                Server.get_lobbyList().get(Integer.parseInt(messageArr[1])-1).addPlayer(_player);
                 lobby = Server.get_lobbyList().get(Integer.parseInt(messageArr[1])-1);
+                lobby.addPlayer(_player);
                 break;
             }
 
             //Gameplay loop
 
             case Protocol.MOVE -> {
+                AbstractCard lastCard = lobby.getUnoGame().getBoard().getLastCard();
                 if(messageArr[1].equals(Protocol.COLOR)){
-                    lobby.getUnoGame().getBoard().getLastCard().setColour(AbstractCard.Colour.valueOf(messageArr[2]));
+                    lastCard.setColour(AbstractCard.Colour.valueOf(messageArr[2]));
                 }else if(messageArr[1].equals(Protocol.CHALLANGE)){
 
                 }else{
@@ -166,7 +167,7 @@ public class ClientHandler implements Runnable {
                         handleMessage(msgFromClient);
                         break;
                     }
-                    Server.get_lobbyList().get(Server.get_lobbyList().indexOf(lobby)).getUnoGame().abilityFunction();
+                    lobby.getUnoGame().abilityFunction();
                 }
                 break;
             }
@@ -249,7 +250,11 @@ public class ClientHandler implements Runnable {
             String msgForClient = "";
             ArrayList<String> serverList = new ArrayList<>();
             for (int i = 0; i < Server.get_lobbyList().size(); i++) {
-                msgForClient += Server.get_lobbyList().get(i).getGameName() + Protocol.DELIMITERINITEMS + Integer.toString(Server.get_lobbyList().get(i).getMaxPlayers()) + Protocol.DELIMITERINITEMS + Integer.toString(Server.get_lobbyList().get(i).getNumberOfPlayers()) + Protocol.DELIMITERINITEMS + Server.get_lobbyList().get(i).getGamemode().toString() + Protocol.DELIMITER;
+                String gameName = Server.get_lobbyList().get(i).getGameName();
+                String maxPlayers = Integer.toString(Server.get_lobbyList().get(i).getMaxPlayers());
+                String numberOfPlayers = Integer.toString(Server.get_lobbyList().get(i).getNumberOfPlayers());
+                String gamemode = Server.get_lobbyList().get(i).getGamemode().toString();
+                msgForClient += Protocol.DELIMITER + gameName + Protocol.DELIMITERINITEMS + maxPlayers + Protocol.DELIMITERINITEMS + numberOfPlayers + Protocol.DELIMITERINITEMS + gamemode;
                 serverList.add(msgForClient);
             }
             //String[] serverListArr = serverList.toArray(new String[serverList.size()]);
@@ -257,7 +262,7 @@ public class ClientHandler implements Runnable {
             //   System.out.println(serverListArr[i]);
             //}
             try {
-                sendProtocol(Protocol.SERVERLIST + Protocol.DELIMITER + msgForClient);
+                sendProtocol(Protocol.SERVERLIST + msgForClient);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -278,7 +283,9 @@ public class ClientHandler implements Runnable {
     }
 
     public boolean canInstantDiscard(){
-        if(_player.getHand().get(_player.getHand().size()-1).getColour().equals(lobby.getUnoGame().getBoard().getLastCard().getColour()) || _player.getHand().get(_player.getHand().size()-1).getSymbol().equals(lobby.getUnoGame().getBoard().getLastCard().getSymbol()) || _player.getHand().get(_player.getHand().size()-1).getColour().equals(AbstractCard.Colour.WILD)){
+        AbstractCard drawnCard = _player.getHand().get(_player.getHand().size()-1);
+        AbstractCard lastCard = lobby.getUnoGame().getBoard().getLastCard();
+        if(drawnCard.getColour().equals(lastCard.getColour()) || drawnCard.getSymbol().equals(lobby.getUnoGame().getBoard().getLastCard().getSymbol()) || drawnCard.getColour().equals(AbstractCard.Colour.WILD)){
             return true;
         }
         return false;
