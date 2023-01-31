@@ -17,7 +17,7 @@ import java.util.Scanner;
  */
 public class ClientTUI {
     private static Scanner _scanner = new Scanner(System.in);
-    public static final String WRONGINPUT = "Wrong input! Please try again.";
+    public static final String WRONGINPUT = "Wrong input! Please try again.\n";
 
     /**
      * This method prints into the terminal the text representation of the player who has to make a move.
@@ -39,7 +39,7 @@ public class ClientTUI {
      * This method prints into the terminal the text representation of the error when the user inputs the wrong index of a server.
      */
     public static void printJoinErrorText(){
-        System.out.println("The index you inputed is not valid. Please try again.");
+        System.out.println("The index you inputed is not valid. Please try again.\n");
     }
 
     /**
@@ -94,6 +94,7 @@ public class ClientTUI {
      * @param servers the servers the user can join
      */
     public static void printServerListText(String[] servers){
+        System.out.println("\nThe list of open servers:");
         for (int i = 0; i < servers.length; i++) {
             String[] arguments = servers[i].split(Protocol.DELIMITERINITEMS);
             String serverName = arguments[0];
@@ -172,7 +173,7 @@ public class ClientTUI {
      * This method prints into the terminal the text representation of the start of the game.
      */
     public static void printStartText(){
-        System.out.println("Everyone is connected. The game will now start!\n");
+        System.out.println("\nEveryone is connected. The game will now start!\n");
     }
 
     /**
@@ -207,7 +208,7 @@ public class ClientTUI {
      * This method prints into the terminal the text for a new round.
      */
     public static void printNewRoundText(){
-        System.out.println("A new round has started!\n");
+        System.out.println("\nA new round has started!\n");
     }
 
     /**
@@ -221,6 +222,7 @@ public class ClientTUI {
             String points = playersArguments[1].toString();
             System.out.println(playerName + " : " + points + " points");
         }
+        System.out.println("\n");
     }
 
     /**
@@ -296,7 +298,7 @@ public class ClientTUI {
                     }
                 }
                 if ( client.sendName(name) ) {
-                    System.out.println("Successful! Loading...");
+                    System.out.println("\nSuccessfully connected! Loading...\n");
                     while (addingFunctionality) { //TODO: to check for valid move
                         while (true) {
                             System.out.println("Please input the index of the functionality you wish to add:");
@@ -328,7 +330,7 @@ public class ClientTUI {
                     new Thread(client).start(); //TODO: hopefully servers are shown here
                     userInitialization = false;
                 } else {
-                    System.out.println("Name is already taken. Try again.");
+                    System.out.println("Name is already taken. Try again.\n");
                 }
             }
         } else {
@@ -375,7 +377,7 @@ public class ClientTUI {
                     System.out.println("Thread interrupted!!!");
                 }
             }
-            System.out.println("This game is over. Do you wish to play and choose another game server to join or create? Press Y for Yes or N for No");
+            System.out.println("\nThis game is over. Do you wish to play and choose another game server to join or create? Press Y for Yes or N for No");
             String response = _scanner.nextLine();
             if(response.equalsIgnoreCase("N")){
                 wishToPlay=false;
