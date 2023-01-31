@@ -18,11 +18,16 @@ public class ClientHandler implements Runnable {
     private final PrintWriter _out;
     private boolean _running;
     private String _name;
-    //private ArrayList<String> _playerNames;
-    //private ArrayList<AbstractPlayer> _players;
     private AbstractPlayer _player;
     private Lobby lobby;
 
+    /**
+     * This constructor creates a new ClientHandler responsible for interpreting commands from the Client
+     * and sending back appropriate respones from the Server without directly linking them.
+     * @param socket the ClientHandler connects with
+     * @param name of the Client
+     * @throws IOException
+     */
     public ClientHandler(Socket socket, String name) throws IOException {
         this._socket = socket;
         this._out = new PrintWriter(_socket.getOutputStream(), true);
@@ -106,7 +111,8 @@ public class ClientHandler implements Runnable {
     }
 
     /**
-     * Contains a switch case statement that chooses how to respond to different messages sent by the Client
+     * Contains a switch case statement that chooses how to respond to different messages sent by the Client.
+     * Handles all commands connected to creating lobbies and the gameplay loop.
      * @param message sent by the client
      * @throws IOException
      */
@@ -208,15 +214,6 @@ public class ClientHandler implements Runnable {
     }
 
     /**
-     * Sends a chat message to the Client (currently not used)
-     * @param message
-     */
-    public void sendMessage(String message) {
-        this._out.println(message);
-        System.out.println("[" + this._name + "]" + message);
-    }
-
-    /**
      * Sends a protocol command to the client
      * @param message sent to the client
      * @throws IOException
@@ -257,10 +254,7 @@ public class ClientHandler implements Runnable {
                 msgForClient += Protocol.DELIMITER + gameName + Protocol.DELIMITERINITEMS + maxPlayers + Protocol.DELIMITERINITEMS + numberOfPlayers + Protocol.DELIMITERINITEMS + gamemode;
                 serverList.add(msgForClient);
             }
-            //String[] serverListArr = serverList.toArray(new String[serverList.size()]);
-            //for(int i = 0; i < serverListArr.length; i++){
-            //   System.out.println(serverListArr[i]);
-            //}
+
             try {
                 sendProtocol(Protocol.SERVERLIST + msgForClient);
             } catch (IOException e) {
@@ -269,6 +263,10 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Waits for a message from the Client and then returns it
+     * @return a message from the Client
+     */
     public String listenToMessage() {
         String line;
         while (true) {
@@ -282,6 +280,10 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Checks whether the newly drawn card can be discarded immediately
+     * @return true if card can be discarded, false if it can't
+     */
     public boolean canInstantDiscard(){
         AbstractCard drawnCard = _player.getHand().get(_player.getHand().size()-1);
         AbstractCard lastCard = lobby.getUnoGame().getBoard().getLastCard();
@@ -290,7 +292,7 @@ public class ClientHandler implements Runnable {
         }
         return false;
     }
-        /**
+    /**
      * Returns currently connected players
      * @return currently connected players
      */
