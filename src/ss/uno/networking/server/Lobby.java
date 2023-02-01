@@ -50,7 +50,7 @@ public class Lobby implements Runnable{
     @Override
     public void run() {
         while(isWaiting()) {
-            numberOfPlayers = players.size();
+            numberOfPlayers = players.size()-1;
             for(ClientHandler handler : Server.get_handlers()){
                 for(AbstractPlayer player : players){
                     if(isPlayerInLobby(handler, player)){
