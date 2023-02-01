@@ -38,8 +38,6 @@ public class ClientHandler implements Runnable {
         this._in = new BufferedReader(new InputStreamReader((_socket.getInputStream())));
         this._running = true;
         this._name = name;
-        //this._playerNames = new ArrayList<>();
-        //this._players = new ArrayList<>();
     }
 
     /**
@@ -56,7 +54,6 @@ public class ClientHandler implements Runnable {
             }
         }
 
-        //sendProtocol(Protocol.PLAYERNAME);
         String msgFromClientPlayerName = listenToMessage();
         String[] msgArrayPlayerName = msgFromClientPlayerName.split("\\" + Protocol.DELIMITER);
         if (msgArrayPlayerName[0].equals(Protocol.PLAYERNAME)) {
@@ -132,12 +129,14 @@ public class ClientHandler implements Runnable {
                 lobby.start();
                 lobby.addPlayer(_player);
                 Server.addLobby(lobby);
+                lobby.setNewPlayerJoined(true);
                 System.out.println("Starting new lobby: "+lobby.getGameName());
                 break;
             }
             case Protocol.JOINGAME -> {
                 lobby = Server.get_lobbyList().get(Integer.parseInt(messageArr[1])-1);
                 lobby.addPlayer(_player);
+                lobby.setNewPlayerJoined(true);
                 break;
             }
 
@@ -222,7 +221,15 @@ public class ClientHandler implements Runnable {
     public void checkName(String name) throws IOException {
         if (Server.get_playerNames().contains(name) || name.contains(" ")) {
             sendProtocol(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.DENIED);
-            sendProtocol(Protocol.PLAYERNAME);
+            String msgFromClientPlayerName = listenToMessage();
+            String[] msgArrayPlayerName = msgFromClientPlayerName.split("\\" + Protocol.DELIMITER);
+            if (msgArrayPlayerName[0].equals(Protocol.PLAYERNAME)) {
+                try {
+                    handleMessage(msgFromClientPlayerName);
+                } catch (IOException e) {
+                    System.out.println("Couldn't get player name");
+                }
+            }
         } else {
             Server.get_playerNames().add(name);
             this._name = name;
