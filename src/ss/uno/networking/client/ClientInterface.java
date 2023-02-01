@@ -29,12 +29,6 @@ public interface ClientInterface extends Runnable {
     @Override
     void run();
 
-    /**
-     * This method sends the username of the client to its cleint handler
-     *
-     * @param name the username of the client
-     */
-    void sendUserNameForChat(String name);
 
     /**
      * This method sends the move of the client to the client handler, according to the protocol
