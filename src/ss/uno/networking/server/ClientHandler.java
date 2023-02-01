@@ -160,14 +160,14 @@ public class ClientHandler implements Runnable {
                 AbstractCard lastCard = lobby.getUnoGame().getBoard().getLastCard();
                 if(messageArr[1].equals(Protocol.COLOR)){
                     lastCard.setColour(AbstractCard.Colour.valueOf(messageArr[2]));
-                }else if(messageArr[1].equals(Protocol.CHALLANGE)){
+                }else if(messageArr[1].equals(Protocol.CHALLENGE)){
 
                 }else{
                     Card playedCard = (Card) lobby.getUnoGame().getPlayersTurn().getHand().get(Integer.parseInt(messageArr[1]));
                     lobby.getUnoGame().playCard((playedCard));
                     if(playedCard.getSymbol().equals(AbstractCard.Symbol.CHANGECOLOR) || playedCard.getSymbol().equals(AbstractCard.Symbol.PLUSFOUR)){
                         if(playedCard.getSymbol().equals(AbstractCard.Symbol.PLUSFOUR)){
-                           lobby.getUnoGame().changeTurn();
+                            lobby.getUnoGame().changeTurn();
                             for(int i = 0; i<4; i++){
                                 lobby.getUnoGame().drawCard();
                             }
@@ -181,6 +181,7 @@ public class ClientHandler implements Runnable {
                 }
                 break;
             }
+
             case Protocol.DRAW -> {
                 lobby.getUnoGame().drawCard();
                 AbstractCard drawnCard = lobby.getUnoGame().getPlayersTurn().getHand().get(lobby.getUnoGame().getPlayersTurn().getHand().size()-1);

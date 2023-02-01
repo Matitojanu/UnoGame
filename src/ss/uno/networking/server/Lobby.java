@@ -32,7 +32,7 @@ public class Lobby implements Runnable{
         this.gameName = gameName;
         this.maxPlayers = maxPlayers;
         this.gamemode = gamemode;
-        this.numberOfPlayers = 1;
+        this.numberOfPlayers = 0;
         this.players = new ArrayList<>();
     }
 
@@ -50,11 +50,12 @@ public class Lobby implements Runnable{
     @Override
     public void run() {
         while(isWaiting()) {
+            numberOfPlayers = players.size();
             for(ClientHandler handler : Server.get_handlers()){
                 for(AbstractPlayer player : players){
                     if(isPlayerInLobby(handler, player)){
                         try {
-                            handler.sendProtocol(Protocol.WAIT + Protocol.DELIMITER + gameName + Protocol.DELIMITER + maxPlayers + Protocol.DELIMITER + players.size());
+                            handler.sendProtocol(Protocol.WAIT + Protocol.DELIMITER + gameName + Protocol.DELIMITER + maxPlayers + Protocol.DELIMITER + numberOfPlayers);
                         } catch (IOException e) {
                             System.out.println("Couldn't send wait command");
                         }

@@ -167,15 +167,15 @@ public class Client implements ClientInterface {
                                 sendProtocol(Protocol.MOVE+Protocol.DELIMITER+ Protocol.COLOR + Protocol.DELIMITER + pickedColor.toString());
                                 break;
                             }
-                            if( words[1].equals(Protocol.CHALLANGE) ){
+                            if( words[1].equals(Protocol.CHALLENGE) ){
                                 if(_playerClient instanceof HumanPlayer) {
                                     boolean response = askUserIfChallangeText();
                                     if ( response ) {
-                                        sendProtocol(Protocol.MOVE + Protocol.DELIMITER + Protocol.CHALLANGE + Protocol.DELIMITER + Protocol.TRUE);
+                                        sendProtocol(Protocol.MOVE + Protocol.DELIMITER + Protocol.CHALLENGE + Protocol.DELIMITER + Protocol.TRUE);
                                         break;
                                     }
                                 }
-                                sendProtocol(Protocol.MOVE + Protocol.DELIMITER + Protocol.CHALLANGE + Protocol.DELIMITER + Protocol.FALSE);
+                                sendProtocol(Protocol.MOVE + Protocol.DELIMITER + Protocol.CHALLENGE + Protocol.DELIMITER + Protocol.FALSE);
                                 break;
                             }
 

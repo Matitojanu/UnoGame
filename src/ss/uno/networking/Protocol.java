@@ -43,7 +43,7 @@ public class Protocol {
     public static final String COLOR = "COLOR";
     public static final String COLORSPOSSIBLE = "YELLOW, RED, BLUE, GREEN";
 
-    public static final String CHALLANGE = "CHALLANGE";
+    public static final String CHALLENGE = "CHALLENGE";
     public static final String TRUE = "TRUE";
     public static final String FALSE = "FALSE";
 
