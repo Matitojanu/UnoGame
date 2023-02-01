@@ -59,12 +59,11 @@ public class Lobby implements Runnable{
                         } catch (IOException e) {
                             System.out.println("Couldn't send wait command");
                         }
-
                     }
                 }
             }
                 try {
-                    TimeUnit.SECONDS.sleep(3);
+                    TimeUnit.SECONDS.sleep(5);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -276,4 +275,5 @@ public class Lobby implements Runnable{
         }
         return protocolMsg;
     }
+
 }

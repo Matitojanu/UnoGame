@@ -134,14 +134,12 @@ public class ClientHandler implements Runnable {
                 lobby.start();
                 lobby.addPlayer(_player);
                 Server.addLobby(lobby);
-                lobby.setNewPlayerJoined(true);
                 System.out.println("Starting new lobby: "+lobby.getGameName());
                 break;
             }
             case Protocol.JOINGAME -> {
                 lobby = Server.get_lobbyList().get(Integer.parseInt(messageArr[1])-1);
                 lobby.addPlayer(_player);
-                lobby.setNewPlayerJoined(true);
                 break;
             }
 
