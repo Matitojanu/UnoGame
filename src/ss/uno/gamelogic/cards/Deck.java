@@ -52,17 +52,6 @@ public class Deck {
             deckCards.add(count+8, new Card(AbstractCard.Colour.GREEN, symbol));
            count=+8;
         }
-        /* for (int i = 1; i <= 2; i++) {
-            deckCards.add(count+1, new Card(AbstractCard.Colour.RED, AbstractCard.Symbol.ONE));
-            deckCards.add(count+2, new Card(AbstractCard.Colour.BLUE, AbstractCard.Symbol.ONE));
-            deckCards.add(count+3, new Card(AbstractCard.Colour.YELLOW, AbstractCard.Symbol.TWO));
-            deckCards.add(count+4, new Card(AbstractCard.Colour.BLUE, i));
-            deckCards.add(count+5, new Card(AbstractCard.Colour.YELLOW, i));
-            deckCards.add(count+6, new Card(AbstractCard.Colour.YELLOW, i));
-            deckCards.add(count+7, new Card(AbstractCard.Colour.GREEN, i));
-            deckCards.add(count+8, new Card(AbstractCard.Colour.GREEN, i));
-            count+=8;
-        }*/
         Collections.shuffle(deckCards);
     }
 

@@ -55,7 +55,7 @@ public class Client implements ClientInterface {
         this.sendProtocol(Protocol.HANDSHAKE+Protocol.DELIMITER+Protocol.HELLO);
         try {
             String msgFromServer = _in.readLine();
-            if(msgFromServer.equals(Protocol.HANDSHAKE+Protocol.DELIMITER+Protocol.HELLO)){ //this can wait for the server infinetly so we need to find solution about it
+            if(msgFromServer.equals(Protocol.HANDSHAKE+Protocol.DELIMITER+Protocol.HELLO)){
                 _handshakeComplete=true;
                 return true;
             }
@@ -90,7 +90,6 @@ public class Client implements ClientInterface {
             String line;
             List<String> servers = new ArrayList<>();
             while ((line = _in.readLine()) != null){
-                //System.out.println(line);
                 String[] words  = line.split("\\" + Protocol.DELIMITER );
                 if(_handshakeComplete){
                     switch (words[0]){

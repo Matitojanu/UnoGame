@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Server implements ServerInterface {
     public final int port = Protocol.PORT;
-    private static List<ClientHandler> _handlers; //_ is best practice to diferentiate members of the class from local parameters
+    private static List<ClientHandler> _handlers;
     private ServerSocket _serverSocket;
     private Socket _socket;
     private static ArrayList<Lobby> _lobbyList;
