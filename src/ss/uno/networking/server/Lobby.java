@@ -70,10 +70,12 @@ public class Lobby implements Runnable{
             }
         for(ClientHandler handler : Server.get_handlers()){
             for(AbstractPlayer player : players) {
-                try {
-                    handler.sendProtocol(Protocol.START);
-                } catch (IOException e) {
-                    System.out.println("Couldn't send start message");;
+                if(isPlayerInLobby(handler, player)) {
+                    try {
+                        handler.sendProtocol(Protocol.START);
+                    } catch (IOException e) {
+                        System.out.println("Couldn't send start message");
+                    }
                 }
             }
         }
