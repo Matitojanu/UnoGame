@@ -1,92 +1,47 @@
 # UNOproject
 
+## Description 
+This project allows users to play multiple games of Uno at once using a lobby system
+The games are hosted on a Server that people can connect to using their Clients
+The java version used is OpenJDK 19
 
+### Additional features
+- Lobby system
+- Multi-game server
+- Team-play (games up to 10 players)
 
-## Getting started
+## How to run
+#### Joining the server
+In order to host a server you first need to run the ServerTUI class. Then you need to
+run ClientTUI in order to connect to the server as a player. The Server will ask you for 
+your name and whether you will want this run to listen to your commands during the game or
+to operate as an AI (write "AI" for AI, "H" for Human). Next the server will ask you whether 
+you want to use any of the listed additional features (Our code doesn't support all the features, but we still 
+give the option for interaction with another Server that might support these features).
+#### Creating a lobby
+If you are the first player to connect to the server you will most likely encounter an empty list of
+lobbies. At that time your only option is to create a new lobby by inputting '0'. The server will then ask 
+you to input a name for the lobby, the maximum number of players at which the game will be played and then it
+will ask you to pick a gamemode that you want to play from the list. (Our current project only supports the Original gamemode).
+After that you will be put in a lobby with notifications about the current number of players in the lobby.
+#### Joining a lobby
+If you are not the first to connect to the server, chances are there already are some lobbies
+in the list of lobbies. If you don't want to create your own, you can join a lobby just by inputting it's index.
+After that you will be put in a lobby with notifications about the current number of players in the lobby.
+#### Gameplay loop
+When a lobby gets filled by players the game will begin. The game will display the last played card and a list of cards
+in your hand. When it's your turn you simply put the index of the card that you want to play. If it's valid it will be played,
+it's ability(if it has one) will activate and the turn will get passed to the next player. You can also choose to draw a card instead
+of playing it can be done by inputing the number that's 1 bigger the the index of the last card in your hand. If you don't have any available
+moves on hand, you are forced to draw a card. Whenever you draw a card voluntarily (or forced by lack of moves) the game will check if the newly drawn
+card can be played on the card on board. If it can, the game will ask you whether you want to discard it instantly.
+#### Win conditions
+The round ends when one of the players gets rid of all cards in their hand. That player gets declared the winner of the round
+and gains points for each card in the opponets hands (Numbered cards give points equal to their number, special colored cards give +20 points
+and Wildcards give +50 points) After that, a new round begins. The players keep playing until one player collects 500 points. At that point, the game
+ends and the player with 500 gets declared the winner of the game.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.utwente.nl/s3060438/unoproject.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab.utwente.nl/s3060438/unoproject/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+## How to play a game with AI players
+Running a game with AI players is very simple. When connecting to the server choose "AI". Then when the game in the lobby you created/joined begins, the AI
+will make moves instead of you. You can play a game with multiple AIs simply by joining the game with another Client that also chooses "AI" when selecting 
+player name.
