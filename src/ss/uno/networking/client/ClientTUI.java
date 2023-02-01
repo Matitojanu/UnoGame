@@ -382,11 +382,10 @@ public class ClientTUI {
             if(response.equalsIgnoreCase("N")){
                 wishToPlay=false;
                 System.out.println("You have been disconected! Goodbye!");
+                client.close();
+                return;
             }
 
-
         }
-        //TODO: from WAIT down
-
     }
 }
