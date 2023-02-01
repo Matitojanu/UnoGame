@@ -1,6 +1,7 @@
 package ss.uno.networking;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * This class consists of all the protocol messages possible between
@@ -9,7 +10,15 @@ import java.net.InetAddress;
  */
 public class Protocol {
     public static final int PORT = 24042;
-    public static final String IPADDRESS = "localhost";
+    public static final InetAddress IPADDRESS;
+
+    static {
+        try {
+            IPADDRESS = InetAddress.getByName("localhost");
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static final String HANDSHAKE = "HANDSHAKE";
     public static final String HELLO = "HELLO";
