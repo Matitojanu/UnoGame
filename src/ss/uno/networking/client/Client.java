@@ -90,7 +90,7 @@ public class Client implements ClientInterface {
             String line;
             List<String> servers = new ArrayList<>();
             while ((line = _in.readLine()) != null){
-                String[] words  = line.split("\\" + Protocol.DELIMITER );
+                String[] words  = line.split( "\\" + Protocol.DELIMITER );
                 if(_handshakeComplete){
                     switch (words[0]){
                         case Protocol.SERVERLIST:{
