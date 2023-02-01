@@ -264,7 +264,7 @@ public class Lobby implements Runnable{
 
     /**
      * Formats the move list into a list
-     * @param cards in the current player's hand
+     * @param playerHand in the current player's hand
      * @return a formatted move list
      */
     public String formatMoveList(List<AbstractCard> playerHand) {
