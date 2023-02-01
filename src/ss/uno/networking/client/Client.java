@@ -31,6 +31,7 @@ public class Client implements ClientInterface {
     private boolean _inGame = false;
     private int _maxPlayers;
     private AbstractPlayer _playerClient;
+    private String _winnerName;
 
     /**
      * This method is a constructor. It creates a client instance, initialising the port, IPAdress and creates a socket,
@@ -246,9 +247,11 @@ public class Client implements ClientInterface {
                                 listResultsString.add(words[i]);
                             }
                             printResultsText(listResultsString);
+                            _winnerName = get_winnerName(listResultsString);
                             break;
                         }
                         case Protocol.GAMEOVER:{
+                            printWinnerText(_winnerName);
                             synchronized (this){
                                 notify();
                             }
@@ -287,13 +290,23 @@ public class Client implements ClientInterface {
     }
 
     /**
-     * This method sends the username of the client to its cleint handler
-     * @param name the username of the client
+     * This method takes the List as argument and checks for every player if
+     * they have the point higher or equal to 30, and returns the name of said player
+     * @param playersPointsList the list of players, containing also the points
+     * @return the string of the winner with 30 or more points
      */
-    @Override
-    public void sendUserNameForChat(String name){
-        _out.println("[ " + name + " ] : ");
-    }
+   public String get_winnerName(List<String> playersPointsList){
+        String winner = null;
+        for (int i = 0; i < playersPointsList.size(); i++) {
+            String[] playersArguments = playersPointsList.get(i).split(Protocol.DELIMITERINITEMS);
+            String playerName = playersArguments[0];
+            int points = Integer.parseInt(playersArguments[1]);
+            if(points>=30){
+               winner = playerName;
+            }
+        }
+        return winner;
+   }
 
     /**
      * This method sends the move of the client to the client handler, according to the protocol

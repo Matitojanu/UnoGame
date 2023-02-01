@@ -32,7 +32,7 @@ public class ClientTUI {
      * @param card the card that will be the last one played
      */
     public static void printUpdatedFieldText(Card card){
-        System.out.println("The last played card is " + card.getColour().toString() + " - " + card.getSymbol().toString());
+        System.out.println("The last played card is " + card.getColour().toString() + " - " + card.getSymbol().toString()+"\n");
     }
 
     /**
@@ -47,11 +47,19 @@ public class ClientTUI {
      * @return the index of the card/ move the user wishes to do
      * @param hand the hand with the cards the player has
      */
-    public static int getMoveFromUserText(List<AbstractCard> hand){
-        System.out.println("Please input the index of the card you wish to play. If you wish to draw a card, input " + (hand.size() + 1));
-        _scanner = new Scanner(System.in);
-        int move = Integer.parseInt(_scanner.nextLine());
-        return move;
+    public static int getMoveFromUserText(List<AbstractCard> hand) {
+        int move;
+        while (true){
+            System.out.println("Please input the index of the card you wish to play. If you wish to draw a card, input " + (hand.size() + 1));
+            try {
+                move= Integer.parseInt(_scanner.nextLine());
+                return move;
+            } catch (NumberFormatException e){
+                System.out.println(WRONGINPUT);
+            }
+
+        }
+
     }
 
     /**
@@ -225,6 +233,10 @@ public class ClientTUI {
         System.out.println("\n");
     }
 
+    public static void printWinnerText(String winnerName){
+        System.out.println("\nThe Winner is " + winnerName + "!\n");
+    }
+
     /**
      * This method prints into the terminal the text for asking the user of what they wish to do with the drawn card, if they want to play it or not.
      * @return an empty string if the user doesn't wish to play the card, 'Y' if the player wishes to play it
@@ -377,7 +389,7 @@ public class ClientTUI {
                     System.out.println("Thread interrupted!!!");
                 }
             }
-            System.out.println("\nThis game is over. Do you wish to play and choose another game server to join or create? Press Y for Yes or N for No");
+            System.out.println("This game is over. Do you wish to play and choose another game server to join or create? Press Y for Yes or N for No");
             String response = _scanner.nextLine();
             if(response.equalsIgnoreCase("N")){
                 wishToPlay=false;
