@@ -184,9 +184,11 @@ public class Client implements ClientInterface {
                                 hand.add(parseCard(words[i].split(Protocol.DELIMITERINITEMS)));
                             }
                             _playerClient.setHand(hand);
-                            if(_playerClient.existsValidMove(_game.getBoard())==false){
-                                printShowPlayerHandText(hand);
-                                printNoAvailableMovesText();
+                            if(_playerClient.existsValidMove(_game.getBoard())==false) {
+                                if ( _playerClient instanceof HumanPlayer ){
+                                    printShowPlayerHandText(hand);
+                                    printNoAvailableMovesText();
+                                }
                                 sendProtocol(Protocol.DRAW);
                                 break;
                             }
