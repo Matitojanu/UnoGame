@@ -21,6 +21,7 @@ public class ClientHandler implements Runnable {
     private final BufferedReader _in;
     private final PrintWriter _out;
     private boolean _running;
+    private boolean nameValid;
     private String _name;
     private AbstractPlayer _player;
     private Lobby lobby;
@@ -38,6 +39,7 @@ public class ClientHandler implements Runnable {
         this._in = new BufferedReader(new InputStreamReader((_socket.getInputStream())));
         this._running = true;
         this._name = name;
+        this.nameValid = false;
     }
 
     /**
@@ -62,6 +64,9 @@ public class ClientHandler implements Runnable {
             } catch (IOException e) {
                 System.out.println("Couldn't get player name");
             }
+        }
+        while(!nameValid){
+
         }
 
         System.out.println("Starting thread for user: " + _name);
@@ -234,6 +239,7 @@ public class ClientHandler implements Runnable {
             Server.get_playerNames().add(name);
             this._name = name;
             _player = new HumanPlayer(name);
+            nameValid = true;
             sendProtocol(Protocol.PLAYERNAME + Protocol.DELIMITER + Protocol.ACCEPTED);
         }
     }
