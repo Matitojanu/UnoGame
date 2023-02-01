@@ -47,43 +47,35 @@ public class ClientHandler implements Runnable {
      * the Client and sends the Client the list of games allowing them to join
      */
     public void setUp() {
-        try {
-            String msgFromClient = _in.readLine();
-            if (msgFromClient.equals(Protocol.HANDSHAKE + Protocol.DELIMITER + Protocol.HELLO)) {
-                try {
-                    handleMessage(msgFromClient);
-                } catch (IOException e) {
-                    System.out.println("Failed to handshake");
-                }
+        String msgFromClientHandshake = listenToMessage();
+        if (msgFromClientHandshake.equals(Protocol.HANDSHAKE + Protocol.DELIMITER + Protocol.HELLO)) {
+            try {
+                handleMessage(msgFromClientHandshake);
+            } catch (IOException e) {
+                System.out.println("Failed to handshake");
             }
-        } catch (IOException e) {
-            System.out.println("Client disconnected");
         }
 
-        try {
-            //sendProtocol(Protocol.PLAYERNAME);
-            String msgFromClient = _in.readLine();
-            String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
-            if (msgArray[0].equals(Protocol.PLAYERNAME)) {
-                try {
-                    handleMessage(msgFromClient);
-                } catch (IOException e) {
-                    System.out.println("Couldn't get player name");
-                }
+        //sendProtocol(Protocol.PLAYERNAME);
+        String msgFromClientPlayerName = listenToMessage();
+        String[] msgArrayPlayerName = msgFromClientPlayerName.split("\\" + Protocol.DELIMITER);
+        if (msgArrayPlayerName[0].equals(Protocol.PLAYERNAME)) {
+            try {
+                handleMessage(msgFromClientPlayerName);
+            } catch (IOException e) {
+                System.out.println("Couldn't get player name");
             }
-        } catch (IOException e) {
-            System.out.println("Client disconnected");
         }
 
         System.out.println("Starting thread for user: " + _name);
 
         try {
             sendProtocol(Protocol.FUNCTIONALITIES);
-            String msgFromClient = _in.readLine();
-            if(msgFromClient != null) {
-                String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
-                if (msgArray[0].equals(Protocol.FUNCTIONALITIES)) {
-                    handleMessage(msgFromClient);
+            String msgFromClientFunctonalities = listenToMessage();
+            if(msgFromClientFunctonalities != null) {
+                String[] msgArrayFunctionalities = msgFromClientFunctonalities.split("\\" + Protocol.DELIMITER);
+                if (msgArrayFunctionalities[0].equals(Protocol.FUNCTIONALITIES)) {
+                    handleMessage(msgFromClientFunctonalities);
                 }
             }
         } catch (IOException e) {
@@ -91,11 +83,11 @@ public class ClientHandler implements Runnable {
         }
 
         sendServerList();
-        String msgFromClient = listenToMessage();
-        String[] msgArray = msgFromClient.split("\\" + Protocol.DELIMITER);
-        if (msgArray[0].equals(Protocol.NEWGAME)||msgArray[0].equals(Protocol.JOINGAME)) {
+        String msgFromClientGame = listenToMessage();
+        String[] msgArrayGame = msgFromClientGame.split("\\" + Protocol.DELIMITER);
+        if (msgArrayGame[0].equals(Protocol.NEWGAME)||msgArrayGame[0].equals(Protocol.JOINGAME)) {
             try {
-                handleMessage(msgFromClient);
+                handleMessage(msgFromClientGame);
             } catch (IOException e) {
                 System.out.println("Couldn't get client choice");
             }
