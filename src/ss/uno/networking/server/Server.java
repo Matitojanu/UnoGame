@@ -70,7 +70,7 @@ public class Server implements ServerInterface {
     @Override
     public void run() {
         try {
-            _serverSocket = new ServerSocket(port, 10, Protocol.IPADDRESS);
+            _serverSocket = new ServerSocket(port);
         } catch (IOException e) {
             System.out.println("Could not start server at port " + port);
         }
