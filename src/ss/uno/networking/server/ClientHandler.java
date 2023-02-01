@@ -132,7 +132,6 @@ public class ClientHandler implements Runnable {
                 lobby.start();
                 lobby.addPlayer(_player);
                 Server.addLobby(lobby);
-//                sendServerList();
                 System.out.println("Starting new lobby: "+lobby.getGameName());
                 break;
             }
