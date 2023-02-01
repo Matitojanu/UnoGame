@@ -301,7 +301,7 @@ public class Client implements ClientInterface {
             String[] playersArguments = playersPointsList.get(i).split(Protocol.DELIMITERINITEMS);
             String playerName = playersArguments[0];
             int points = Integer.parseInt(playersArguments[1]);
-            if(points>=30){
+            if(points>=500){
                winner = playerName;
             }
         }
@@ -358,7 +358,6 @@ public class Client implements ClientInterface {
     public void sendFunctionalities(List<String> features) {
 
         try {
-            //TODO: to fix the waiting for functionalities from server
             _out.println(formatFunctionalities(features));
         } catch (Exception e) {
             System.out.println("An exception while sending functionalities");

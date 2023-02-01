@@ -342,7 +342,7 @@ public class ClientTUI {
                     new Thread(client).start(); //TODO: hopefully servers are shown here
                     userInitialization = false;
                 } else {
-                    System.out.println("Name is already taken. Try again.\n");
+                    System.out.println("Name is already taken or contains spaces. Try again.\n");
                 }
             }
         } else {
