@@ -170,7 +170,7 @@ public class UnoGame implements AbstractCard.Ability {
      */
     public boolean isGameOver(){
         for(AbstractPlayer player : playersPoints.keySet()){
-            if(playersPoints.get(player) >= 30){
+            if(playersPoints.get(player) >= 500){
                 return true;
             }
         }
