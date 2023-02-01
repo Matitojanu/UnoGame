@@ -66,17 +66,6 @@ public interface ClientInterface extends Runnable {
      */
     String formatFunctionalities(List<String> features);
 
-    /**
-     * This method returns the game which the client stores
-     * @return the game the client has joined and is playing
-     */
-    UnoGame getGame();
-
-    /**
-     * This method sets the global variable of the game as the game that is given in parameters
-     * @param game the game to which the global variable will be set to
-     */
-    void setGame(UnoGame game);
 
     /**
      * This method returns the status of the client, whether it is curently in a game or if it's not

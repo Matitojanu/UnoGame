@@ -109,12 +109,4 @@ public class Server implements ServerInterface {
     public static ArrayList<String> get_playerNames() {
         return _playerNames;
     }
-
-    /**
-     * This method adds a player name to the name list
-     * @param name the name to be added to the list
-     */
-    public static void add_playerName(String name) {
-        _playerNames.add(name);
-    }
 }

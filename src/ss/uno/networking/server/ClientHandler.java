@@ -302,20 +302,4 @@ public class ClientHandler implements Runnable {
     public AbstractPlayer get_player() {
         return _player;
     }
-
-    /**
-     * Returns the input stream
-     * @return the input stream
-     */
-    public BufferedReader get_in() {
-        return _in;
-    }
-
-    /**
-     * Returns the output stream
-     * @return the output stream
-     */
-    public PrintWriter get_out() {
-        return _out;
-    }
 }

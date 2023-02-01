@@ -59,12 +59,11 @@ public class Lobby implements Runnable{
                         } catch (IOException e) {
                             System.out.println("Couldn't send wait command");
                         }
-
                     }
                 }
             }
                 try {
-                    TimeUnit.SECONDS.sleep(3);
+                    TimeUnit.SECONDS.sleep(5);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -240,14 +239,6 @@ public class Lobby implements Runnable{
     }
 
     /**
-     * Returns a list of players in the lobby
-     * @return a list of players in the lobby
-     */
-    public ArrayList<AbstractPlayer> getPlayers() {
-        return players;
-    }
-
-    /**
      * Returns the unoGame
      * @return the unoGame
      */
@@ -265,7 +256,7 @@ public class Lobby implements Runnable{
 
     /**
      * Formats the move list into a list
-     * @param cards in the current player's hand
+     * @param playerHand in the current player's hand
      * @return a formatted move list
      */
     public String formatMoveList(List<AbstractCard> playerHand) {
@@ -276,4 +267,5 @@ public class Lobby implements Runnable{
         }
         return protocolMsg;
     }
+
 }
