@@ -239,14 +239,6 @@ public class Lobby implements Runnable{
     }
 
     /**
-     * Returns a list of players in the lobby
-     * @return a list of players in the lobby
-     */
-    public ArrayList<AbstractPlayer> getPlayers() {
-        return players;
-    }
-
-    /**
      * Returns the unoGame
      * @return the unoGame
      */

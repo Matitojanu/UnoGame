@@ -383,24 +383,6 @@ public class Client implements ClientInterface {
     }
 
     /**
-     * This method returns the game which the client stores
-     * @return the game the client has joined and is playing
-     */
-    @Override
-    public UnoGame getGame() {
-        return _game;
-    }
-
-    /**
-     * This method sets the global variable of the game as the game that is given in parameters
-     * @param game the game to which the global variable will be set to
-     */
-    @Override
-    public void setGame(UnoGame game) {
-        this._game = game;
-    }
-
-    /**
      * This method returns the status of the client, whether it is curently in a game or if it's not
      * @return true, if the client has joined or created a game, false if it has not entered a game
      */
